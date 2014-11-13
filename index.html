@@ -20,8 +20,14 @@
         Tabletop.init( { key: URL, callback: myData, simpleSheet: true } )
     })
     function myData(data) {
-        document.write(data.URL);
+        console.log(data)
+        document.write("<h1> Malaria POC</h1>")
+        document.write("<h2>pulls from this <a href='https://docs.google.com/spreadsheets/d/1ohIziLdTvWk9jj8MYVOJ0J0fbSWhH9k4VOER4GNMVG4/edit#gid=596427466'> spreadsheet</a> </h2> ")
+        for (i = 0; i < data.length; i++) {
+	        document.write("<h4>"+data[i].country+"</h4>"+"<p>"+"parameter 1:"+" "+data[i].param1+"</p>"+"<p>"+"parameter 2:"+" "+data[i].param2+"</p>"+"<p>"+"parameter 3:"+" "+data[i].param3+"</p>"+"<p>"+"parameter 4:"+" "+data[i].param4+"</p>"+"<p>"+"parameter 5:"+" "+data[i].param5+"</p>")  
+        }
     }
   </script>
   </body>
 </html>
+
