@@ -107,12 +107,12 @@
             country_list.push(ctry);
             $("#countries option[value="+ctry+"]").attr('disabled',true);
             $("#country-output").append("<div class='countries-output' id='"+ctry+"'>"+ctry_txt+"<div class='closer'>&#10006;</div>");
-            checkCountryLength();
-            disableDD();
             if (country_list.length >= 1 && ctry!="All_Countries") {
               $("#countries option[value='All_Countries']").attr('disabled',true);
             }
-            $(this).selectmenu("refresh");
+            disableDD();
+            checkCountryLength();
+            $(this).selectmenu("refresh");            
           }
         }) 
         $("#country-output").on("click", ".countries-output", function(e) {
@@ -135,8 +135,10 @@
       // ** max 5 countries drop down
       function checkCountryLength() {
         if (country_list.length == 5) {
-          $("#countries").selectmenu("disable");  
+          console.log("yes")
+          $("#countries").selectmenu().selectmenu("disable");  
         } else {
+          console.log("no")
           $("#countries").selectmenu().selectmenu("enable");   
         }        
       }
