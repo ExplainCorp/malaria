@@ -51,6 +51,22 @@
   #country-container .ui-selectmenu-text { font-size:18px;}
   #country-container .ui-selectmenu-button { width:300px !important;}
   #country-container .ui-selectmenu-button span.ui-selectmenu-text { line-height:25px;}
+  /** results viz **/
+  #results-viz { width:1100px;margin:0px auto 100px auto;background:beige;}
+  #results-viz a { text-decoration: none;}
+   #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
+   #results-viz .results-header-countries { margin-top:15px;}
+   #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
+   #results-nav-risks { margin:25px 0px;background:#f7f7f7;}
+   #results-viz #nav-risks li { float:left;padding:10px 6px;background: #ccc;color:white;margin-left:1px;cursor:pointer;font-size:11px}
+   #results-viz #nav-risks li:hover { background:#777;color:#f5f5f5;}
+   #results-viz #nav-risks li:first-child { margin-left:0px;}
+   #results-viz #results-nav-left { width:145px;background:silver;float:left;}
+   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
+   #results-viz #nav-left {color:#666666;}
+   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
+   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
+   #results-viz #results-content { float:left;width:955px;height:400px;background:#f2f2f2}
   </style>
   <script>
   $(document).ready(function() {
@@ -442,7 +458,9 @@
           <option value="years1971to1980">1971 &mdash; 1980</option>
           <option value="years1981to1990">1981 &mdash; 1990</option>
           <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2014">2001 &mdash; 2014</option>
+          <option value="years2001to2005">2001 &mdash; 2005</option>
+          <option value="years2006to2010">2006 &mdash; 2010</option>
+          <option value="years2011to2014">2011 &mdash; 2014</option>
         </select>
         <div class="clear"></div>
       </div>
@@ -464,7 +482,9 @@
           <option value="years1971to1980">1971 &mdash; 1980</option>
           <option value="years1981to1990">1981 &mdash; 1990</option>
           <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2014">2001 &mdash; 2014</option>
+          <option value="years2001to2005">2001 &mdash; 2005</option>
+          <option value="years2006to2010">2006 &mdash; 2010</option>
+          <option value="years2011to2014">2011 &mdash; 2014</option>
         </select>
         <div class="clear"></div>
       </div>
@@ -485,7 +505,9 @@
           <option value="years1971to1980">1971 &mdash; 1980</option>
           <option value="years1981to1990">1981 &mdash; 1990</option>
           <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2014">2001 &mdash; 2014</option>
+          <option value="years2001to2005">2001 &mdash; 2005</option>
+          <option value="years2006to2010">2006 &mdash; 2010</option>
+          <option value="years2011to2014">2011 &mdash; 2014</option>
         </select>
         <div class="clear"></div>
       </div>
@@ -506,7 +528,9 @@
           <option value="years1971to1980">1971 &mdash; 1980</option>
           <option value="years1981to1990">1981 &mdash; 1990</option>
           <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2014">2001 &mdash; 2014</option>
+          <option value="years2001to2005">2001 &mdash; 2005</option>
+          <option value="years2006to2010">2006 &mdash; 2010</option>
+          <option value="years2011to2014">2011 &mdash; 2014</option>
         </select>
         <div class="clear"></div>
       </div>
@@ -527,12 +551,12 @@
           <option value="years1971to1980">1971 &mdash; 1980</option>
           <option value="years1981to1990">1981 &mdash; 1990</option>
           <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2014">2001 &mdash; 2014</option>
+          <option value="years2001to2005">2001 &mdash; 2005</option>
+          <option value="years2006to2010">2006 &mdash; 2010</option>
+          <option value="years2011to2014">2011 &mdash; 2014</option>
         </select>
         <div class="clear"></div>
       </div>                
-
-
     </div>
 
     <div id="landing-submit">
@@ -543,6 +567,47 @@
     <div id="landing-footer">
       <p>By Derek Willis<br/>& Explain Corp.</p>
     </div>
+  </div>
+
+
+  <div id="results-viz">
+    <div class="results-header">
+      <h2><a href="/">Malaria Data Visualization Tool</a></h2>
+      <div class="results-header-countries">
+        <h3>Active Country</h3>
+      </div>
+    </div>
+    <div id="results-nav-risks">
+      <ul id="nav-risks">
+        <li>Population</li>
+        <li>Population at risk</li>
+        <li>Total funding*</li>
+        <li>GDP per capita*</li>
+        <li>Larval control</li>
+        <li>Insecticide-treated net*</li>
+        <li>Indoor residual spraying</li>
+        <li>Antimalarial drug</li>
+        <li>Insecticide resistance level</li>
+        <li>Drug resistance level</li>
+      </ul>
+      <div class="clear"></div>
+    </div>
+    <div id="results-nav-left">
+      <p>Select up to five countries</p>
+      <ul id="nav-left">
+        <li>Country one</li>
+        <li>Country two</li>
+        <li>Country thr</li>
+        <li>Country fou</li>
+        <li>Country fiv</li>
+        <li>Country six</li>
+      </ul>
+      <div class="clear"></div>
+    </div>
+    <div id="results-content">
+      
+    </div>
+    <div class="clear"></div>
   </div>
 </body>
 </html>
