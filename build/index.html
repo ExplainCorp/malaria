@@ -54,19 +54,22 @@
   /** results viz **/
   #results-viz { width:1100px;margin:0px auto 100px auto;background:beige;}
   #results-viz a { text-decoration: none;}
-   #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
-   #results-viz .results-header-countries { margin-top:15px;}
-   #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
-   #results-nav-risks { margin:25px 0px;background:#f7f7f7;}
-   #results-viz #nav-risks li { float:left;padding:10px 6px;background: #ccc;color:white;margin-left:1px;cursor:pointer;font-size:11px}
-   #results-viz #nav-risks li:hover { background:#777;color:#f5f5f5;}
-   #results-viz #nav-risks li:first-child { margin-left:0px;}
-   #results-viz #results-nav-left { width:145px;background:silver;float:left;}
-   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
-   #results-viz #nav-left {color:#666666;}
-   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
-   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
-   #results-viz #results-content { float:left;width:955px;height:400px;background:#f2f2f2}
+  #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
+  #results-viz .results-header-countries { margin-top:15px;}
+  #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
+  #results-nav-risks { margin:25px 0px;background:#f7f7f7;}
+  #results-viz #nav-risks li { float:left;padding:10px 6px;background: #ccc;color:white;margin-left:1px;cursor:pointer;font-size:11px}
+  #results-viz #nav-risks li:hover { background:#777;color:#f5f5f5;}
+  #results-viz #nav-risks li:first-child { margin-left:0px;}
+  #results-viz #nav-risks li.risks-active { background:#777;color:#f5f5f5;}
+  #results-viz #results-nav-left { width:145px;background:silver;float:left;}
+  #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
+  #results-viz #nav-left {color:#666666;}
+  #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
+  #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
+  #results-viz #results-content { float:left;width:955px;height:400px;background:#f2f2f2}
+  #results-viz .results-content-risk { background:pink;margin-top:25px;}
+  #results-viz .results-content-risk:first-child { margin-top:0px;height:400px;}
   </style>
   <script>
   $(document).ready(function() {
@@ -185,6 +188,34 @@
           $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
         }
       });
+
+      $("#results-viz #nav-risks li").on("click", function(e) {
+        e.preventDefault();
+        $(this).toggleClass("risks-active");
+        get_risk_id = $(this).attr("id");
+        get_risk_cnt = $("#results-viz #nav-risks .risks-active").length;
+        if (get_risk_cnt == 0) { $(this).addClass("risks-active") };
+        if (get_risk_cnt >= 1) {
+          divideSpaces(get_risk_id.split("risks-")[1],get_risk_cnt);
+        } else {
+          return false;
+        }
+      })
+
+      function divideSpaces(risks,count) {
+        $("#results-viz #results-content").html("");
+        if (count<=5) {
+          risks_height = $("#results-viz #results-content").height()/count;
+        } else {
+          risks_height = $("#results-viz #results-content").height()/5;
+        }
+
+        for(i=0;i<count;i++) {
+          $("#results-viz #results-content").append("<div class='results-content-risk' style='height:"+risks_height+"px'></div>")
+        }
+
+      }
+
   });
   </script>
 </head>
@@ -579,16 +610,16 @@
     </div>
     <div id="results-nav-risks">
       <ul id="nav-risks">
-        <li>Population</li>
-        <li>Population at risk</li>
-        <li>Total funding*</li>
-        <li>GDP per capita*</li>
-        <li>Larval control</li>
-        <li>Insecticide-treated net*</li>
-        <li>Indoor residual spraying</li>
-        <li>Antimalarial drug</li>
-        <li>Insecticide resistance level</li>
-        <li>Drug resistance level</li>
+        <li class="risks-active" id="risks-population">Population</li>
+        <li id="risks-par">Population at risk</li>
+        <li id="risks-funding">Total funding*</li>
+        <li id="risks-gdp">GDP per capita*</li>
+        <li id="risks-larval">Larval control</li>
+        <li id="risks-insecticide">Insecticide-treated net*</li>
+        <li id="risks-spraying">Indoor residual spraying</li>
+        <li id="risks-drug">Antimalarial drug</li>
+        <li id="risks-resistance">Insecticide resistance level</li>
+        <li id="risks-drug-resistance">Drug resistance level</li>
       </ul>
       <div class="clear"></div>
     </div>
@@ -605,7 +636,7 @@
       <div class="clear"></div>
     </div>
     <div id="results-content">
-      
+      <div class="results-content-risk"></div>
     </div>
     <div class="clear"></div>
   </div>
