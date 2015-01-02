@@ -75,6 +75,7 @@
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
   /** d3 stuff **/
   .lines { stroke:blue;fill:none;stroke-width:3px;display:none;}
+  #line-population_RISK_FACTOR { stroke:red;}
   </style>
   <script>
   $(document).ready(function() {
@@ -83,6 +84,19 @@
       var params = {};
       var country_list = []; 
       var datarisk;
+      // ** global d3 variables
+      var w,h,p;
+      var viz;
+      var viz_population_RISK_FACTOR;
+      var viz_pop_at_risk_RISK_FACTOR;
+      var viz_funding_RISK_FACTOR;
+      var viz_GDP_per_capita_RISK_FACTOR;
+      var viz_ALL_larval_control_RISK_FACTOR;
+      var viz_ALL_nets_RISK_FACTOR;
+      var viz_IRS_RISK_FACTOR;
+      var viz_drugs_RISK_FACTOR;
+      var viz_insecticide_resistance_RISK_FACTOR;
+      var viz_drug_resistance_RISK_FACTOR;
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -246,18 +260,19 @@
           cntrys = $("#results-viz .nav-left-active").eq(idx).attr("id");
           cntrys_all.push(cntrys);
         });        
-        console.log(cntrys_all)
+        //console.log(cntrys_all)
                  
         if (get_risk_cnt >= 1 && get_cnty_cnt == 1) {
-          activateLines(get_risk_cnt);
+          activateLines(get_risk_cnt,risks_all, cntrys_all);
         } else {
-          divideSpaces(risks_all, get_risk_cnt, cntrys_all);            
+          divideSpaces(risks_all, get_risk_cnt, cntrys_all);
+          //console.log("divded")            
         }
 
       }
 
       function divideSpaces(risks,count,countries) {
-        console.log(risks)
+        //console.log(risks)
         $("#results-viz #results-content").html("");
         if (count<=5) {
           risks_height = $("#results-viz #results-content").height()/count;
@@ -267,9 +282,16 @@
         
         for(i=0;i<count;i++) {
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+risks_all[i]+"</div></div>")
-            
-            graph_risks(datarisk[countries[i]].elements, risks[i], risks_height)
+            createSVG(risks_all[i], risks_height);        
         }
+        for(j=0;j<countries.length;j++) {
+          // calling it twice.. this is a problem
+          //console.log("risks_all: "+risks_all)
+          for(k=0;k<risks_all.length;k++) {
+            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j])  
+          }
+        }
+        
       }
 
       // draw left-nav based off country_list or param filters w/ All Countries
@@ -287,7 +309,7 @@
       function navLeftEvents() {
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active");
         //console.log(datarisk["Brazil"].elements)
-        graph_risks(datarisk["Brazil"].elements);
+        //graph_risks(datarisk["Brazil"].elements);
         
         $("#results-nav-left #nav-left li").on("click", function(e) {
           e.preventDefault();
@@ -315,7 +337,20 @@
       // ** REWORK **
       // risks > 1, each path goes to it's own div
       // draw all countries but hide lines
-      function graph_risks(data,risksID,h2) {      
+
+      function createSVG(riskID, h2) {
+        w = 955;
+        h = h2;
+        p = 25; // padding
+        viz = d3.select("#results-content #"+riskID).append("svg")
+          .attr("width", w)
+          .attr("height", h2)
+          .attr("id", "viz_"+riskID)
+      }
+
+      function graph_risks(data,risksID,h2,country) {      
+
+        console.log(risksID)
 
         // create concentrated dataset for lines by removing params
         var labelVar = 'year';
@@ -328,6 +363,10 @@
         var md = 'malaria_deaths';
         var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
 
+
+        if (risksID == "population_RISK_FACTOR") getidx = 0; 
+        if (risksID == "pop_at_risk_RISK_FACTOR") getidx = 1;         
+
         var seriesData = varNames.map(function (name) {
           return {
             name: name,
@@ -336,17 +375,12 @@
             })
           };
         });
-
-        var w = 955;
-        var h = h2;
-        var p = 25; // padding
-
-        var viz = d3.select("#results-content #"+risksID).append("svg")
-          .attr("width", w)
-          .attr("height", h2)
-          
-        newviz = viz.append("g");
-
+   
+        console.log(seriesData[getidx])
+        //newviz = viz.append("g");
+        // temp
+        //newviz = viz;
+        
         var format_date = d3.time.format("%Y").parse; 
 
         minDate = new Date("1898");
@@ -366,12 +400,16 @@
           .x(function (d) { return xpos(format_date(d.label));  })
           .y(function (d) { return ypos(d.value); });
 
-        var series = newviz.selectAll(".series")
-          .data(seriesData)
-          .enter().append("g")
-          .attr("class", "series");
+        risksviz = d3.select("#results-content #viz_"+risksID);
 
-        series.append("path")
+        // ** problem is here
+        // look at d3.keys maybe?
+        var series = risksviz.select(".series"+risksID)
+          .data(seriesData[getidx])
+          .enter().append("g")
+          .attr("class", "series_"+country+"_"+risksID);
+
+        series.append("path"+country)
           .attr("class", "lines")
           .attr("id", function(d) { return "line-"+d.name })
           .attr("d", function (d) { return line(d.values); })
@@ -390,13 +428,13 @@
       // dynamically create svgs inside divs
 
       }
-      function activateLines(count) {
+      function activateLines(count,the_risk, the_cntry) {
         $("#results-viz .lines").hide();
         get_risk_cnt = $("#results-viz #nav-risks .risks-active");
         get_risk_cnt.each(function (s) {
           //activate
           init_line = $(this).attr("id").replace("risks-","line-");
-          $("#results-viz #"+init_line).show();
+          $("#results-viz #"+the_risk+" #"+init_line).show();
         })       
       }
 
