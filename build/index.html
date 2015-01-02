@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <script src="js/d3.v3.min.js" charset="utf-8"></script>
+  <script src="js/tabletop.js"></script>
   <link rel="stylesheet" href="css/reset.css">
   <style type="text/css">
   body { font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;font-size:16px;}
@@ -58,8 +60,8 @@
   #results-viz .results-header-countries { margin-top:15px;}
   #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
   #results-nav-risks { margin:25px 0px;background:#f7f7f7;}
-  #results-viz #nav-risks li { float:left;padding:10px 6px;background: #ccc;color:white;margin-left:1px;cursor:pointer;font-size:11px}
-  #results-viz #nav-risks li:hover { background:#777;color:#f5f5f5;}
+  #results-viz #nav-risks li { float:left;padding:10px 6px;background: #ccc;color:#555;margin-left:1px;cursor:pointer;font-size:11px}
+  #results-viz #nav-risks li:hover { background:#bbb;color:#777;}
   #results-viz #nav-risks li:first-child { margin-left:0px;}
   #results-viz #nav-risks li.risks-active { background:#777;color:#f5f5f5;}
   #results-viz #results-nav-left { width:145px;background:silver;float:left;}
@@ -68,15 +70,40 @@
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   #results-viz #results-content { float:left;width:955px;height:400px;background:#f2f2f2}
-  #results-viz .results-content-risk { background:pink;margin-top:25px;}
+  #results-viz .results-content-risk { background:#f8f8f8;margin-top:25px;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:400px;}
+  #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
+  /** d3 stuff **/
+  .lines { stroke:blue;fill:none;stroke-width:3px;display:none;}
   </style>
   <script>
   $(document).ready(function() {
 
       // ** global variables **
       var params = {};
-      var country_list = [];
+      var country_list = []; 
+      var datarisk;
+
+      // ** pull data from spreadsheet into json via tabletop.js
+      var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
+
+      function initTabletop() {
+        Tabletop.init( { key: public_spreadsheet_url,
+                         callback: showInfo,
+                         simpleSheet: false,
+                         parseNumbers: false } )
+      }
+
+      function showInfo(data, tabletop) {
+        console.log("Successfully processed!")
+        // how to sort transmission index if no specific year is selected? Ask Derek
+
+        // to do: 
+        // data will load every sheet, write function to sort through sheets
+        // active countries draw left-nav [done]
+        console.log(data);
+        datarisk = data;
+      }      
 
       // ** init param object and country list 
       function initParams() {
@@ -87,6 +114,7 @@
           }
         initSliders();
         initCountries();
+        initTabletop();
       }
 
       // ** sliders
@@ -115,7 +143,7 @@
         })
       }
 
-      // ** country drop down
+      // ** country drop down [done]
       // to do: if all countries -> deselect drop down [done]
       // to do: if something other than all countries -> deselect all countries [done]
       function initCountries() {
@@ -183,38 +211,195 @@
           country_list.push("All_Countries");
         }
         $("#landing-results-output-test").html("Countries: "+country_list);
-        //cnt = 0;
         for (p in params) {
           $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
         }
+        visualize();
       });
 
+      // array for selected risk navigation items
+      var risks_all = [];
+      var cntrys_all = [];
+      // to do: add labels to risk boxes at top left [done]
       $("#results-viz #nav-risks li").on("click", function(e) {
         e.preventDefault();
         $(this).toggleClass("risks-active");
-        get_risk_id = $(this).attr("id");
-        get_risk_cnt = $("#results-viz #nav-risks .risks-active").length;
-        if (get_risk_cnt == 0) { $(this).addClass("risks-active") };
-        if (get_risk_cnt >= 1) {
-          divideSpaces(get_risk_id.split("risks-")[1],get_risk_cnt);
-        } else {
-          return false;
-        }
+        navEvents();
+        if (get_risk_cnt == 0) $(this).addClass("risks-active")
       })
 
-      function divideSpaces(risks,count) {
+      function navEvents(navActive) {
+        // reset array on every click
+        risks_all.length = 0;
+        cntrys_all.length = 0;
+
+        get_risk_cnt = $("#results-viz #nav-risks .risks-active").length;
+        get_cnty_cnt = $("#results-viz #nav-left .nav-left-active").length;
+
+        $("#results-viz #nav-risks .risks-active").each(function(i) {
+          idx = $(this).index();
+          risks = $("#results-viz #nav-risks li").eq(idx).attr("id").split("risks-")[1];
+          risks_all.push(risks);
+        });
+        $("#results-viz #nav-left .nav-left-active").each(function(j) {
+          idx = $(this).index();
+          cntrys = $("#results-viz .nav-left-active").eq(idx).attr("id");
+          cntrys_all.push(cntrys);
+        });        
+        console.log(cntrys_all)
+                 
+        if (get_risk_cnt >= 1 && get_cnty_cnt == 1) {
+          activateLines(get_risk_cnt);
+        } else {
+          divideSpaces(risks_all, get_risk_cnt, cntrys_all);            
+        }
+
+      }
+
+      function divideSpaces(risks,count,countries) {
+        console.log(risks)
         $("#results-viz #results-content").html("");
         if (count<=5) {
           risks_height = $("#results-viz #results-content").height()/count;
         } else {
           risks_height = $("#results-viz #results-content").height()/5;
         }
-
+        
         for(i=0;i<count;i++) {
-          $("#results-viz #results-content").append("<div class='results-content-risk' style='height:"+risks_height+"px'></div>")
+          $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+risks_all[i]+"</div></div>")
+            
+            graph_risks(datarisk[countries[i]].elements, risks[i], risks_height)
         }
+      }
+
+      // draw left-nav based off country_list or param filters w/ All Countries
+      // first draw it off of country_list [done]
+      // after draw it off of all_countries + params
+      function drawNav(countries) {
+        console.log(countries.length)
+        $("#results-viz #nav-left").html("");
+        for (i=0;i<countries.length;i++) {
+          $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"</li>")
+        }
+        navLeftEvents();
+      }
+
+      function navLeftEvents() {
+        $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active");
+        //console.log(datarisk["Brazil"].elements)
+        graph_risks(datarisk["Brazil"].elements);
+        
+        $("#results-nav-left #nav-left li").on("click", function(e) {
+          e.preventDefault();
+          $(this).toggleClass("nav-left-active");
+
+          // update to id instead of text when data structure is complete
+          get_ctry = $(this).text();
+          navEvents(get_ctry);
+          if (get_cnty_cnt == 0) $(this).addClass("nav-left-active");
+
+        });
+      }
+      // ^-- come back to this, work on setting up  
+      // and integrating data for 1 country first w/ all risks
+
+      function visualize() {
+        // for testing purposes just have two countries here
+        country_list = [];
+        country_list.push("Brazil");
+        country_list.push("Congo");
+        drawNav(country_list);
+      }
+
+      // d3 viz comes here
+      // ** REWORK **
+      // risks > 1, each path goes to it's own div
+      // draw all countries but hide lines
+      function graph_risks(data,risksID,h2) {      
+
+        // create concentrated dataset for lines by removing params
+        var labelVar = 'year';
+        var param1 = 'intervention_index_PARAM';
+        var param2 = 'development_index_PARAM';
+        var param3 = 'vector_behavior_index_PARAM';
+        var param4 = 'climate_index_PARAM';
+        var param5 = 'transmission_index_PARAM';
+        var mc = 'malaria_cases';
+        var md = 'malaria_deaths';
+        var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
+
+        var seriesData = varNames.map(function (name) {
+          return {
+            name: name,
+            values: data.map(function (d) {
+              return {name: name, label: d[labelVar], value: +d[name]};
+            })
+          };
+        });
+
+        var w = 955;
+        var h = h2;
+        var p = 25; // padding
+
+        var viz = d3.select("#results-content #"+risksID).append("svg")
+          .attr("width", w)
+          .attr("height", h2)
+          
+        newviz = viz.append("g");
+
+        var format_date = d3.time.format("%Y").parse; 
+
+        minDate = new Date("1898");
+        // temporary, pull from sheet
+        maxDate = new Date("2014");
+
+        var xpos = d3.time.scale()
+          .domain([minDate,maxDate])
+          .range([0, w-p]);
+
+        var ypos = d3.scale.linear()
+          .domain([0,100])
+          .range([h-p,p]);
+
+        var line = d3.svg.line()
+          .interpolate("cardinal")
+          .x(function (d) { return xpos(format_date(d.label));  })
+          .y(function (d) { return ypos(d.value); });
+
+        var series = newviz.selectAll(".series")
+          .data(seriesData)
+          .enter().append("g")
+          .attr("class", "series");
+
+        series.append("path")
+          .attr("class", "lines")
+          .attr("id", function(d) { return "line-"+d.name })
+          .attr("d", function (d) { return line(d.values); })
+
+        get_risk_cnt = $("#results-viz #nav-risks .risks-active");
+
+        get_risk_cnt.each(function (s) {
+          //activate
+          init_line = $(this).attr("id").replace("risks-","line-");
+          $("#results-viz #"+init_line).show();
+        })
+
+      // if leftnav active = 1 but risks > 1, stay on large window [done]
+
+      // next, when multiple countries and risks are selected, will need to redraw 
+      // dynamically create svgs inside divs
 
       }
+      function activateLines(count) {
+        $("#results-viz .lines").hide();
+        get_risk_cnt = $("#results-viz #nav-risks .risks-active");
+        get_risk_cnt.each(function (s) {
+          //activate
+          init_line = $(this).attr("id").replace("risks-","line-");
+          $("#results-viz #"+init_line).show();
+        })       
+      }
+
 
   });
   </script>
@@ -226,7 +411,7 @@
       <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam suscipit consequat scelerisque. Sed id facilisis est. Vestibulum sagittis diam quis arcu vehicula, ac luctus risus faucibus. Sed sed diam at nunc gravida scelerisque. Nam sed arcu at tortor sollicitudin imperdiet. Cras facilisis neque mi, quis lacinia nulla egestas in. Aenean vitae leo finibus, placerat nibh quis, consequat leo. Etiam augue dui, vestibulum nec viverra nec, molestie ut turpis. Mauris sit amet nibh.</h2>
     </div>
 
-    <!-- placeholder, wait for 100-country list -->
+    <!-- placeholder, wait for 100-country list :: generate from spreadsheet -->
     <div id="country-container">
       <select id="countries" name="countries">
         <option selected disabled>Choose up to 5 countries</option>
@@ -496,7 +681,6 @@
         <div class="clear"></div>
       </div>
 
-
       <div id="param-two" class="all-params">
         <div class="param-title"><p>Param</p></div>
         <div class="sliders" id="slider-range-two"></div>
@@ -600,7 +784,6 @@
     </div>
   </div>
 
-
   <div id="results-viz">
     <div class="results-header">
       <h2><a href="/">Malaria Data Visualization Tool</a></h2>
@@ -610,16 +793,16 @@
     </div>
     <div id="results-nav-risks">
       <ul id="nav-risks">
-        <li class="risks-active" id="risks-population">Population</li>
-        <li id="risks-par">Population at risk</li>
-        <li id="risks-funding">Total funding*</li>
-        <li id="risks-gdp">GDP per capita*</li>
-        <li id="risks-larval">Larval control</li>
-        <li id="risks-insecticide">Insecticide-treated net*</li>
-        <li id="risks-spraying">Indoor residual spraying</li>
-        <li id="risks-drug">Antimalarial drug</li>
-        <li id="risks-resistance">Insecticide resistance level</li>
-        <li id="risks-drug-resistance">Drug resistance level</li>
+        <li class="risks-active" id="risks-population_RISK_FACTOR">Population</li>
+        <li id="risks-pop_at_risk_RISK_FACTOR">Population at risk</li>
+        <li id="risks-funding_RISK_FACTOR">Total funding*</li>
+        <li id="risks-GDP_per_capita_RISK_FACTOR">GDP per capita*</li>
+        <li id="risks-ALL_larval_control_RISK_FACTOR">Larval control</li>
+        <li id="risks-ALL_nets_RISK_FACTOR">Insecticide-treated net*</li>
+        <li id="risks-IRS_RISK_FACTOR">Indoor residual spraying</li>
+        <li id="risks-drugs_RISK_FACTOR">Antimalarial drug</li>
+        <li id="risks-insecticide_resistance_RISK_FACTOR">Insecticide resistance level</li>
+        <li id="risks-drug_resistance_RISK_FACTOR">Drug resistance level</li>
       </ul>
       <div class="clear"></div>
     </div>
