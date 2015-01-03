@@ -69,13 +69,13 @@
   #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
-  #results-viz #results-content { float:left;width:955px;height:400px;background:#f2f2f2}
+  #results-viz #results-content { float:left;width:955px;height:600px;background:#f2f2f2}
   #results-viz .results-content-risk { background:#f8f8f8;margin-top:25px;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:400px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
   /** d3 stuff **/
-  .lines { stroke:blue;fill:none;stroke-width:3px;display:none;}
-  #line-population_RISK_FACTOR { stroke:red;}
+  .lines { stroke:blue;fill:none;stroke-width:3px;}
+  #line-Brazil-population_RISK_FACTOR { stroke:red;}
   </style>
   <script>
   $(document).ready(function() {
@@ -231,7 +231,7 @@
         visualize();
       });
 
-      // array for selected risk navigation items
+      // arrays for selected navigation items
       var risks_all = [];
       var cntrys_all = [];
       // to do: add labels to risk boxes at top left [done]
@@ -243,7 +243,7 @@
       })
 
       function navEvents(navActive) {
-        // reset array on every click
+        // reset arrays on every click
         risks_all.length = 0;
         cntrys_all.length = 0;
 
@@ -251,28 +251,25 @@
         get_cnty_cnt = $("#results-viz #nav-left .nav-left-active").length;
 
         $("#results-viz #nav-risks .risks-active").each(function(i) {
-          idx = $(this).index();
-          risks = $("#results-viz #nav-risks li").eq(idx).attr("id").split("risks-")[1];
+          risks = $("#results-viz #nav-risks li").eq(i).attr("id").split("risks-")[1];
           risks_all.push(risks);
         });
         $("#results-viz #nav-left .nav-left-active").each(function(j) {
-          idx = $(this).index();
-          cntrys = $("#results-viz .nav-left-active").eq(idx).attr("id");
+          cntrys = $("#results-viz .nav-left-active").eq(j).attr("id");
           cntrys_all.push(cntrys);
         });        
-        //console.log(cntrys_all)
+
+        console.log(cntrys_all)
                  
         if (get_risk_cnt >= 1 && get_cnty_cnt == 1) {
           activateLines(get_risk_cnt,risks_all, cntrys_all);
         } else {
           divideSpaces(risks_all, get_risk_cnt, cntrys_all);
-          //console.log("divded")            
         }
 
       }
 
       function divideSpaces(risks,count,countries) {
-        //console.log(risks)
         $("#results-viz #results-content").html("");
         if (count<=5) {
           risks_height = $("#results-viz #results-content").height()/count;
@@ -284,11 +281,11 @@
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+risks_all[i]+"</div></div>")
             createSVG(risks_all[i], risks_height);        
         }
+
         for(j=0;j<countries.length;j++) {
-          // calling it twice.. this is a problem
-          //console.log("risks_all: "+risks_all)
           for(k=0;k<risks_all.length;k++) {
-            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j])  
+            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j])
+            console.log(countries[j])  
           }
         }
         
@@ -326,17 +323,18 @@
       // and integrating data for 1 country first w/ all risks
 
       function visualize() {
-        // for testing purposes just have two countries here
+        // for testing purposes just have three countries here
         country_list = [];
         country_list.push("Brazil");
         country_list.push("Congo");
+        country_list.push("Chad");
         drawNav(country_list);
       }
 
       // d3 viz comes here
       // ** REWORK **
-      // risks > 1, each path goes to it's own div
-      // draw all countries but hide lines
+      // risks > 1, each path goes to it's own div [done]
+      // draw all countries but hide lines [not necessary]
 
       function createSVG(riskID, h2) {
         w = 955;
@@ -364,8 +362,18 @@
         var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
 
 
-        if (risksID == "population_RISK_FACTOR") getidx = 0; 
-        if (risksID == "pop_at_risk_RISK_FACTOR") getidx = 1;         
+        // target data
+        // there might be a better way to do this, will revisit later
+        if (risksID == "population_RISK_FACTOR") getidx = 0;         
+        if (risksID == "pop_at_risk_RISK_FACTOR") getidx = 1;
+        if (risksID == "funding_RISK_FACTOR") getidx = 2;
+        if (risksID == "GDP_per_capita_RISK_FACTOR") getidx = 3;
+        if (risksID == "ALL_larval_control_RISK_FACTOR") getidx = 4;
+        if (risksID == "ALL_nets_RISK_FACTOR") getidx = 5;
+        if (risksID == "IRS_RISK_FACTOR") getidx = 6;
+        if (risksID == "drugs_RISK_FACTOR") getidx = 7;
+        if (risksID == "insecticide_resistance_RISK_FACTOR") getidx = 8;
+        if (risksID == "drug_resistance_RISK_FACTOR") getidx = 9;
 
         var seriesData = varNames.map(function (name) {
           return {
@@ -376,11 +384,9 @@
           };
         });
    
-        console.log(seriesData[getidx])
-        //newviz = viz.append("g");
-        // temp
-        //newviz = viz;
-        
+        newdata = seriesData[getidx];
+        console.log(newdata)
+
         var format_date = d3.time.format("%Y").parse; 
 
         minDate = new Date("1898");
@@ -400,18 +406,11 @@
           .x(function (d) { return xpos(format_date(d.label));  })
           .y(function (d) { return ypos(d.value); });
 
-        risksviz = d3.select("#results-content #viz_"+risksID);
-
-        // ** problem is here
-        // look at d3.keys maybe?
-        var series = risksviz.select(".series"+risksID)
-          .data(seriesData[getidx])
-          .enter().append("g")
-          .attr("class", "series_"+country+"_"+risksID);
-
-        series.append("path"+country)
+        var series = d3.select("#results-content #viz_"+risksID)
+          .datum(newdata)
+          .append("path")
           .attr("class", "lines")
-          .attr("id", function(d) { return "line-"+d.name })
+          .attr("id", function(d) { return "line-"+country+"-"+d.name })
           .attr("d", function (d) { return line(d.values); })
 
         get_risk_cnt = $("#results-viz #nav-risks .risks-active");
@@ -424,8 +423,8 @@
 
       // if leftnav active = 1 but risks > 1, stay on large window [done]
 
-      // next, when multiple countries and risks are selected, will need to redraw 
-      // dynamically create svgs inside divs
+      // next, when multiple countries and risks are selected, 
+      // will need to redraw  dynamically create svgs inside divs [done]
 
       }
       function activateLines(count,the_risk, the_cntry) {
