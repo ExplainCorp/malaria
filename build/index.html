@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/reset.css">
   <style type="text/css">
   body { font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;font-size:16px;}
-  #landing-page { margin-top:50px;}
+  #landing-page { margin-top:50px;display:none;}
   #landing-page #landing-header { width:740px;margin:0px auto;text-align: center}
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
@@ -70,12 +70,26 @@
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   #results-viz #results-content { float:left;width:955px;height:600px;background:#f2f2f2}
-  #results-viz .results-content-risk { background:#f8f8f8;margin-top:25px;}
-  #results-viz .results-content-risk:first-child { margin-top:0px;height:400px;}
+  #results-viz .results-content-risk { background:#f8f8f8;margin-top:25px;position: relative}
+  #results-viz .results-content-risk .results-risks-title { position:absolute;top:5px;}
+  #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
   /** d3 stuff **/
   .lines { stroke:blue;fill:none;stroke-width:3px;}
   #line-Brazil-population_RISK_FACTOR { stroke:red;}
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+  } 
+  .tick line { stroke:#ccc;stroke-dasharray: 2, 5;}
+  .tick:first-child line { display:none;}
+  .axis .tick text { font-size:14px;fill:#666;}
+  .axis .tick:first-child text { text-anchor:start !important;}
+  .x .tick text { text-anchor:end !important;}
+  .y .domain { display:none;}
   </style>
   <script>
   $(document).ready(function() {
@@ -97,6 +111,9 @@
       var viz_drugs_RISK_FACTOR;
       var viz_insecticide_resistance_RISK_FACTOR;
       var viz_drug_resistance_RISK_FACTOR;
+      var format_date;
+      var xpos;
+      var ypos;
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -117,6 +134,8 @@
         // active countries draw left-nav [done]
         console.log(data);
         datarisk = data;
+        // temporary, comment this out when landing-page is visible
+        visualize();
       }      
 
       // ** init param object and country list 
@@ -224,10 +243,12 @@
         if (country_list.length == 0) {
           country_list.push("All_Countries");
         }
+        /*
         $("#landing-results-output-test").html("Countries: "+country_list);
         for (p in params) {
           $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
         }
+        */
         visualize();
       });
 
@@ -251,7 +272,8 @@
         get_cnty_cnt = $("#results-viz #nav-left .nav-left-active").length;
 
         $("#results-viz #nav-risks .risks-active").each(function(i) {
-          risks = $("#results-viz #nav-risks li").eq(i).attr("id").split("risks-")[1];
+          idx = $(this).index();
+          risks = $("#results-viz #nav-risks li").eq(idx).attr("id").split("risks-")[1];
           risks_all.push(risks);
         });
         $("#results-viz #nav-left .nav-left-active").each(function(j) {
@@ -259,14 +281,17 @@
           cntrys_all.push(cntrys);
         });        
 
-        console.log(cntrys_all)
-                 
+        //console.log(cntrys_all)
+        //console.log(get_risk_cnt + " " + get_cnty_cnt)
+   
+        /*
         if (get_risk_cnt >= 1 && get_cnty_cnt == 1) {
           activateLines(get_risk_cnt,risks_all, cntrys_all);
         } else {
           divideSpaces(risks_all, get_risk_cnt, cntrys_all);
         }
-
+        */
+        divideSpaces(risks_all, get_risk_cnt, cntrys_all);
       }
 
       function divideSpaces(risks,count,countries) {
@@ -279,13 +304,13 @@
         
         for(i=0;i<count;i++) {
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+risks_all[i]+"</div></div>")
-            createSVG(risks_all[i], risks_height);        
+            createSVG(risks_all[i], risks_height, count);        
         }
 
         for(j=0;j<countries.length;j++) {
           for(k=0;k<risks_all.length;k++) {
-            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j])
-            console.log(countries[j])  
+            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count)
+            //console.log(countries[j])  
           }
         }
         
@@ -295,7 +320,7 @@
       // first draw it off of country_list [done]
       // after draw it off of all_countries + params
       function drawNav(countries) {
-        console.log(countries.length)
+        //console.log(countries.length)
         $("#results-viz #nav-left").html("");
         for (i=0;i<countries.length;i++) {
           $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"</li>")
@@ -306,8 +331,9 @@
       function navLeftEvents() {
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active");
         //console.log(datarisk["Brazil"].elements)
-        //graph_risks(datarisk["Brazil"].elements);
-        
+        // call first graph here
+        navEvents("Brazil");
+
         $("#results-nav-left #nav-left li").on("click", function(e) {
           e.preventDefault();
           $(this).toggleClass("nav-left-active");
@@ -336,7 +362,7 @@
       // risks > 1, each path goes to it's own div [done]
       // draw all countries but hide lines [not necessary]
 
-      function createSVG(riskID, h2) {
+      function createSVG(riskID, h2, count) {
         w = 955;
         h = h2;
         p = 25; // padding
@@ -344,11 +370,62 @@
           .attr("width", w)
           .attr("height", h2)
           .attr("id", "viz_"+riskID)
+
+        format_date = d3.time.format("%Y").parse; 
+
+        minDate = new Date("1/1/1898");
+        // temporary, pull from sheet
+        maxDate = new Date("1/1/2014");
+
+        xpos = d3.time.scale()
+          .domain([minDate,maxDate])
+          .range([p, w-(p*2)]);
+
+        ypos = d3.scale.linear()
+          .domain([0,100])
+          .range([h-p,p]);      
+
+        var xAxis = d3.svg.axis()
+            .scale(xpos)
+            .orient("bottom")
+            .tickValues([minDate,maxDate])
+            .tickFormat(d3.time.format("%Y"))
+            .tickSize(0,0)
+
+        if (count == 1) {
+          yTicks = ["0","25","50","75","100"];
+        } else if (count < 4) {
+          yTicks = ["0","50","100"];
+        } else {
+          yTicks = ["0","100"];
+        }
+
+        var yAxis = d3.svg.axis()
+            .scale(ypos)
+            .orient("right")
+            .tickValues(yTicks)
+            .tickSize(-(w-(p*3)),0)
+
+        all_axis = d3.select("#results-content #viz_"+riskID);
+
+        all_axis.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (h2-p) + ")")
+            .call(xAxis)
+            .selectAll("text")
+            .attr("y", "10px");
+
+        all_axis.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate("+(w-(p*2))+",0)")
+            .call(yAxis)
+            .selectAll("text")
+            .attr("x", "7px")
       }
 
-      function graph_risks(data,risksID,h2,country) {      
+      function graph_risks(data,risksID,h2,country,count) {      
 
-        console.log(risksID)
+        //console.log(risksID)
 
         // create concentrated dataset for lines by removing params
         var labelVar = 'year';
@@ -385,24 +462,10 @@
         });
    
         newdata = seriesData[getidx];
-        console.log(newdata)
-
-        var format_date = d3.time.format("%Y").parse; 
-
-        minDate = new Date("1898");
-        // temporary, pull from sheet
-        maxDate = new Date("2014");
-
-        var xpos = d3.time.scale()
-          .domain([minDate,maxDate])
-          .range([0, w-p]);
-
-        var ypos = d3.scale.linear()
-          .domain([0,100])
-          .range([h-p,p]);
+        //console.log(newdata)
 
         var line = d3.svg.line()
-          .interpolate("cardinal")
+          .interpolate("monotone")
           .x(function (d) { return xpos(format_date(d.label));  })
           .y(function (d) { return ypos(d.value); });
 
@@ -426,7 +489,18 @@
       // next, when multiple countries and risks are selected, 
       // will need to redraw  dynamically create svgs inside divs [done]
 
+      // ** to do
+      // add axis [done]
+      // new: call axis only once per risk, currently multiple [done]
+      // axis style + dynamic y-axis ticks [done]
+      // cases and deaths
+      // hover/toggle interaction
+      // nav bugs
+      // colors
+      // spreadsheet country/param integration, set of check loops
+
       }
+      // this might not be necessary anymore
       function activateLines(count,the_risk, the_cntry) {
         $("#results-viz .lines").hide();
         get_risk_cnt = $("#results-viz #nav-risks .risks-active");
