@@ -69,8 +69,8 @@
   #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
-  #results-viz #results-content { float:left;width:955px;height:600px;background:#f2f2f2}
-  #results-viz .results-content-risk { background:#f8f8f8;margin-top:25px;position: relative}
+  #results-viz #results-content { float:left;width:955px;height:600px;background:white;}
+  #results-viz .results-content-risk { background:#f8f8f8;margin-top:15px;position: relative}
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:5px;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
@@ -393,13 +393,13 @@
             .tickSize(0,0)
 
         if (count == 1) {
-          yTicks = ["0","25","50","75","100"];
+          yTicks = ["0","10","20","30","40","50","60","70","80","90","100"];
         } else if (count < 4) {
           yTicks = ["0","50","100"];
         } else {
           yTicks = ["0","100"];
         }
-
+        
         var yAxis = d3.svg.axis()
             .scale(ypos)
             .orient("right")
@@ -421,6 +421,7 @@
             .call(yAxis)
             .selectAll("text")
             .attr("x", "7px")
+        
       }
 
       function graph_risks(data,risksID,h2,country,count) {      
@@ -904,16 +905,16 @@
     </div>
     <div id="results-nav-risks">
       <ul id="nav-risks">
-        <li class="risks-active" id="risks-population_RISK_FACTOR">Population</li>
+        <li class="risks-active" id="risks-population_RISK_FACTOR">Total Population</li>
         <li id="risks-pop_at_risk_RISK_FACTOR">Population at risk</li>
-        <li id="risks-funding_RISK_FACTOR">Total funding*</li>
+        <li id="risks-funding_RISK_FACTOR">Funding*</li>
         <li id="risks-GDP_per_capita_RISK_FACTOR">GDP per capita*</li>
         <li id="risks-ALL_larval_control_RISK_FACTOR">Larval control</li>
-        <li id="risks-ALL_nets_RISK_FACTOR">Insecticide-treated net*</li>
+        <li id="risks-ALL_nets_RISK_FACTOR">Insecticidal nets</li>
         <li id="risks-IRS_RISK_FACTOR">Indoor residual spraying</li>
-        <li id="risks-drugs_RISK_FACTOR">Antimalarial drug</li>
-        <li id="risks-insecticide_resistance_RISK_FACTOR">Insecticide resistance level</li>
-        <li id="risks-drug_resistance_RISK_FACTOR">Drug resistance level</li>
+        <li id="risks-drugs_RISK_FACTOR">Antimalarial drugs</li>
+        <li id="risks-insecticide_resistance_RISK_FACTOR">Insecticide resistance</li>
+        <li id="risks-drug_resistance_RISK_FACTOR">Drug resistance</li>
       </ul>
       <div class="clear"></div>
     </div>
