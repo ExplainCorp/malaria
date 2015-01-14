@@ -70,7 +70,7 @@
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   #results-viz #results-content { float:left;width:955px;height:600px;background:white;}
-  #results-viz .results-content-risk { background:#f8f8f8;margin-top:15px;position: relative}
+  #results-viz .results-content-risk { background:white;margin-top:15px;position: relative;margin-left:15px;margin-right:35px;}
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:5px;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
@@ -90,6 +90,7 @@
   .axis .tick:first-child text { text-anchor:start !important;}
   .x .tick text { text-anchor:end !important;}
   .y .domain { display:none;}
+  .viz-risks { margin-left:25px;}
   </style>
   <script>
   $(document).ready(function() {
@@ -100,7 +101,7 @@
       var datarisk;
       // ** global d3 variables
       var w,h,p;
-      var viz;
+      var viz, viz_int;
       var viz_population_RISK_FACTOR;
       var viz_pop_at_risk_RISK_FACTOR;
       var viz_funding_RISK_FACTOR;
@@ -363,13 +364,20 @@
       // draw all countries but hide lines [not necessary]
 
       function createSVG(riskID, h2, count) {
+        p = 25; // padding
         w = 955;
         h = h2;
-        p = 25; // padding
         viz = d3.select("#results-content #"+riskID).append("svg")
           .attr("width", w)
-          .attr("height", h2)
+          .attr("height", h)
           .attr("id", "viz_"+riskID)
+          .attr("class", "viz-visks")
+
+        viz.append("rect")
+          .attr("width", w-(p*2))
+          .attr("height", h-(p))
+          .attr("class", "background-class")
+          .style("fill", "#f2f2f2")
 
         format_date = d3.time.format("%Y").parse; 
 
@@ -379,11 +387,11 @@
 
         xpos = d3.time.scale()
           .domain([minDate,maxDate])
-          .range([p, w-(p*2)]);
+          .range([0, w-(p*2)]);
 
         ypos = d3.scale.linear()
           .domain([0,100])
-          .range([h-p,p]);      
+          .range([h-p,5]);      
 
         var xAxis = d3.svg.axis()
             .scale(xpos)
@@ -399,29 +407,47 @@
         } else {
           yTicks = ["0","100"];
         }
-        
+
         var yAxis = d3.svg.axis()
             .scale(ypos)
             .orient("right")
             .tickValues(yTicks)
-            .tickSize(-(w-(p*3)),0)
+            .tickSize(-(w-(p*2)),0)
 
         all_axis = d3.select("#results-content #viz_"+riskID);
-
+        
         all_axis.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (h2-p) + ")")
+            .attr("transform", "translate(0," + (h2-(p)) + ")")
             .call(xAxis)
             .selectAll("text")
             .attr("y", "10px");
-
+        
         all_axis.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+(w-(p*2))+",0)")
             .call(yAxis)
             .selectAll("text")
-            .attr("x", "7px")
-        
+            .attr("x", "10px")
+
+          modifyLabels();
+      }
+
+      function modifyLabels() {
+        d3.selection.prototype.first = function() {
+          return d3.select(this[0][0]);
+        };
+        d3.selection.prototype.last = function() {
+          var last = this.size() - 1;
+          return d3.select(this[0][last]);
+        };
+
+        var tickLabels = all_axis.selectAll('.y .tick text');
+
+        tickLabels.first()
+          .attr('transform','translate(0,-5)');
+        tickLabels.last()
+          .attr('transform','translate(0,7)');        
       }
 
       function graph_risks(data,risksID,h2,country,count) {      
