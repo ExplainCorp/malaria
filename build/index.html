@@ -69,9 +69,9 @@
   #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
-  #results-viz #results-content { float:left;width:955px;height:600px;background:white;}
-  #results-viz .results-content-risk { background:white;margin-top:15px;position: relative;margin-left:15px;margin-right:35px;}
-  #results-viz .results-content-risk .results-risks-title { position:absolute;top:5px;}
+  #results-viz #results-content { float:left;width:955px;background:white;}
+  #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
+  #results-viz .results-content-risk .results-risks-title { position:absolute;top:5px;left:5px;font-size:12px;font-color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
   /** d3 stuff **/
@@ -86,11 +86,18 @@
   } 
   .tick line { stroke:#ccc;stroke-dasharray: 2, 5;}
   .tick:first-child line { display:none;}
-  .axis .tick text { font-size:14px;fill:#666;}
+  .axis .tick text { font-size:12px;fill:#666;}
   .axis .tick:first-child text { text-anchor:start !important;}
-  .x .tick text { text-anchor:end !important;}
+  .x .tick text { text-anchor:end !important;font-size:16px;}
   .y .domain { display:none;}
   .viz-risks { margin-left:25px;}
+  /** cases death **/
+  #results-viz #cases-death { width:1100px;height:300px;}
+  #results-viz #cd-nav-left { width:145px;background:silver;float:left;}
+  #results-viz #cd-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
+  #results-viz #cd-nav-left {color:#666666;}
+  #results-viz #cd-nav-left li { padding:15px;display: inline-block;cursor:pointer;}
+  #results-viz #cd-nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   </style>
   <script>
   $(document).ready(function() {
@@ -297,16 +304,20 @@
 
       function divideSpaces(risks,count,countries) {
         $("#results-viz #results-content").html("");
+        // set height of first div that divides
+        set_height = 600;
         if (count<=5) {
-          risks_height = $("#results-viz #results-content").height()/count;
+          risks_height = set_height/count;
         } else {
-          risks_height = $("#results-viz #results-content").height()/5;
+          risks_height = set_height/5;
         }
         
         for(i=0;i<count;i++) {
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+risks_all[i]+"</div></div>")
             createSVG(risks_all[i], risks_height, count);        
         }
+
+        //$("#results-viz #results-content").append("<div class='clear'></div>");
 
         for(j=0;j<countries.length;j++) {
           for(k=0;k<risks_all.length;k++) {
@@ -960,6 +971,23 @@
       <div class="results-content-risk"></div>
     </div>
     <div class="clear"></div>
+    
+    <div id="cases-deaths">
+      <div id="cd-nav-left">
+        <p>Cases and deaths</p>
+        <ul id="cd-nav-left">
+          <li>Cases</li>
+          <li>Deaths</li>
+          <li>Both</li> 
+        </ul>
+        <div class="clear"></div>
+      </div>
+      <div id="cd-results-content">
+        <div class="cd-results-content-risk"></div> 
+      </div>
+    <div class="clear"></div>      
+
+    </div>
   </div>
 </body>
 </html>
