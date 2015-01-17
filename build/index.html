@@ -93,11 +93,13 @@
   .viz-risks { margin-left:25px;}
   /** cases death **/
   #results-viz #cases-death { width:1100px;height:300px;}
+  #results-viz #cd-results-content { float:left;width:955px;background:white;}
   #results-viz #cd-nav-left { width:145px;background:silver;float:left;}
   #results-viz #cd-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
   #results-viz #cd-nav-left {color:#666666;}
   #results-viz #cd-nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #cd-nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
+  #results-viz #viz_CD { margin-left:15px;margin-right:35px;position: relative; }
   </style>
   <script>
   $(document).ready(function() {
@@ -106,9 +108,29 @@
       var params = {};
       var country_list = []; 
       var datarisk;
+      var datariskCD;
       // ** global d3 variables
       var w,h,p;
-      var viz, viz_int;
+      var viz, viz_int, vizCD;
+        // create concentrated dataset for lines by removing params
+      var labelVar = 'year';
+      var param1 = 'intervention_index_PARAM';
+      var param2 = 'development_index_PARAM';
+      var param3 = 'vector_behavior_index_PARAM';
+      var param4 = 'climate_index_PARAM';
+      var param5 = 'transmission_index_PARAM';
+      var risk1 = 'population_RISK_FACTOR';
+      var risk2 = 'pop_at_risk_RISK_FACTOR';
+      var risk3 = 'GDP_per_capita_RISK_FACTOR';
+      var risk4 = 'funding_RISK_FACTOR';
+      var risk5 = 'ALL_larval_control_RISK_FACTOR';
+      var risk6 = 'ALL_nets_RISK_FACTOR';
+      var risk7 = 'IRS_RISK_FACTOR';
+      var risk8 = 'drugs_RISK_FACTOR';
+      var risk9 = 'insecticide_resistance_RISK_FACTOR';
+      var risk10 = 'drug_resistance_RISK_FACTOR';
+      var mc = 'malaria_cases';
+      var md = 'malaria_deaths';
       var viz_population_RISK_FACTOR;
       var viz_pop_at_risk_RISK_FACTOR;
       var viz_funding_RISK_FACTOR;
@@ -122,6 +144,10 @@
       var format_date;
       var xpos;
       var ypos;
+      var minDate, maxDate;
+      var xAxis, yAxis;
+      var seriesDataCD;
+      var varNames, varNamesCD;
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -142,6 +168,7 @@
         // active countries draw left-nav [done]
         console.log(data);
         datarisk = data;
+        datariskCD = data;
         // temporary, comment this out when landing-page is visible
         visualize();
       }      
@@ -273,6 +300,7 @@
 
       function navEvents(navActive) {
         // reset arrays on every click
+        console.log("4. navEvents()")
         risks_all.length = 0;
         cntrys_all.length = 0;
 
@@ -303,6 +331,7 @@
       }
 
       function divideSpaces(risks,count,countries) {
+        console.log("5 divideSpaces()")
         $("#results-viz #results-content").html("");
         // set height of first div that divides
         set_height = 600;
@@ -313,10 +342,12 @@
         }
         
         for(i=0;i<count;i++) {
-          $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+risks_all[i]+"</div></div>")
+          get_title = $("#results-viz #nav-risks li#risks-"+risks_all[i]).text();
+
+          $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+get_title+"</div></div>")
             createSVG(risks_all[i], risks_height, count);        
         }
-
+        console.log("6. createSvg")
         //$("#results-viz #results-content").append("<div class='clear'></div>");
 
         for(j=0;j<countries.length;j++) {
@@ -325,6 +356,7 @@
             //console.log(countries[j])  
           }
         }
+        console.log("7. graphRisks")
         
       }
 
@@ -333,18 +365,22 @@
       // after draw it off of all_countries + params
       function drawNav(countries) {
         //console.log(countries.length)
+        console.log("2. drawNav()")
         $("#results-viz #nav-left").html("");
         for (i=0;i<countries.length;i++) {
           $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"</li>")
         }
         navLeftEvents();
+
       }
 
       function navLeftEvents() {
+        console.log("3. navLeftEvents()")
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active");
         //console.log(datarisk["Brazil"].elements)
         // call first graph here
         navEvents("Brazil");
+        vizCD(datariskCD["Brazil"].elements)
 
         $("#results-nav-left #nav-left li").on("click", function(e) {
           e.preventDefault();
@@ -362,11 +398,13 @@
 
       function visualize() {
         // for testing purposes just have three countries here
+        console.log("1. visualize()")
         country_list = [];
         country_list.push("Brazil");
         country_list.push("Congo");
         country_list.push("Chad");
         drawNav(country_list);
+
       }
 
       // d3 viz comes here
@@ -404,7 +442,7 @@
           .domain([0,100])
           .range([h-p,5]);      
 
-        var xAxis = d3.svg.axis()
+        xAxis = d3.svg.axis()
             .scale(xpos)
             .orient("bottom")
             .tickValues([minDate,maxDate])
@@ -419,7 +457,7 @@
           yTicks = ["0","100"];
         }
 
-        var yAxis = d3.svg.axis()
+        yAxis = d3.svg.axis()
             .scale(ypos)
             .orient("right")
             .tickValues(yTicks)
@@ -464,19 +502,10 @@
       function graph_risks(data,risksID,h2,country,count) {      
 
         //console.log(risksID)
+        varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
 
-        // create concentrated dataset for lines by removing params
-        var labelVar = 'year';
-        var param1 = 'intervention_index_PARAM';
-        var param2 = 'development_index_PARAM';
-        var param3 = 'vector_behavior_index_PARAM';
-        var param4 = 'climate_index_PARAM';
-        var param5 = 'transmission_index_PARAM';
-        var mc = 'malaria_cases';
-        var md = 'malaria_deaths';
-        var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
-
-
+        console.log(varNames)
+                                                                    
         // target data
         // there might be a better way to do this, will revisit later
         if (risksID == "population_RISK_FACTOR") getidx = 0;         
@@ -538,6 +567,97 @@
       // spreadsheet country/param integration, set of check loops
 
       }
+
+      function vizCD(data) {
+        p = 25; // padding
+        w = 955;
+        hCD = 300;
+        count = 3;
+
+        var varNamesCD = d3.keys(data[0]).filter(function (keyCD) { return keyCD !== labelVar && keyCD != param1 && keyCD != param2 && keyCD != param3 && keyCD != param4 && keyCD != param5 && keyCD != risk1 && keyCD != risk2 && keyCD != risk3 && keyCD != risk4 && keyCD != risk5 && keyCD != risk6 && keyCD != risk7 && keyCD != risk8 && keyCD != risk9 && keyCD != risk10; });
+
+        console.log(varNamesCD)
+
+        var seriesDataCD = varNamesCD.map(function (name) {
+          return {
+            name: name,
+            values: data.map(function (d) {
+              return {name: name, label: d[labelVar], value: +d[name]};
+            })
+          };
+        });
+
+        //console.log(seriesDataCD)
+
+        vizCD = d3.select("#results-viz .cd-results-content-risk").append("svg")
+          .attr("width", w)
+          .attr("height", hCD)
+          .attr("id", "viz_CD");
+
+        vizCD.append("rect")
+          .attr("width", w-(p*2))
+          .attr("height", hCD-(p))
+          .attr("class", "background-class")
+          .style("fill", "#f2f2f2")
+
+        yposCD = d3.scale.linear()
+          .domain([0,100])
+          .range([hCD-p,5]);   
+
+        xAxis = d3.svg.axis()
+            .scale(xpos)
+            .orient("bottom")
+            .tickValues([minDate,maxDate])
+            .tickFormat(d3.time.format("%Y"))
+            .tickSize(0,0)
+
+        if (count == 1) {
+          yTicks = ["0","10","20","30","40","50","60","70","80","90","100"];
+        } else if (count < 4) {
+          yTicks = ["0","50","100"];
+        } else {
+          yTicks = ["0","100"];
+        }
+
+        yAxisCD = d3.svg.axis()
+            .scale(yposCD)
+            .orient("right")
+            .tickValues(yTicks)
+            .tickSize(-(w-(p*2)),0)
+
+        all_axisCD = d3.select("#cd-results-content #viz_CD");
+        
+        all_axisCD.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (hCD-(p)) + ")")
+            .call(xAxis)
+            .selectAll("text")
+            .attr("y", "10px");
+        
+        all_axisCD.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate("+(w-(p*2))+",0)")
+            .call(yAxisCD)
+            .selectAll("text")
+            .attr("x", "10px")
+
+          modifyLabels();        
+
+        var line = d3.svg.line()
+          .interpolate("monotone")
+          .x(function (d) { return xpos(format_date(d.label));  })
+          .y(function (d) { return yposCD(d.value); });
+
+        var seriesCD = d3.select("#cd-results-content #viz_CD")
+          .datum(seriesDataCD[0])
+          .append("path")
+          .attr("class", "lines")
+          .attr("id", function(d) { return (d.name) })
+          .attr("d", function (d) { return line(d.values) })
+
+
+      }
+
       // this might not be necessary anymore
       function activateLines(count,the_risk, the_cntry) {
         $("#results-viz .lines").hide();
@@ -971,7 +1091,7 @@
       <div class="results-content-risk"></div>
     </div>
     <div class="clear"></div>
-    
+
     <div id="cases-deaths">
       <div id="cd-nav-left">
         <p>Cases and deaths</p>
