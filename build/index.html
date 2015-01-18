@@ -110,7 +110,7 @@
       var datarisk;
       var datariskCD;
       // ** global d3 variables
-      var w,h,p;
+      var w,h,hCD,p;
       var viz, viz_int, vizCD;
         // create concentrated dataset for lines by removing params
       var labelVar = 'year';
@@ -278,7 +278,7 @@
         if (country_list.length == 0) {
           country_list.push("All_Countries");
         }
-        /*
+        /* testing purposes
         $("#landing-results-output-test").html("Countries: "+country_list);
         for (p in params) {
           $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
@@ -300,7 +300,6 @@
 
       function navEvents(navActive) {
         // reset arrays on every click
-        console.log("4. navEvents()")
         risks_all.length = 0;
         cntrys_all.length = 0;
 
@@ -317,21 +316,14 @@
           cntrys_all.push(cntrys);
         });        
 
-        //console.log(cntrys_all)
-        //console.log(get_risk_cnt + " " + get_cnty_cnt)
-   
-        /*
-        if (get_risk_cnt >= 1 && get_cnty_cnt == 1) {
-          activateLines(get_risk_cnt,risks_all, cntrys_all);
-        } else {
-          divideSpaces(risks_all, get_risk_cnt, cntrys_all);
-        }
-        */
         divideSpaces(risks_all, get_risk_cnt, cntrys_all);
+
+        // this area is for drawing cases/deaths for selected countries
+        $("#results-viz .cd-results-content-risk").html("");
+        createSVG_CD(cntrys_all);
       }
 
       function divideSpaces(risks,count,countries) {
-        console.log("5 divideSpaces()")
         $("#results-viz #results-content").html("");
         // set height of first div that divides
         set_height = 600;
@@ -341,23 +333,20 @@
           risks_height = set_height/5;
         }
         
+        // get risk count and create separate svgs
         for(i=0;i<count;i++) {
           get_title = $("#results-viz #nav-risks li#risks-"+risks_all[i]).text();
 
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+get_title+"</div></div>")
             createSVG(risks_all[i], risks_height, count);        
         }
-        console.log("6. createSvg")
-        //$("#results-viz #results-content").append("<div class='clear'></div>");
 
+        // call risks viz function here
         for(j=0;j<countries.length;j++) {
           for(k=0;k<risks_all.length;k++) {
             graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count)
-            //console.log(countries[j])  
           }
-        }
-        console.log("7. graphRisks")
-        
+        }        
       }
 
       // draw left-nav based off country_list or param filters w/ All Countries
@@ -365,7 +354,6 @@
       // after draw it off of all_countries + params
       function drawNav(countries) {
         //console.log(countries.length)
-        console.log("2. drawNav()")
         $("#results-viz #nav-left").html("");
         for (i=0;i<countries.length;i++) {
           $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"</li>")
@@ -375,12 +363,10 @@
       }
 
       function navLeftEvents() {
-        console.log("3. navLeftEvents()")
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active");
         //console.log(datarisk["Brazil"].elements)
         // call first graph here
         navEvents("Brazil");
-        vizCD(datariskCD["Brazil"].elements)
 
         $("#results-nav-left #nav-left li").on("click", function(e) {
           e.preventDefault();
@@ -398,7 +384,6 @@
 
       function visualize() {
         // for testing purposes just have three countries here
-        console.log("1. visualize()")
         country_list = [];
         country_list.push("Brazil");
         country_list.push("Congo");
@@ -407,11 +392,7 @@
 
       }
 
-      // d3 viz comes here
-      // ** REWORK **
-      // risks > 1, each path goes to it's own div [done]
-      // draw all countries but hide lines [not necessary]
-
+      // risk svg's are separate to avoid duplicates
       function createSVG(riskID, h2, count) {
         p = 25; // padding
         w = 955;
@@ -482,6 +463,7 @@
           modifyLabels();
       }
 
+      // typographic adjustments on the labels
       function modifyLabels() {
         d3.selection.prototype.first = function() {
           return d3.select(this[0][0]);
@@ -499,12 +481,10 @@
           .attr('transform','translate(0,7)');        
       }
 
+      // visualize risks
       function graph_risks(data,risksID,h2,country,count) {      
 
-        //console.log(risksID)
         varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
-
-        console.log(varNames)
                                                                     
         // target data
         // there might be a better way to do this, will revisit later
@@ -552,7 +532,6 @@
         })
 
       // if leftnav active = 1 but risks > 1, stay on large window [done]
-
       // next, when multiple countries and risks are selected, 
       // will need to redraw  dynamically create svgs inside divs [done]
 
@@ -560,7 +539,9 @@
       // add axis [done]
       // new: call axis only once per risk, currently multiple [done]
       // axis style + dynamic y-axis ticks [done]
-      // cases and deaths
+      // cases and deaths [done]
+      // cases and deaths fix svg and country multiple [done]
+      // look into voroni hover
       // hover/toggle interaction
       // nav bugs
       // colors
@@ -568,26 +549,12 @@
 
       }
 
-      function vizCD(data) {
+      // create one svg for cases and deaths
+      function createSVG_CD(countries) {
         p = 25; // padding
         w = 955;
         hCD = 300;
         count = 3;
-
-        var varNamesCD = d3.keys(data[0]).filter(function (keyCD) { return keyCD !== labelVar && keyCD != param1 && keyCD != param2 && keyCD != param3 && keyCD != param4 && keyCD != param5 && keyCD != risk1 && keyCD != risk2 && keyCD != risk3 && keyCD != risk4 && keyCD != risk5 && keyCD != risk6 && keyCD != risk7 && keyCD != risk8 && keyCD != risk9 && keyCD != risk10; });
-
-        console.log(varNamesCD)
-
-        var seriesDataCD = varNamesCD.map(function (name) {
-          return {
-            name: name,
-            values: data.map(function (d) {
-              return {name: name, label: d[labelVar], value: +d[name]};
-            })
-          };
-        });
-
-        //console.log(seriesDataCD)
 
         vizCD = d3.select("#results-viz .cd-results-content-risk").append("svg")
           .attr("width", w)
@@ -641,24 +608,55 @@
             .selectAll("text")
             .attr("x", "10px")
 
-          modifyLabels();        
+          modifyLabels();      
+
+        // draw cases and deaths lines
+        for(j=0;j<countries.length;j++) {
+         viz_CD(datariskCD[countries[j]].elements, countries[j]);
+        }  
+        
+      }
+
+      // visualize cases and deaths
+      function viz_CD(data, country) {
+
+        // create new data w/ just cases and deaths
+        var varNamesCD = d3.keys(data[0]).filter(function (keyCD) { return keyCD !== labelVar && keyCD != param1 && keyCD != param2 && keyCD != param3 && keyCD != param4 && keyCD != param5 && keyCD != risk1 && keyCD != risk2 && keyCD != risk3 && keyCD != risk4 && keyCD != risk5 && keyCD != risk6 && keyCD != risk7 && keyCD != risk8 && keyCD != risk9 && keyCD != risk10; });
+
+        var seriesDataCD = varNamesCD.map(function (name) {
+          return {
+            name: name,
+            values: data.map(function (d) {
+              return {name: name, label: d[labelVar], value: +d[name]};
+            })
+          };
+        });
 
         var line = d3.svg.line()
           .interpolate("monotone")
           .x(function (d) { return xpos(format_date(d.label));  })
           .y(function (d) { return yposCD(d.value); });
 
-        var seriesCD = d3.select("#cd-results-content #viz_CD")
+        // cases path
+        var seriesCD_c = d3.select("#cd-results-content #viz_CD")
           .datum(seriesDataCD[0])
           .append("path")
-          .attr("class", "lines")
-          .attr("id", function(d) { return (d.name) })
+          .attr("class", function(d) { return "lines cd-"+d.name})
+          .attr("id", function(d) { return "cd-"+d.name+"-"+country })
           .attr("d", function (d) { return line(d.values) })
 
+        // deaths path
+        var seriesCD_d = d3.select("#cd-results-content #viz_CD")
+          .datum(seriesDataCD[1])
+          .append("path")
+          .attr("class", function(d) { return "lines cd-"+d.name})
+          .attr("id", function(d) { return "cd-"+d.name+"-"+country })
+          .attr("d", function (d) { return line(d.values) })
 
       }
 
       // this might not be necessary anymore
+      /*
       function activateLines(count,the_risk, the_cntry) {
         $("#results-viz .lines").hide();
         get_risk_cnt = $("#results-viz #nav-risks .risks-active");
@@ -668,7 +666,7 @@
           $("#results-viz #"+the_risk+" #"+init_line).show();
         })       
       }
-
+      */
 
   });
   </script>
