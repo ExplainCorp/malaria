@@ -54,7 +54,7 @@
   #country-container .ui-selectmenu-button { width:300px !important;}
   #country-container .ui-selectmenu-button span.ui-selectmenu-text { line-height:25px;}
   /** results viz **/
-  #results-viz { width:1100px;margin:0px auto 100px auto;background:beige;}
+  #results-viz { width:1100px;margin:0px auto 100px auto;background:white;}
   #results-viz a { text-decoration: none;}
   #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
   #results-viz .results-header-countries { margin-top:15px;}
@@ -64,7 +64,7 @@
   #results-viz #nav-risks li:hover { background:#bbb;color:#777;}
   #results-viz #nav-risks li:first-child, #results-viz #nav-risks li:nth-child(6) { margin-left:0px;}
   #results-viz #nav-risks li.risks-active { background:#777;color:#f5f5f5;}
-  #results-viz #results-nav-left { width:145px;background:silver;float:left;}
+  #results-viz #results-nav-left { width:145px;background:white;float:left;}
   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
   #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
@@ -93,7 +93,7 @@
   /** cases death **/
   #results-viz #cases-death { width:1100px;height:300px;}
   #results-viz #cd-results-content { float:left;width:955px;background:white;}
-  #results-viz #cd-nav-left { width:145px;background:silver;float:left;}
+  #results-viz #cd-nav-left { width:145px;background:white;float:left;}
   #results-viz #cd-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
   #results-viz #cd-nav-left {color:#666666;}
   #results-viz #cd-nav-left li { padding:15px;display: inline-block;cursor:pointer;}
@@ -525,6 +525,15 @@
           .attr("id", function(d) { return "line-"+country+"-"+d.name })
           .attr("d", function (d) { return line(d.values); })
 
+        var series_text = d3.select("#results-content #viz_"+risksID)
+          .datum(newdata)
+          .append("text")
+          .attr("x", 5)
+          .attr("y", function(d) { return ypos(d.values[0].value)-10 })
+          .text(country)
+
+        
+        /*
         get_risk_cnt = $("#results-viz #nav-risks .risks-active");
 
         get_risk_cnt.each(function (s) {
@@ -532,7 +541,7 @@
           init_line = $(this).attr("id").replace("risks-","line-");
           $("#results-viz #"+init_line).show();
         })
-
+        */
       // if leftnav active = 1 but risks > 1, stay on large window [done]
       // next, when multiple countries and risks are selected, 
       // will need to redraw  dynamically create svgs inside divs [done]
@@ -543,7 +552,7 @@
       // axis style + dynamic y-axis ticks [done]
       // cases and deaths [done]
       // cases and deaths fix svg and country multiple [done]
-      // look into voroni hover
+      // look into voroni hover [maybe]
       // hover/toggle interaction
       // nav bugs
       // colors
@@ -657,6 +666,14 @@
           .attr("d", function (d) { return line(d.values) })
 
           navEventsCD("Cases");
+
+        var series_text = d3.select("#cd-results-content #viz_CD")
+          .datum(seriesDataCD[0])
+          .append("text")
+          .attr("x", 5)
+          .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
+          .text(country)
+
       }
 
       $("#results-viz #cd-nav-left li").on("click", function(e) {
