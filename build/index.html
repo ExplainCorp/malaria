@@ -71,12 +71,11 @@
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   #results-viz #results-content { float:left;width:955px;background:white;}
   #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
-  #results-viz .results-content-risk .results-risks-title { position:absolute;top:5px;left:5px;font-size:12px;font-color:#777;}
+  #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:12px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
   /** d3 stuff **/
-  .lines { stroke:blue;fill:none;stroke-width:3px;}
-  #line-Brazil-population_RISK_FACTOR { stroke:red;}
+  .lines { stroke:#999;fill:none;stroke-width:3px;}
   .axis path,
   .axis line {
     fill: none;
@@ -100,6 +99,8 @@
   #results-viz #cd-nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #cd-nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   #results-viz #viz_CD { margin-left:15px;margin-right:35px;position: relative; }
+  #results-viz #cd-nav-left .cd-nav-left-active { background:#22b573;color:white;border-radius:5px;}
+
   </style>
   <script>
   $(document).ready(function() {
@@ -643,7 +644,7 @@
         var seriesCD_c = d3.select("#cd-results-content #viz_CD")
           .datum(seriesDataCD[0])
           .append("path")
-          .attr("class", function(d) { return "lines cd-"+d.name})
+          .attr("class", function(d) { return "lines lines-cd cd-"+d.name})
           .attr("id", function(d) { return "cd-"+d.name+"-"+country })
           .attr("d", function (d) { return line(d.values) })
 
@@ -651,24 +652,39 @@
         var seriesCD_d = d3.select("#cd-results-content #viz_CD")
           .datum(seriesDataCD[1])
           .append("path")
-          .attr("class", function(d) { return "lines cd-"+d.name})
+          .attr("class", function(d) { return "lines lines-cd cd-"+d.name})
           .attr("id", function(d) { return "cd-"+d.name+"-"+country })
           .attr("d", function (d) { return line(d.values) })
 
+          navEventsCD("Cases");
       }
 
-      // this might not be necessary anymore
-      /*
-      function activateLines(count,the_risk, the_cntry) {
-        $("#results-viz .lines").hide();
-        get_risk_cnt = $("#results-viz #nav-risks .risks-active");
-        get_risk_cnt.each(function (s) {
-          //activate
-          init_line = $(this).attr("id").replace("risks-","line-");
-          $("#results-viz #"+the_risk+" #"+init_line).show();
-        })       
+      $("#results-viz #cd-nav-left li").on("click", function(e) {
+        e.preventDefault();
+        $("#results-viz #cd-nav-left li").removeClass("cd-nav-left-active");
+        $(this).toggleClass("cd-nav-left-active");
+        getCDid = $(this).text();
+        navEventsCD(getCDid);
+      })
+
+      function navEventsCD(getCDid) {
+        $("#results-viz .lines-cd").hide();
+
+        if (getCDid == "Cases") {
+          $("#results-viz .cd-malaria_cases").show(); 
+          $("#results-viz .cd-malaria_deaths").hide();  
+        } else if (getCDid == "Deaths") {
+          $("#results-viz .cd-malaria_cases").hide();
+          $("#results-viz .cd-malaria_deaths").show();   
+        } else {
+          $("#results-viz .cd-malaria_cases").show();
+          $("#results-viz .cd-malaria_deaths").show();             
+        }
+
+
       }
-      */
+
+
 
   });
   </script>
@@ -1096,7 +1112,7 @@
       <div id="cd-nav-left">
         <p>Cases and deaths</p>
         <ul id="cd-nav-left">
-          <li>Cases</li>
+          <li class="cd-nav-left-active">Cases</li>
           <li>Deaths</li>
           <li>Both</li> 
         </ul>
