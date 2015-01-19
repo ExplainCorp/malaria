@@ -59,7 +59,7 @@
   #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
   #results-viz .results-header-countries { margin-top:15px;}
   #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
-  #results-nav-risks { margin:25px 0px;background:#f7f7f7;}
+  #results-nav-risks { margin:25px 0px 35px 0px;background:#f7f7f7;}
   #results-viz #nav-risks li { float:left;padding:15px 0px 15px 15px;background: #ccc;color:#555;margin-left:1px;cursor:pointer;font-size:16px;width:204px;margin-top:1px;}
   #results-viz #nav-risks li:hover { background:#bbb;color:#777;}
   #results-viz #nav-risks li:first-child, #results-viz #nav-risks li:nth-child(6) { margin-left:0px;}
@@ -69,7 +69,7 @@
   #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
-  #results-viz #results-content { float:left;width:955px;background:white;}
+  #results-viz #results-content { float:left;width:955px;background:white;margin-bottom:30px;}
   #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:12px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
@@ -339,7 +339,7 @@
           get_title = $("#results-viz #nav-risks li#risks-"+risks_all[i]).text();
 
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+get_title+"</div></div>")
-            createSVG(risks_all[i], risks_height, count);        
+            createSVG(risks_all[i], risks_height, count, i);        
         }
 
         // call risks viz function here
@@ -394,10 +394,17 @@
       }
 
       // risk svg's are separate to avoid duplicates
-      function createSVG(riskID, h2, count) {
+      function createSVG(riskID, h2, count, idx) {
         p = 25; // padding
         w = 955;
         h = h2;
+
+        if ((idx+1)==count) { 
+          h = h2;
+        } else {
+          h = h2 + p;
+        }
+
         viz = d3.select("#results-content #"+riskID).append("svg")
           .attr("width", w)
           .attr("height", h)
@@ -426,11 +433,11 @@
           .range([h-p,5]);      
 
         xAxis = d3.svg.axis()
-            .scale(xpos)
-            .orient("bottom")
-            .tickValues([minDate,maxDate])
-            .tickFormat(d3.time.format("%Y"))
-            .tickSize(0,0)
+          .scale(xpos)
+          .orient("bottom")
+          .tickValues([minDate,maxDate])
+          .tickFormat(d3.time.format("%Y"))
+          .tickSize(0,0)
 
         if (count == 1) {
           yTicks = ["0","10","20","30","40","50","60","70","80","90","100"];
@@ -441,20 +448,23 @@
         }
 
         yAxis = d3.svg.axis()
-            .scale(ypos)
-            .orient("right")
-            .tickValues(yTicks)
-            .tickSize(-(w-(p*2)),0)
+          .scale(ypos)
+          .orient("right")
+          .tickValues(yTicks)
+          .tickSize(-(w-(p*2)),0)
+        
 
         all_axis = d3.select("#results-content #viz_"+riskID);
-        
-        all_axis.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + (h2-(p)) + ")")
-            .call(xAxis)
-            .selectAll("text")
-            .attr("y", "10px");
-        
+
+        if ((idx+1)==count) {           
+          all_axis.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + (h2-(p)) + ")")
+              .call(xAxis)
+              .selectAll("text")
+              .attr("y", "10px");
+        }        
+ 
         all_axis.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+(w-(p*2))+",0)")
