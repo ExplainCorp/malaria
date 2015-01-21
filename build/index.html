@@ -92,7 +92,7 @@
   .viz-risks { margin-left:25px;}
   /** cases death **/
   #results-viz #cases-death { width:1100px;height:300px;}
-  #results-viz #cd-results-content { float:left;width:955px;background:white;}
+  #results-viz #cd-results-content { float:left;width:955px;background:white;position:relative;}
   #results-viz #cd-nav-left { width:145px;background:white;float:left;}
   #results-viz #cd-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
   #results-viz #cd-nav-left {color:#666666;}
@@ -100,7 +100,8 @@
   #results-viz #cd-nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
   #results-viz #viz_CD { margin-left:15px;margin-right:35px;position: relative; }
   #results-viz #cd-nav-left .cd-nav-left-active { background:#22b573;color:white;border-radius:5px;}
-
+  #results-viz .cd-text-cases, #results-viz .cd-text-deaths { display:none;font-size:12px;color:#777;}
+  #results-viz .cd-results-risks-title { position:absolute;top:15px;left:20px;font-size:12px;color:#777;}
   </style>
   <script>
   $(document).ready(function() {
@@ -148,6 +149,7 @@
       var minDate, maxDate;
       var xAxis, yAxis;
       var seriesDataCD;
+      var all_axis, all_axisCD;
       var varNames, varNamesCD;
 
       // ** pull data from spreadsheet into json via tabletop.js
@@ -475,24 +477,6 @@
           modifyLabels();
       }
 
-      // typographic adjustments on the labels
-      function modifyLabels() {
-        d3.selection.prototype.first = function() {
-          return d3.select(this[0][0]);
-        };
-        d3.selection.prototype.last = function() {
-          var last = this.size() - 1;
-          return d3.select(this[0][last]);
-        };
-
-        var tickLabels = all_axis.selectAll('.y .tick text');
-
-        tickLabels.first()
-          .attr('transform','translate(0,-5)');
-        tickLabels.last()
-          .attr('transform','translate(0,7)');        
-      }
-
       // visualize risks
       function graph_risks(data,risksID,h2,country,count) {      
 
@@ -630,14 +614,50 @@
             .selectAll("text")
             .attr("x", "10px")
 
-          modifyLabels();      
+          modifyLabelsCD();      
 
         // draw cases and deaths lines
         for(j=0;j<countries.length;j++) {
          viz_CD(datariskCD[countries[j]].elements, countries[j]);
-        }  
-        
+        }          
       }
+
+      // typographic adjustments on the labels
+      function modifyLabels() {
+        d3.selection.prototype.first = function() {
+          return d3.select(this[0][0]);
+        };
+        d3.selection.prototype.last = function() {
+          var last = this.size() - 1;
+          return d3.select(this[0][last]);
+        };
+
+        var tickLabels = all_axis.selectAll('.y .tick text');
+
+        tickLabels.first()
+          .attr('transform','translate(0,-5)');
+        tickLabels.last()
+          .attr('transform','translate(0,7)');        
+      } 
+
+      function modifyLabelsCD() {
+        d3.selection.prototype.first = function() {
+          return d3.select(this[0][0]);
+        };
+        d3.selection.prototype.last = function() {
+          var last = this.size() - 1;
+          return d3.select(this[0][last]);
+        };
+
+        var tickLabels = all_axisCD.selectAll('.y .tick text');
+
+        tickLabels.first()
+          .attr('transform','translate(0,-5)');
+        tickLabels.last()
+          .attr('transform','translate(0,7)');        
+
+      } 
+
 
       // visualize cases and deaths
       function viz_CD(data, country) {
@@ -675,14 +695,23 @@
           .attr("id", function(d) { return "cd-"+d.name+"-"+country })
           .attr("d", function (d) { return line(d.values) })
 
-          navEventsCD("Cases");
-
         var series_text = d3.select("#cd-results-content #viz_CD")
           .datum(seriesDataCD[0])
           .append("text")
+          .attr("class", "cd-text-cases")
           .attr("x", 5)
           .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
-          .text(country)
+          .text("Cases: "+country)
+
+        var series_text = d3.select("#cd-results-content #viz_CD")
+          .datum(seriesDataCD[1])
+          .append("text")
+          .attr("class", "cd-text-deaths")
+          .attr("x", 5)
+          .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
+          .text("Deaths: "+country)          
+
+        navEventsCD("Cases");
 
       }
 
@@ -696,14 +725,30 @@
 
       function navEventsCD(getCDid) {
         $("#results-viz .lines-cd").hide();
+        $("#results-viz .cd-text-cases").hide();
+        $("#results-viz .cd-text-deaths").hide();   
+        var titleChange;
+        if (getCDid=="Both") {
+          titleChange = "Cases and deaths";
+        } else {
+          titleChange = getCDid;
+        }
+        $("#results-viz .cd-results-content-risk .cd-results-risks-title").remove();
+        $("#results-viz .cd-results-content-risk").append("<div class='cd-results-risks-title'>"+titleChange+"</div></div>");
 
         if (getCDid == "Cases") {
-          $("#results-viz .cd-malaria_cases").show(); 
+          $("#results-viz .cd-text-cases").show(); 
+          $("#results-viz .cd-text-deaths").hide();             
+          $("#results-viz .cd-malaria_cases").show();         
           $("#results-viz .cd-malaria_deaths").hide();  
         } else if (getCDid == "Deaths") {
+          $("#results-viz .cd-text-cases").hide(); 
+          $("#results-viz .cd-text-deaths").show();     
           $("#results-viz .cd-malaria_cases").hide();
           $("#results-viz .cd-malaria_deaths").show();   
         } else {
+          $("#results-viz .cd-text-cases").show(); 
+          $("#results-viz .cd-text-deaths").show();     
           $("#results-viz .cd-malaria_cases").show();
           $("#results-viz .cd-malaria_deaths").show();             
         }
