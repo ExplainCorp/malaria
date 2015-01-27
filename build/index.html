@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/reset.css">
   <style type="text/css">
   body { font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;font-size:16px;}
-  #landing-page { margin-top:50px;display:none;}
+  #landing-page { margin-top:50px; display:none;}
   #landing-page #landing-header { width:740px;margin:0px auto;text-align: center}
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
@@ -102,6 +102,8 @@
   #results-viz #cd-nav-left .cd-nav-left-active { background:#22b573;color:white;border-radius:5px;}
   #results-viz .cd-text-cases, #results-viz .cd-text-deaths { display:none;font-size:12px;color:#777;}
   #results-viz .cd-results-risks-title { position:absolute;top:15px;left:20px;font-size:12px;color:#777;}
+  #results-viz .voronoi path { fill: none; pointer-events: all; }
+
   </style>
   <script>
   $(document).ready(function() {
@@ -151,6 +153,8 @@
       var seriesDataCD;
       var all_axis, all_axisCD;
       var varNames, varNamesCD;
+      var vData = [];
+      var voronoi = false;
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -344,10 +348,17 @@
             createSVG(risks_all[i], risks_height, count, i);        
         }
 
+        vData = [];
+        voronoi = false;
+
         // call risks viz function here
         for(j=0;j<countries.length;j++) {
+          voronoi = false;
+          if ((j+1)==countries.length) {
+            voronoi = true;
+          }
           for(k=0;k<risks_all.length;k++) {
-            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count)
+            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi)
           }
         }        
       }
@@ -478,7 +489,15 @@
       }
 
       // visualize risks
-      function graph_risks(data,risksID,h2,country,count) {      
+      function graph_risks(data,risksID,h2,country,count, idx, v) {      
+
+        if ((idx+1)==count) { 
+          h = h2;
+        } else {
+          h = h2 + p;
+        }
+
+        voronoi = v;
 
         varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
                                                                     
@@ -504,7 +523,9 @@
           };
         });
    
+        //console.log(seriesData);
         newdata = seriesData[getidx];
+        // create data sets for each risk?
         //console.log(newdata)
 
         var line = d3.svg.line()
@@ -526,7 +547,71 @@
           .attr("y", function(d) { return ypos(d.values[0].value)-10 })
           .text(country)
 
+        newdata.values.forEach(function(d,i) {
+          vData.push({label: d.label, value: d.value, name: d.name});
+          //console.log(vData[i])
+        })
+
+        //console.log(vData)
+        /*
+        vData.sort(function(a,b) {
+          return a.label - b.label;
+        })
+        */
+        var uniqueData = [];
+
+        var uniqueData = d3.nest()
+            .key(function(d) { return d.label; })
+            .entries(vData)
+            .map(function(entry) { return (entry) });
+
+       
+       // console.log(uniqueData);
+
+          //  .range([0, w-(p*2)]);
+        if (voronoi==true) {
+          console.log(true)
+        var vor = d3.select("#results-content #viz_"+risksID).append("g").attr("id", "paths").attr("class", "voronoi");
+        var voronoi = d3.geom.voronoi()
+          .x(function(d) { return xpos(format_date(d.label)); })
+          .y(function(d) { return ypos(d.value); })
+          .clipExtent([[0, 0], [w - (p*2), h - p]]);
+
         
+
+        var focus = d3.select("#results-content #viz_"+risksID).append("g")
+            .attr("transform", "translate(-100,-100)")
+            .attr("class", "focus");
+
+        focus.append("circle")
+            .attr("r", 3.5);
+
+        focus.append("text")
+            .attr("y", -10);
+
+        vor.selectAll("path")
+          .data(voronoi(vData))
+          .enter().append("path")
+          .style("fill", "none")
+          .style("stroke", "pink")
+          .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+          .datum(function(d) { return d.point })
+          .on("mouseover", mouseover)
+          .on("mouseout", mouseout);            
+ 
+        function mouseover(d) {
+          //console.log(d)
+          //d3.select(d.city.line).classed("city--hover", true);
+          //d.city.line.parentNode.appendChild(d.city.line);
+          focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
+          //focus.select("text").text(d.city.name);
+        }
+
+        function mouseout(d) {
+         // d3.select(d.city.line).classed("city--hover", false);
+          focus.attr("transform", "translate(-100,-100)");
+        }      
+        }
         /*
         get_risk_cnt = $("#results-viz #nav-risks .risks-active");
 
@@ -546,11 +631,15 @@
       // axis style + dynamic y-axis ticks [done]
       // cases and deaths [done]
       // cases and deaths fix svg and country multiple [done]
-      // look into voroni hover [maybe]
+      // look into voroni hover [done]
       // hover/toggle interaction
       // nav bugs
       // colors
       // spreadsheet country/param integration, set of check loops
+
+      }
+
+      function createVoronoi(vData) {
 
       }
 
@@ -1176,7 +1265,9 @@
       <div class="clear"></div>
     </div>
     <div id="results-content">
+      <p style="font-size:150px;color:#ddd;letter-spacing:-10px;position:relative;margin-left:20px">Loading...</p>
       <div class="results-content-risk"></div>
+
     </div>
     <div class="clear"></div>
 
