@@ -349,6 +349,7 @@
         }
 
         vData = [];
+        vData_mult = [];
         voronoi = false;
 
         // call risks viz function here
@@ -358,7 +359,7 @@
             voronoi = true;
           }
           for(k=0;k<risks_all.length;k++) {
-            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi)
+            graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi, j)
           }
         }        
       }
@@ -489,7 +490,7 @@
       }
 
       // visualize risks
-      function graph_risks(data,risksID,h2,country,count, idx, v) {      
+      function graph_risks(data,risksID,h2,country,count, idx, v, cntry_idx) {      
 
         if ((idx+1)==count) { 
           h = h2;
@@ -547,83 +548,68 @@
           .attr("y", function(d) { return ypos(d.values[0].value)-10 })
           .text(country)
 
+        // we use this for a single path voronoi
         newdata.values.forEach(function(d,i) {
           vData.push({label: d.label, value: d.value, name: d.name});
-          //console.log(vData[i])
         })
 
-        //console.log(vData)
-        /*
-        vData.sort(function(a,b) {
-          return a.label - b.label;
-        })
-        */
-        var uniqueData = [];
+        // this array contains more than one country
+        vData_mult.push(newdata);
 
-        var uniqueData = d3.nest()
-            .key(function(d) { return d.label; })
-            .entries(vData)
-            .map(function(entry) { return (entry) });
+        // check if more than one country, remove duplicates
+        if(cntry_idx+1>1) {
+          var uniqueData = d3.nest()
+            .key(function(d) { return xpos(format_date(d.label)) + "," +ypos(d.value); })
+            .rollup(function(v) { return v[0]; })
+            .entries(d3.merge(vData_mult.map(function(d) { return d.values; })))
+            .map(function(d) { return d.values });    
 
-       
-       // console.log(uniqueData);
+            vData = uniqueData;
+        }
 
-          //  .range([0, w-(p*2)]);
+        // this may change, only want to apply to last instance of loop
         if (voronoi==true) {
-          console.log(true)
-        var vor = d3.select("#results-content #viz_"+risksID).append("g").attr("id", "paths").attr("class", "voronoi");
-        var voronoi = d3.geom.voronoi()
-          .x(function(d) { return xpos(format_date(d.label)); })
-          .y(function(d) { return ypos(d.value); })
-          .clipExtent([[0, 0], [w - (p*2), h - p]]);
+          var vor = d3.select("#results-content #viz_"+risksID).append("g")
+            .attr("id", "paths")
+            .attr("class", "voronoi");
 
-        
-
-        var focus = d3.select("#results-content #viz_"+risksID).append("g")
+          var voronoi = d3.geom.voronoi()
+            .x(function(d) { return xpos(format_date(d.label)); })
+            .y(function(d) { return ypos(d.value); })
+            .clipExtent([[0, 0], [w - (p*2), h - p]]);
+      
+          var focus = d3.select("#results-content #viz_"+risksID).append("g")
             .attr("transform", "translate(-100,-100)")
             .attr("class", "focus");
 
-        focus.append("circle")
+          focus.append("circle")
             .attr("r", 3.5);
 
-        focus.append("text")
+          focus.append("text")
             .attr("y", -10);
 
-        vor.selectAll("path")
-          .data(voronoi(vData))
-          .enter().append("path")
-          .style("fill", "none")
-          .style("stroke", "pink")
-          .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
-          .datum(function(d) { return d.point })
-          .on("mouseover", mouseover)
-          .on("mouseout", mouseout);            
- 
-        function mouseover(d) {
-          //console.log(d)
-          //d3.select(d.city.line).classed("city--hover", true);
-          //d.city.line.parentNode.appendChild(d.city.line);
-          focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
-          //focus.select("text").text(d.city.name);
+          vor.selectAll("path")
+            .data(voronoi(vData))
+            .enter().append("path")
+            .style("fill", "none")
+            .style("stroke", "pink")
+            .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+            .datum(function(d) { return d.point })
+            .on("mouseover", mouseover)
+            .on("mouseout", mouseout);            
         }
+      function mouseover(d) {
+        //console.log(d)
+        //d3.select(d.city.line).classed("city--hover", true);
+        //d.city.line.parentNode.appendChild(d.city.line);
+        focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
+        //focus.select("text").text(d.city.name);
+      }
 
-        function mouseout(d) {
-         // d3.select(d.city.line).classed("city--hover", false);
-          focus.attr("transform", "translate(-100,-100)");
-        }      
-        }
-        /*
-        get_risk_cnt = $("#results-viz #nav-risks .risks-active");
-
-        get_risk_cnt.each(function (s) {
-          //activate
-          init_line = $(this).attr("id").replace("risks-","line-");
-          $("#results-viz #"+init_line).show();
-        })
-        */
-      // if leftnav active = 1 but risks > 1, stay on large window [done]
-      // next, when multiple countries and risks are selected, 
-      // will need to redraw  dynamically create svgs inside divs [done]
+      function mouseout(d) {
+       // d3.select(d.city.line).classed("city--hover", false);
+        focus.attr("transform", "translate(-100,-100)");
+      }   
 
       // ** to do
       // add axis [done]
