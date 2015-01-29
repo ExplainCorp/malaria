@@ -103,7 +103,7 @@
   #results-viz .cd-text-cases, #results-viz .cd-text-deaths { display:none;font-size:12px;color:#777;}
   #results-viz .cd-results-risks-title { position:absolute;top:15px;left:20px;font-size:12px;color:#777;}
   #results-viz .voronoi path { fill: none; pointer-events: all; }
-
+  #results-viz .line--hover { stroke:orange;}
   </style>
   <script>
   $(document).ready(function() {
@@ -154,6 +154,16 @@
       var all_axis, all_axisCD;
       var varNames, varNamesCD;
       var vData = [];
+      var vData_population = [];
+      var vData_pop_at_risk = [];
+      var vData_funding = [];
+      var vData_GDP_per_capita = [];
+      var vData_ALL_larval_control = [];
+      var vData_ALL_nets = [];
+      var vData_IRS = [];
+      var vData_drugs = [];
+      var vData_insecticide_resistance = [];
+      var vData_drug_resistance = [];
       var voronoi = false;
 
       // ** pull data from spreadsheet into json via tabletop.js
@@ -350,6 +360,16 @@
 
         vData = [];
         vData_mult = [];
+        vData_population = [];
+        vData_pop_at_risk = [];
+        vData_funding = [];
+        vData_GDP_per_capita = [];
+        vData_ALL_larval_control = [];
+        vData_ALL_nets = [];
+        vData_IRS = [];
+        vData_drugs = [];
+        vData_insecticide_resistance = [];
+        vData_drug_resistance = [];        
         voronoi = false;
 
         // call risks viz function here
@@ -504,7 +524,7 @@
                                                                     
         // target data
         // there might be a better way to do this, will revisit later
-        if (risksID == "population_RISK_FACTOR") getidx = 0;         
+        if (risksID == "population_RISK_FACTOR") getidx = 0;          
         if (risksID == "pop_at_risk_RISK_FACTOR") getidx = 1;
         if (risksID == "funding_RISK_FACTOR") getidx = 2;
         if (risksID == "GDP_per_capita_RISK_FACTOR") getidx = 3;
@@ -519,15 +539,13 @@
           return {
             name: name,
             values: data.map(function (d) {
-              return {name: name, label: d[labelVar], value: +d[name]};
+              return {name: name, label: d[labelVar], value: +d[name], country:country};
             })
           };
         });
    
-        //console.log(seriesData);
+        // isolate risk data
         newdata = seriesData[getidx];
-        // create data sets for each risk?
-        //console.log(newdata)
 
         var line = d3.svg.line()
           .interpolate("monotone")
@@ -537,7 +555,7 @@
         var series = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
           .append("path")
-          .attr("class", "lines")
+          .attr("class", "lines lines-"+country)
           .attr("id", function(d) { return "line-"+country+"-"+d.name })
           .attr("d", function (d) { return line(d.values); })
 
@@ -548,23 +566,58 @@
           .attr("y", function(d) { return ypos(d.values[0].value)-10 })
           .text(country)
 
-        // we use this for a single path voronoi
-        newdata.values.forEach(function(d,i) {
-          vData.push({label: d.label, value: d.value, name: d.name});
-        })
-
-        // this array contains more than one country
-        vData_mult.push(newdata);
-
-        // check if more than one country, remove duplicates
-        if(cntry_idx+1>1) {
-          var uniqueData = d3.nest()
+        // format voronoi data
+        var voronoi_data = function(input) {
+          vData_input = input;
+          uniqueData = d3.nest()
             .key(function(d) { return xpos(format_date(d.label)) + "," +ypos(d.value); })
             .rollup(function(v) { return v[0]; })
-            .entries(d3.merge(vData_mult.map(function(d) { return d.values; })))
+            .entries(d3.merge(vData_input.map(function(d) { return d.values; })))
             .map(function(d) { return d.values });    
+            vData = uniqueData;        
+        }
 
-            vData = uniqueData;
+        // each risk needs its own data set
+        // there must be a better way to do this, but it works, so i'm happy.
+        if (risksID == "population_RISK_FACTOR") {
+          vData_population.push(newdata);
+          voronoi_data(vData_population);        
+        }
+        if (risksID == "pop_at_risk_RISK_FACTOR") {
+          vData_pop_at_risk.push(newdata); 
+          voronoi_data(vData_pop_at_risk); 
+        }
+        if (risksID == "funding_RISK_FACTOR") {
+          vData_funding.push(newdata);
+          voronoi_data(vData_funding);
+        }
+        if (risksID == "GDP_per_capita_RISK_FACTOR") {
+          vData_GDP_per_capita.push(newdata);
+          voronoi_data(vData_GDP_per_capita);     
+        }
+        if (risksID == "ALL_larval_control_RISK_FACTOR") {
+          vData_ALL_larval_control.push(newdata);
+          voronoi_data(vData_ALL_larval_control);     
+        }
+        if (risksID == "ALL_nets_RISK_FACTOR") {
+          vData_ALL_nets.push(newdata);
+          voronoi_data(vData_ALL_nets);     
+        }
+        if (risksID == "IRS_RISK_FACTOR") {
+          vData_IRS.push(newdata);
+          voronoi_data(vData_IRS);     
+        }
+        if (risksID == "drugs_RISK_FACTOR") {
+          vData_drugs.push(newdata);
+          voronoi_data(vData_drugs);     
+        }
+        if (risksID == "insecticide_resistance_RISK_FACTOR") {
+          vData_insecticide_resistance.push(newdata);
+          voronoi_data(vData_insecticide_resistance);     
+        }
+        if (risksID == "drug_resistance_RISK_FACTOR") {
+          vData_drug_resistance.push(newdata);
+          voronoi_data(vData_drug_resistance);     
         }
 
         // this may change, only want to apply to last instance of loop
@@ -598,35 +651,34 @@
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);            
         }
+
       function mouseover(d) {
         //console.log(d)
-        //d3.select(d.city.line).classed("city--hover", true);
+        //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", true);
+        d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true);
         //d.city.line.parentNode.appendChild(d.city.line);
         focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
         //focus.select("text").text(d.city.name);
       }
 
       function mouseout(d) {
-       // d3.select(d.city.line).classed("city--hover", false);
+        //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", false);
+        d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", false);
         focus.attr("transform", "translate(-100,-100)");
       }   
 
-      // ** to do
-      // add axis [done]
-      // new: call axis only once per risk, currently multiple [done]
-      // axis style + dynamic y-axis ticks [done]
-      // cases and deaths [done]
-      // cases and deaths fix svg and country multiple [done]
-      // look into voroni hover [done]
-      // hover/toggle interaction
-      // nav bugs
-      // colors
-      // spreadsheet country/param integration, set of check loops
-
-      }
-
-      function createVoronoi(vData) {
-
+        // ** to do
+        // add axis [done]
+        // new: call axis only once per risk, currently multiple [done]
+        // axis style + dynamic y-axis ticks [done]
+        // cases and deaths [done]
+        // cases and deaths fix svg and country multiple [done]
+        // look into voronoi hover [done]
+        // hover/toggle interaction
+        // voronoi cases/deaths 
+        // nav bugs
+        // colors
+        // spreadsheet country/param integration, set of check loops
       }
 
       // create one svg for cases and deaths
