@@ -69,7 +69,7 @@
   #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left li { padding:15px;display: inline-block;cursor:pointer;}
   #results-viz #nav-left li:hover { background:#22b573;color:white;border-radius:5px;}
-  #results-viz #results-content { float:left;width:955px;background:white;margin-bottom:30px;}
+  #results-viz #results-content { float:left;width:955px;background:white;margin-bottom:30px;position:relative;}
   #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:12px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
@@ -169,6 +169,8 @@
       var cd_cntrys_all = [];
       var initNavCD = false;
       var getCDid = "Cases";
+      var tooltip;
+      var myPos, myX, myY;
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -346,6 +348,7 @@
 
       function divideSpaces(risks,count,countries) {
         $("#results-viz #results-content").html("");
+        
         // set height of first div that divides
         set_height = 600;
         if (count<=5) {
@@ -359,7 +362,9 @@
           get_title = $("#results-viz #nav-risks li#risks-"+risks_all[i]).text();
 
           $("#results-viz #results-content").append("<div id='"+risks_all[i]+"' class='results-content-risk' style='height:"+risks_height+"px'><div class='results-risks-title'>"+get_title+"</div></div>")
-            createSVG(risks_all[i], risks_height, count, i);        
+            createSVG(risks_all[i], risks_height, count, i);    
+            // create tooltips
+            createTT(risks_all[i]);    
         }
 
         vData = [];
@@ -429,6 +434,32 @@
         country_list.push("Chad");
         drawNav(country_list);
 
+      }
+
+      // for hovers, bring line to front
+      d3.selection.prototype.moveToFront = function() {
+        return this.each(function(){
+          this.parentNode.appendChild(this);
+        });
+      };   
+
+      function createTT(risk) {
+        tooltip = d3.select("#results-content #"+risk)
+          .append("div")
+          .attr("class", "tt tt_"+risk)
+          .style("z-index", "500")
+          .style("position", "absolute")
+          .style("visibility", "hidden"); 
+      }
+
+      // working tooltip
+      function tt(risk,country,date,value, x, y) {
+        d3.selectAll("#results-content .tt").style("visibility", "hidden");
+        d3.select("#results-content #"+risk+" .tt_"+risk)
+        .style("visibility", "visible")
+        .style("left", x+"px")
+        .style("top", y-50+"px")        
+        .html("<div id='tipContainer'><div id='tipLocation'>"+country+"</div><div id='tipData'>"+value+"</div></div>");
       }
 
       // risk svg's are separate to avoid duplicates
@@ -659,14 +690,19 @@
       function mouseover(d) {
         //console.log(d)
         //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", true);
-        d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true);
+        d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true).moveToFront();
         //d.city.line.parentNode.appendChild(d.city.line);
+        //myPos = d3.mouse(this);
+        //myX = myPos[0];
+        //myY = myPos[1];
+        tt(d.name,d.country,d.label,d.value, xpos(format_date(d.label)), ypos(d.value))
         focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
         //focus.select("text").text(d.city.name);
       }
 
       function mouseout(d) {
         //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", false);
+        d3.selectAll("#results-viz .tt").style("visibility", "hidden");
         d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", false);
         focus.attr("transform", "translate(-100,-100)");
       }   
