@@ -74,7 +74,7 @@
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:12px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active { background:#22b573;color:white;border-radius:5px;}
-  /** d3 stuff **/
+    /** d3 stuff **/
   .lines { stroke:#999;fill:none;stroke-width:3px;}
   .axis path,
   .axis line {
@@ -103,7 +103,8 @@
   #results-viz .cd-text-cases, #results-viz .cd-text-deaths { font-size:12px;color:#777;}
   #results-viz .cd-results-risks-title { position:absolute;top:15px;left:20px;font-size:12px;color:#777;}
   #results-viz .voronoi path { fill: none; pointer-events: all; }
-  #results-viz .line--hover { stroke:orange;}
+  #results-viz .line--hover { stroke:black !important;opacity:1 !important;}
+  /**#results-viz .line--hover:nth-child(2) { stroke:red;}**/
   </style>
   <script>
   $(document).ready(function() {
@@ -171,6 +172,8 @@
       var getCDid = "Cases";
       var tooltip;
       var myPos, myX, myY;
+      var colors = ["green", "orange", "red", "purple", "pink"]
+      var colorsArr = [];
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -390,7 +393,8 @@
           for(k=0;k<risks_all.length;k++) {
             graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi, j)
           }
-        }        
+          colorize(countries[j], j);  
+        }      
       }
 
       // draw left-nav based off country_list or param filters w/ All Countries
@@ -688,8 +692,9 @@
         }
 
       function mouseover(d) {
-        //console.log(d)
+       // console.log(d)
         //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", true);
+        d3.selectAll("#results-content .lines").style("opacity", "0.25")
         d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true).moveToFront();
         //d.city.line.parentNode.appendChild(d.city.line);
         //myPos = d3.mouse(this);
@@ -704,6 +709,7 @@
         //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", false);
         d3.selectAll("#results-viz .tt").style("visibility", "hidden");
         d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", false);
+        d3.selectAll("#results-content .lines").style("opacity", "1")
         focus.attr("transform", "translate(-100,-100)");
       }   
 
@@ -1031,6 +1037,14 @@
 
       }
 
+      function colorize(country, count) {
+        if (count < 5) {
+        //var _c = { stroke: colors[count] } 
+        //colorsArr.push(_c);
+        $("#results-nav-left #nav-left #"+country+".nav-left-active").css({background:colors[count]})
+        $("#results-content .lines-"+country).css({stroke:colors[count]})
+        }
+      }
 
 
   });
