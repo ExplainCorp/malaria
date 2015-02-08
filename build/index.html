@@ -174,6 +174,7 @@
       var voronoi = false;
       var voronoiCD = false;
       var cd_cntrys_all = [];
+      var v_cd = [];
       var initNavCD = false;
       var getCDid = "Cases";
       var tooltip;
@@ -468,23 +469,44 @@
       };   
 
       function createTT(risk) {
-        tooltip = d3.select("#results-content #"+risk)
-          .append("div")
-          .attr("class", "tt tt_"+risk)
-          .style("z-index", "500")
-          .style("position", "absolute")
-          .style("visibility", "hidden"); 
+        if (risk==="cd") {
+          tooltip = d3.select("#cases-deaths #cd-results-content .cd-results-content-risk")
+            .append("div")
+            .attr("id", "cd_tt")
+            .attr("class", "tt")
+            .style("z-index", "500")
+            .style("position", "absolute")
+            .style("visibility", "hidden");           
+        } else {
+          tooltip = d3.select("#results-content #"+risk)
+            .append("div")
+            .attr("class", "tt tt_"+risk)
+            .style("z-index", "500")
+            .style("position", "absolute")
+            .style("visibility", "hidden"); 
+        }
       }
 
       // working tooltip
-      function tt(risk,country,date,value, x, y) {
-        d3.selectAll("#results-content .tt").style("visibility", "hidden");
-        d3.select("#results-content #"+risk+" .tt_"+risk)
-        .style("visibility", "visible")
-        .style("left", x+"px")
-        .style("top", y-50+"px")        
-        .html("<div id='tipContainer'><div id='tipLocation'>"+country+"</div><div id='tipData'>"+value+"</div></div>");
+      function tt(type,risk,country,date,value, x, y) {
+        if (type=="risks") {
+          d3.selectAll("#results-content .tt").style("visibility", "hidden");
+          d3.select("#results-content #"+risk+" .tt_"+risk)
+          .style("visibility", "visible")
+          .style("left", x+"px")
+          .style("top", y-50+"px")        
+          .html("<div id='tipContainer'><div id='tipLocation'>"+country+"</div><div id='tipData'>"+value+"</div></div>");
+        }
+        if (type=="cd") {
+          d3.select("#cd-results-content .tt").style("visibility", "hidden");
+          d3.select("#cd-results-content #cd_tt")
+          .style("visibility", "visible")
+          .style("left", x+"px")
+          .style("top", y-50+"px")        
+          .html("<div id='tipContainer'><div id='tipLocation'>"+country+"</div><div id='tipData'>"+value+"</div></div>");
+          }        
       }
+
 
       // risk svg's are separate to avoid duplicates
       function createSVG(riskID, h2, count, idx) {
@@ -712,21 +734,13 @@
         }
 
       function mouseover(d) {
-       // console.log(d)
-        //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", true);
         d3.selectAll("#results-content .lines").style("opacity", "0.25")
         d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true).moveToFront();
-        //d.city.line.parentNode.appendChild(d.city.line);
-        //myPos = d3.mouse(this);
-        //myX = myPos[0];
-        //myY = myPos[1];
-        tt(d.name,d.country,d.label,d.value, xpos(format_date(d.label)), ypos(d.value))
+        tt("risks",d.name,d.country,d.label,d.value, xpos(format_date(d.label)), ypos(d.value))
         focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
-        //focus.select("text").text(d.city.name);
       }
 
       function mouseout(d) {
-        //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", false);
         d3.selectAll("#results-viz .tt").style("visibility", "hidden");
         d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", false);
         d3.selectAll("#results-content .lines").style("opacity", "1")
@@ -812,6 +826,7 @@
         getCDid = getNav;
        
         voronoiCD = false;
+        v_cd = [];
         // draw cases and deaths lines
         for(j=0;j<countries.length;j++) {
           voronoiCD = false;
@@ -819,7 +834,9 @@
             voronoiCD = true;
           }
           viz_CD(datariskCD[countries[j]].elements, countries[j], getCDid, voronoiCD);
-        }          
+        }
+      createTT("cd");
+        
       }
 
       // typographic adjustments on the labels
@@ -863,7 +880,6 @@
 
         casesdeaths = cd;
         voronoiCD = _voronoiCD;
-        v_cd = [];
         // create new data w/ just cases and deaths
         var varNamesCD = d3.keys(data[0]).filter(function (keyCD) { return keyCD !== labelVar && keyCD != param1 && keyCD != param2 && keyCD != param3 && keyCD != param4 && keyCD != param5 && keyCD != risk1 && keyCD != risk2 && keyCD != risk3 && keyCD != risk4 && keyCD != risk5 && keyCD != risk6 && keyCD != risk7 && keyCD != risk8 && keyCD != risk9 && keyCD != risk10; });
 
@@ -895,10 +911,12 @@
         // cases path
         if (casesdeaths=="Cases") {
 
+
+
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
             .datum(seriesDataCD[0])
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name})
+            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
             .attr("id", function(d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) });
 
@@ -910,10 +928,10 @@
             .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
             .text("Cases: "+country) 
 
-          v_cd.push(seriesDataCD[0])
-          voronoi_dataCD(v_cd)
-
+          v_cd.push(seriesDataCD[0]) 
+          voronoi_dataCD(v_cd)        
         }
+        //
 
         // deaths path        
         if (casesdeaths=="Deaths") {
@@ -921,7 +939,7 @@
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
             .datum(seriesDataCD[1])
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name})
+            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
             .attr("id", function(d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) })
   
@@ -935,8 +953,8 @@
 
           v_cd.push(seriesDataCD[1])
           voronoi_dataCD(v_cd)
-
         }
+        //
 
         // cases and deahts       
         if (casesdeaths=="Both") {
@@ -944,7 +962,7 @@
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
             .datum(seriesDataCD[0])
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name})
+            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
             .attr("id", function(d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) });
 
@@ -959,7 +977,7 @@
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
             .datum(seriesDataCD[1])
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name})
+            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
             .attr("id", function(d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) })
   
@@ -974,10 +992,8 @@
           v_cd.push(seriesDataCD[0])
           v_cd.push(seriesDataCD[1])
           voronoi_dataCD(v_cd)
-
         }
-
-      
+        
         // this may change, only want to apply to last instance of loop
         if (voronoiCD==true) {
           var vor = d3.select("#cd-results-content #viz_CD").append("g")
@@ -1012,18 +1028,15 @@
 
         function mouseover(d) {
           //console.log(d)
-          //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", true);
-          d3.selectAll("#cd-results-content #viz_CD .cd-"+d.name).classed("line--hover", true);
-          //d.city.line.parentNode.appendChild(d.city.line);
+          d3.selectAll("#cd-results-content .lines-cd").style("opacity", "0.25")
+          d3.selectAll("#cd-results-content #viz_CD .cd-"+d.country).classed("line--hover", true).moveToFront();
+          tt("cd", d.name,d.country,d.label,d.value, xpos(format_date(d.label)), yposCD(d.value))
           focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + yposCD(d.value) + ")");
-          //focus.select("text").text(d.city.name);
         }
 
-        //class = lines lines-cd cd-malaria_deaths
-        //id =  cd-malaria_deaths-Brazil
         function mouseout(d) {
-          //d3.select("#results-viz #line-"+d.country+"-"+d.name).classed("line--hover", false);
-          d3.selectAll("#cd-results-content #viz_CD .cd-"+d.name).classed("line--hover", false);
+          d3.selectAll("#cd-results-content .lines-cd").style("opacity", "1")
+          d3.selectAll("#cd-results-content #viz_CD .cd-"+d.country).classed("line--hover", false);
           focus.attr("transform", "translate(-100,-100)");
         } 
 
