@@ -181,7 +181,7 @@
       var myPos, myX, myY;
       var colors = ["green", "orange", "red", "purple", "pink"]
       var colorsArr = [];
-
+      var exit_idx = null;
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
 
@@ -429,20 +429,31 @@
           get_id = $(this).attr("id");
           // $(this).toggleClass("nav-left-active");
           // builds a limited array of 5 active countries
-          
+         
           if ($.inArray(get_id, navArray) >= 0) {
               console.log("in>out")
               get_id_idx = navArray.indexOf(get_id);
               navArray.splice($.inArray(get_id, navArray), 1);
-              $(this).toggleClass("nav-left-active");
-          } else if ($.inArray(get_id, navArray) < 0 && navArray.length <= 4) {
-              navArray.push(get_id);
-              console.log("out>in")
-              get_id_idx = navArray.indexOf(get_id);
-              $(this).toggleClass("nav-left-active");
-          }
+              $(this).toggleClass("nav-left-active-"+get_id_idx);
+              // store exit idx to splice and join into array
+              exit_idx = get_id_idx;
+              console.log(get_id+ " "+get_id_idx+" "+exit_idx)
 
+          } else if ($.inArray(get_id, navArray) < 0 && navArray.length <= 4) {
+              console.log("out>in")
+              if(exit_idx!=null) {
+                navArray.splice(exit_idx, 0, get_id)
+              } else {
+                navArray.push(get_id);
+              }
+              get_id_idx = navArray.indexOf(get_id);
+
+              $(this).toggleClass("nav-left-active-"+get_id_idx);
+              console.log(get_id+ " "+get_id_idx+" "+exit_idx)
+              exit_idx = null;
+          }
           console.log(navArray)
+          
 
           get_ctry = $(this).text();
           navEvents(get_ctry);
