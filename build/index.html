@@ -67,11 +67,11 @@
   #results-viz #results-nav-left { width:145px;background:white;float:left;}
   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
   #results-viz #nav-left {color:#666666;}
-  #results-viz #nav-left li { padding:15px;cursor:pointer;}
+  #results-viz #nav-left li { padding:15px;cursor:pointer;position:relative;}
   #results-viz #nav-left li:hover { background:black;color:white;border-radius:5px;}
   #results-viz #results-content { float:left;width:955px;background:white;margin-bottom:30px;position:relative;}
   #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
-  #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:12px;color:#777;}
+  #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:16px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active {   background:rgb(31, 120, 180);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-0 { background:rgb(31, 120, 180);color:white;border-radius:5px;}
@@ -84,6 +84,8 @@
   #results-viz #nav-left .nav-left-active-2:hover { background:rgb(227, 26, 28);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-3:hover { background:rgb(106, 61, 154);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-4:hover { background:rgb(251, 154, 153);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-close { background:#ccc; position:absolute;top:-7px;right:0px;font-size:10px;padding:5px;color:#444;border-radius:25%;display:none;}
+  #results-viz #nav-left .nav-left-active:hover > .nav-left-close { background:#222; color:#ccc; }
     /** d3 stuff **/
   .lines { stroke:#999;fill:none;stroke-width:3px;pointer-events:none;}
   .lines-a { stroke:rgb(31, 120, 180);fill:none;stroke-width:3px;}
@@ -110,7 +112,7 @@
   #results-viz #viz_CD { margin-left:15px;margin-right:35px;position: relative; }
   #results-viz #cd-nav-left .cd-nav-left-active { background:black;color:white;border-radius:5px;}
   #results-viz .cd-text-cases, #results-viz .cd-text-deaths { font-size:12px;color:#777;}
-  #results-viz .cd-results-risks-title { position:absolute;top:15px;left:20px;font-size:12px;color:#777;}
+  #results-viz .cd-results-risks-title { position:absolute;top:15px;left:20px;font-size:16px;color:#777;}
   #results-viz .voronoi path { fill: none; pointer-events: all; }
   #results-viz .line--hover { stroke:black !important;opacity:1 !important;}
   .voronoi path { cursor:pointer;}
@@ -421,17 +423,23 @@
         //console.log(countries.length)
         $("#results-viz #nav-left").html("");
         for (i=0;i<countries.length;i++) {
-          $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"</li>")
+          $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"<span class='nav-left-close'>&#10006;</span></li>")
         }
+
+        $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-0");
+        $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
+
         navLeftEvents();
+
 
       }
 
       function navLeftEvents() {
-        $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-0");
+
         // call first graph here
         navEvents("Brazil");
         var navArray = ["Brazil"];
+        navArrayIdx = ["a"]
         var _tempArr = ["a","b","c","d","e"];
         var _color;
 
@@ -449,7 +457,7 @@
             get_id = $(this).attr("id");
 
             if ($.inArray(get_id, navArray) >= 0) {
-                console.log("in>out")
+                //console.log("in>out")
                 get_id_idx = navArray.indexOf(get_id);
                 if (get_id_idx == 0) _color = "a";
                 if (get_id_idx == 1) _color = "b";
@@ -459,6 +467,7 @@
 
                 navArray.splice($.inArray(get_id, navArray), 1);
                 $(this).toggleClass("nav-left-active nav-left-active-" + get_id_idx);
+                $(this).find("span").hide();
                 // store exit idx to splice and join into array
                 exit_idx = get_id_idx;
                 navArrayIdx.splice($.inArray(_tempArr[get_id_idx], navArrayIdx), 1);
@@ -480,16 +489,16 @@
                 }
 
                 $(this).toggleClass("nav-left-active nav-left-active-" + get_id_idx);
-                console.log(get_id + " " + get_id_idx + " " + exit_idx)
+                $(this).find("span").show();
+                //console.log(get_id + " " + get_id_idx + " " + exit_idx)
                 exit_idx = null;
             }
-            console.log(navArray)
-            console.log(navArrayIdx);
+            //console.log(navArray)
+            //console.log(navArrayIdx);
 
             get_ctry = $(this).text();
             navEvents(get_ctry, navArrayIdx);
-            if (get_cnty_cnt == 0) $(this).addClass("nav-left-active");
-
+            //if (get_cnty_cnt == 0) $(this).addClass("nav-left-active");
         });
       }
 
@@ -521,7 +530,7 @@
               tooltip = d3.select("#results-content #" + risk)
                   .append("div")
                   .attr("class", "tt tt_" + risk)
-                  .style("z-index", "1")
+                  .style("z-index", "500")
                   .style("position", "absolute")
                   .style("visibility", "hidden");
           }
@@ -538,12 +547,12 @@
                   .html("<div id='tipContainer'><div id='tipDate'>"+date+"</div><div id='tipLocation'>" + country + "</div><div id='tipData'>" + value + "</div></div>");
           }
           if (type == "cd") {
-              d3.select("#cd-results-content .tt").style("visibility", "hidden");
+              //d3.select("#cd-results-content .tt").style("visibility", "hidden");
               d3.select("#cd-results-content #cd_tt")
                   .style("visibility", "visible")
-                  .style("left", x + "px")
+                  .style("left", (x + 15) + "px")
                   .style("top", y - 50 + "px")
-                  .html("<div id='tipContainer'><div id='tipLocation'>" + country + "</div><div id='tipData'>" + value + "</div></div>");
+                  .html("<div id='tipContainer'><div id='tipDate'>"+date+"</div><div id='tipLocation'>" + country + "</div><div id='tipData'>" + value + "</div></div>");
           }
       }
 
@@ -767,7 +776,7 @@
             .enter().append("path")
             .style("fill", "none")
             .style("stroke", "white")
-            .style("stroke-opacity",1)
+            .style("stroke-opacity",0)
             .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
             .datum(function(d) { return d.point })
             .on("mouseover", mouseover)
@@ -798,7 +807,10 @@
         // hover/toggle interaction [done]
         // voronoi cases/deaths  [done]
         // colors [done]
-        // style popup
+        // style popup [done]
+        // cases/deaths popup [done]
+        // check label coordinates function        
+        // check design for consistency 
         // spreadsheet country/param integration, set of check loops
         // test for bugs
       }
@@ -953,8 +965,6 @@
         // cases path
         if (casesdeaths=="Cases") {
 
-
-
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
             .datum(seriesDataCD[0])
             .append("path")
@@ -1061,7 +1071,8 @@
             .data(voronoi(vDataCD))
             .enter().append("path")
             .style("fill", "none")
-            .style("stroke", "pink")
+            .style("stroke", "white")
+            .style("stroke-opacity", 0)
             .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
             .datum(function(d) { return d.point })
             .on("mouseover", mouseover)
@@ -1110,15 +1121,6 @@
         $("#results-viz .cd-results-content-risk .cd-results-risks-title").remove();
         $("#results-viz .cd-results-content-risk").append("<div class='cd-results-risks-title'>"+titleChange+"</div></div>");
 
-      }
-
-      function colorize(country, count) {
-        if (count < 5) {
-        //var _c = { stroke: colors[count] } 
-        //colorsArr.push(_c);
-        $("#results-nav-left #nav-left #"+country+".nav-left-active").css({background:colors[count]})
-        $("#results-content .lines-"+country).css({stroke:colors[count]})
-        }
       }
 
 
@@ -1530,12 +1532,7 @@
     <div id="results-nav-left">
       <p>Select up to five countries</p>
       <ul id="nav-left">
-        <li>Country one</li>
-        <li>Country two</li>
-        <li>Country thr</li>
-        <li>Country fou</li>
-        <li>Country fiv</li>
-        <li>Country six</li>
+        <li>Loading...</li>
       </ul>
       <div class="clear"></div>
     </div>
