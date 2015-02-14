@@ -54,16 +54,28 @@
   #country-container .ui-selectmenu-button { width:300px !important;}
   #country-container .ui-selectmenu-button span.ui-selectmenu-text { line-height:25px;}
   /** results viz **/
-  #results-viz { width:1100px;margin:0px auto 100px auto;background:white;}
+  #results-viz { width:1100px;margin:50px auto 50px auto;background:white;}
   #results-viz a { text-decoration: none;}
   #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
   #results-viz .results-header-countries { margin-top:15px;}
   #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
-  #results-nav-risks { margin:25px 0px 35px 0px;background:#f7f7f7;}
-  #results-viz #nav-risks li { float:left;padding:15px 0px 15px 15px;background: #ccc;color:#555;margin-left:1px;cursor:pointer;font-size:16px;width:204px;margin-top:1px;}
-  #results-viz #nav-risks li:hover { background:#bbb;color:#777;}
+  /** nav risks **/
+  #results-nav-risks { margin:25px 0px 35px 0px;background:white;}
+  #results-viz #nav-risks li { float:left;padding:15px 0px 15px 15px;color:#444;margin-left:1px;cursor:pointer;font-size:13px;width:204px;margin-top:1px;text-transform: uppercase;}
+  #results-viz #nav-risks li:hover { background:#222 !important;color:white;}
   #results-viz #nav-risks li:first-child, #results-viz #nav-risks li:nth-child(6) { margin-left:0px;}
-  #results-viz #nav-risks li.risks-active { background:#777;color:#f5f5f5;}
+  #results-viz #nav-risks .risks-active { color: black;font-weight:bold;}
+  #results-viz #nav-risks #risks-population_RISK_FACTOR {background:rgba(166,206,227,.20);}
+  #results-viz #nav-risks #risks-pop_at_risk_RISK_FACTOR {background:rgba(166,206,227,.20);}
+  #results-viz #nav-risks #risks-GDP_per_capita_RISK_FACTOR {background:rgba(178,223,138, .15)  ;}
+  #results-viz #nav-risks #risks-funding_RISK_FACTOR {background:rgba(178,223,138,.15) ;}
+  #results-viz #nav-risks #risks-IRS_RISK_FACTOR {background:rgba(202,178,214,.30);}
+  #results-viz #nav-risks #risks-ALL_nets_RISK_FACTOR {background:rgba(202,178,214,.40);}
+  #results-viz #nav-risks #risks-insecticide_resistance_RISK_FACTOR {background:rgba(202,178,214,.40);}
+  #results-viz #nav-risks #risks-ALL_larval_control_RISK_FACTOR {background:rgba(202,178,214,.20);}  
+  #results-viz #nav-risks #risks-drugs_RISK_FACTOR {background:rgba(202,178,214,.60);}
+  #results-viz #nav-risks #risks-drug_resistance_RISK_FACTOR {background:rgba(202,178,214,.60);}
+  /** nav left **/
   #results-viz #results-nav-left { width:145px;background:white;float:left;}
   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
   #results-viz #nav-left {color:#666666;}
@@ -73,23 +85,35 @@
   #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:16px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
-  #results-viz #nav-left .nav-left-active {   background:rgb(31, 120, 180);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-0 { background:rgb(31, 120, 180);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-1 { background:rgb(51, 160, 44);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active {   background:rgb(255,127,0);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-0 { background:rgb(255,127,0);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-1 { background:rgb(31,120,180);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-2 { background:rgb(227, 26, 28);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-3 { background:rgb(106, 61, 154);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-4 { background:rgb(251, 154, 153);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-0:hover { background:rgb(31, 120, 180);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-1:hover { background:rgb(51, 160, 44);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-0:hover { background:rgb(255,127,0);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-1:hover { background:rgb(31,120,180);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-2:hover { background:rgb(227, 26, 28);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-3:hover { background:rgb(106, 61, 154);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-active-4:hover { background:rgb(251, 154, 153);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-close { background:#ccc; position:absolute;top:-7px;right:0px;font-size:10px;padding:5px;color:#444;border-radius:25%;display:none;}
   #results-viz #nav-left .nav-left-active:hover > .nav-left-close { background:#222; color:#ccc; }
-    /** d3 stuff **/
+  #results-viz #footer { font-size:14px;line-height:22px;margin:100px 0px 0px 0px;color:#777; }   
+  /** d3 stuff **/
+  
+  #results-viz #viz_population_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
+  #results-viz #viz_pop_at_risk_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
+  #results-viz #viz_GDP_per_capita_RISK_FACTOR .background-class {fill:rgba(178,223,138, .15)  ;}
+  #results-viz #viz_funding_RISK_FACTOR .background-class {fill:rgba(178,223,138,.15) ;}
+  #results-viz #viz_IRS_RISK_FACTOR .background-class {fill:rgba(202,178,214,.20);}
+  #results-viz #viz_ALL_nets_RISK_FACTOR .background-class {fill:rgba(202,178,214,.30);}
+  #results-viz #viz_insecticide_resistance_RISK_FACTOR .background-class {fill:rgba(202,178,214,.30);}
+  #results-viz #viz_ALL_larval_control_RISK_FACTOR .background-class {fill:rgba(202,178,214,.10);}  
+  #results-viz #viz_drugs_RISK_FACTOR .background-class {fill:rgba(202,178,214,.50);}
+  #results-viz #viz_drug_resistance_RISK_FACTOR .background-class {fill:rgba(202,178,214,.50);}    
   .lines { stroke:#999;fill:none;stroke-width:3px;pointer-events:none;}
-  .lines-a { stroke:rgb(31, 120, 180);fill:none;stroke-width:3px;}
-  .lines-b { stroke:rgb(51, 160, 44);fill:none;stroke-width:3px;}
+  .lines-a { stroke:rgb(255,127,0);fill:none;stroke-width:3px;}
+  .lines-b { stroke:rgb(31,120,180);fill:none;stroke-width:3px;}
   .lines-c { stroke:rgb(227, 26, 28);fill:none;stroke-width:3px;}
   .lines-d { stroke:rgb(106, 61, 154);fill:none;stroke-width:3px;}
   .lines-e { stroke:rgb(251, 154, 153);fill:none;stroke-width:3px;}  
@@ -363,6 +387,7 @@
           });
 
           divideSpaces(risks_all, get_risk_cnt, cntrys_all, navArrayIdx);
+          $(".nav-active-countries").html(cntrys_all.join(", "))
 
           // this area is for drawing cases/deaths for selected countries
           $("#results-viz .cd-results-content-risk").html("");
@@ -580,7 +605,7 @@
           .attr("height", h-(p+5))
           .attr("y", 5)
           .attr("class", "background-class")
-          .style("fill", "#f2f2f2")
+          //.style("fill", "#f2f2f2")
 
         format_date = d3.time.format("%Y").parse; 
 
@@ -695,6 +720,7 @@
           .attr("x", 5)
           .attr("y", function(d) { return ypos(d.values[0].value)-10 })
           .text(country)
+          .style("display","none")
 
         // format voronoi data
         var voronoi_data = function(input) {
@@ -1128,437 +1154,460 @@
   </script>
 </head>
 <body>
-  <div id="landing-page">
+<div id="landing-page">
     <div id="landing-header">
-      <h1>Malaria Data Visualization Tool</h1>
-      <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam suscipit consequat scelerisque. Sed id facilisis est. Vestibulum sagittis diam quis arcu vehicula, ac luctus risus faucibus. Sed sed diam at nunc gravida scelerisque. Nam sed arcu at tortor sollicitudin imperdiet. Cras facilisis neque mi, quis lacinia nulla egestas in. Aenean vitae leo finibus, placerat nibh quis, consequat leo. Etiam augue dui, vestibulum nec viverra nec, molestie ut turpis. Mauris sit amet nibh.</h2>
+        <h1>Malaria Data Visualization Tool</h1>
+        <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam suscipit consequat scelerisque. Sed id facilisis est. Vestibulum sagittis diam quis arcu vehicula, ac luctus risus faucibus. Sed sed diam at nunc gravida scelerisque. Nam sed arcu at tortor sollicitudin imperdiet. Cras facilisis neque mi, quis lacinia nulla egestas in. Aenean vitae leo finibus, placerat nibh quis, consequat leo. Etiam augue dui, vestibulum nec viverra nec, molestie ut turpis. Mauris sit amet nibh.</h2>
     </div>
 
     <!-- placeholder, wait for 100-country list :: generate from spreadsheet -->
     <div id="country-container">
-      <select id="countries" name="countries">
-        <option selected disabled>Choose up to 5 countries</option>
-        <option value="All_Countries">All Countries</option>
-        <option value="Afghanistan">Afghanistan</option>
-        <option value="Albania">Albania</option>
-        <option value="Algeria">Algeria</option>
-        <option value="American_Samoa">American Samoa</option>
-        <option value="Andorra">Andorra</option>
-        <option value="Angola">Angola</option>
-        <option value="Anguilla">Anguilla</option>
-        <option value="Antarctica">Antarctica</option>
-        <option value="Antigua_And_Barbuda">Antigua and Barbuda</option>
-        <option value="Argentina">Argentina</option>
-        <option value="Armenia">Armenia</option>
-        <option value="Aruba">Aruba</option>
-        <option value="Australia">Australia</option>
-        <option value="Austria">Austria</option>
-        <option value="Azerbaijan">Azerbaijan</option>
-        <option value="Bahamas">Bahamas</option>
-        <option value="Bahrain">Bahrain</option>
-        <option value="Bangladesh">Bangladesh</option>
-        <option value="Barbados">Barbados</option>
-        <option value="Belarus">Belarus</option>
-        <option value="Belgium">Belgium</option>
-        <option value="Belize">Belize</option>
-        <option value="Benin">Benin</option>
-        <option value="Bermuda">Bermuda</option>
-        <option value="Bhutan">Bhutan</option>
-        <option value="Bolivia">Bolivia</option>
-        <option value="Bosnia_And_Herzegovina">Bosnia and Herzegovina</option>
-        <option value="Botswana">Botswana</option>
-        <option value="Bouvet_Island">Bouvet Island</option>
-        <option value="Brazil">Brazil</option>
-        <option value="Brunei_Darussalam">Brunei Darussalam</option>
-        <option value="Bulgaria">Bulgaria</option>
-        <option value="Burkina_Faso">Burkina Faso</option>
-        <option value="Burundi">Burundi</option>
-        <option value="Cambodia">Cambodia</option>
-        <option value="Cameroon">Cameroon</option>
-        <option value="Canada">Canada</option>
-        <option value="Cape_Verde">Cape Verde</option>
-        <option value="Cayman_Islands">Cayman Islands</option>
-        <option value="Central_African_Republic">Central African Republic</option>
-        <option value="Chad">Chad</option>
-        <option value="Chile">Chile</option>
-        <option value="China">China</option>
-        <option value="Christmas_Island">Christmas Island</option>
-        <option value="Colombia">Colombia</option>
-        <option value="Comoros">Comoros</option>
-        <option value="Congo">Congo</option>
-        <option value="Cook_Islands">Cook Islands</option>
-        <option value="Costa_Rica">Costa Rica</option>
-        <option value="Cote_D'ivoire">Cote D'ivoire</option>
-        <option value="Croatia">Croatia</option>
-        <option value="Cuba">Cuba</option>
-        <option value="Cyprus">Cyprus</option>
-        <option value="Czech_Republic">Czech Republic</option>
-        <option value="Denmark">Denmark</option>
-        <option value="Djibouti">Djibouti</option>
-        <option value="Dominica">Dominica</option>
-        <option value="Dominican_Republic">Dominican Republic</option>
-        <option value="Ecuador">Ecuador</option>
-        <option value="Egypt">Egypt</option>
-        <option value="El_Salvador">El Salvador</option>
-        <option value="Equatorial_Guinea">Equatorial Guinea</option>
-        <option value="Eritrea">Eritrea</option>
-        <option value="Estonia">Estonia</option>
-        <option value="Ethiopia">Ethiopia</option>
-        <option value="Faroe_Islands">Faroe Islands</option>
-        <option value="Fiji">Fiji</option>
-        <option value="Finland">Finland</option>
-        <option value="France">France</option>
-        <option value="French_Guiana">French Guiana</option>
-        <option value="French_Polynesia">French Polynesia</option>
-        <option value="French_Southern_Territories">French Southern Territories</option>
-        <option value="Gabon">Gabon</option>
-        <option value="Gambia">Gambia</option>
-        <option value="Georgia">Georgia</option>
-        <option value="Germany">Germany</option>
-        <option value="Ghana">Ghana</option>
-        <option value="Gibraltar">Gibraltar</option>
-        <option value="Greece">Greece</option>
-        <option value="Greenland">Greenland</option>
-        <option value="Grenada">Grenada</option>
-        <option value="Guadeloupe">Guadeloupe</option>
-        <option value="Guam">Guam</option>
-        <option value="Guatemala">Guatemala</option>
-        <option value="Guernsey">Guernsey</option>
-        <option value="Guinea">Guinea</option>
-        <option value="Guinea-bissau">Guinea-bissau</option>
-        <option value="Guyana">Guyana</option>
-        <option value="Haiti">Haiti</option>
-        <option value="Honduras">Honduras</option>
-        <option value="Hong_Kong">Hong Kong</option>
-        <option value="Hungary">Hungary</option>
-        <option value="Iceland">Iceland</option>
-        <option value="India">India</option>
-        <option value="Indonesia">Indonesia</option>
-        <option value="Iran,_Islamic_Republic_Of">Iran, Islamic Republic of</option>
-        <option value="Iraq">Iraq</option>
-        <option value="Ireland">Ireland</option>
-        <option value="Isle_Of_Man">Isle of Man</option>
-        <option value="Israel">Israel</option>
-        <option value="Italy">Italy</option>
-        <option value="Jamaica">Jamaica</option>
-        <option value="Japan">Japan</option>
-        <option value="Jersey">Jersey</option>
-        <option value="Jordan">Jordan</option>
-        <option value="Kazakhstan">Kazakhstan</option>
-        <option value="Kenya">Kenya</option>
-        <option value="Kiribati">Kiribati</option>
-        <option value="Korea,_Republic_Of">Korea, Republic of</option>
-        <option value="Kuwait">Kuwait</option>
-        <option value="Kyrgyzstan">Kyrgyzstan</option>
-        <option value="Latvia">Latvia</option>
-        <option value="Lebanon">Lebanon</option>
-        <option value="Lesotho">Lesotho</option>
-        <option value="Liberia">Liberia</option>
-        <option value="Libyan_Arab_Jamahiriya">Libyan Arab Jamahiriya</option>
-        <option value="Liechtenstein">Liechtenstein</option>
-        <option value="Lithuania">Lithuania</option>
-        <option value="Luxembourg">Luxembourg</option>
-        <option value="Macao">Macao</option>
-        <option value="Madagascar">Madagascar</option>
-        <option value="Malawi">Malawi</option>
-        <option value="Malaysia">Malaysia</option>
-        <option value="Maldives">Maldives</option>
-        <option value="Mali">Mali</option>
-        <option value="Malta">Malta</option>
-        <option value="Marshall_Islands">Marshall Islands</option>
-        <option value="Martinique">Martinique</option>
-        <option value="Mauritania">Mauritania</option>
-        <option value="Mauritius">Mauritius</option>
-        <option value="Mayotte">Mayotte</option>
-        <option value="Mexico">Mexico</option>
-        <option value="Moldova,_Republic_Of">Moldova, Republic of</option>
-        <option value="Monaco">Monaco</option>
-        <option value="Mongolia">Mongolia</option>
-        <option value="Montenegro">Montenegro</option>
-        <option value="Montserrat">Montserrat</option>
-        <option value="Morocco">Morocco</option>
-        <option value="Mozambique">Mozambique</option>
-        <option value="Myanmar">Myanmar</option>
-        <option value="Namibia">Namibia</option>
-        <option value="Nauru">Nauru</option>
-        <option value="Nepal">Nepal</option>
-        <option value="Netherlands">Netherlands</option>
-        <option value="Netherlands_Antilles">Netherlands Antilles</option>
-        <option value="New_Caledonia">New Caledonia</option>
-        <option value="New_Zealand">New Zealand</option>
-        <option value="Nicaragua">Nicaragua</option>
-        <option value="Niger">Niger</option>
-        <option value="Nigeria">Nigeria</option>
-        <option value="Niue">Niue</option>
-        <option value="Norfolk_Island">Norfolk Island</option>
-        <option value="Northern_Mariana_Islands">Northern Mariana Islands</option>
-        <option value="Norway">Norway</option>
-        <option value="Oman">Oman</option>
-        <option value="Pakistan">Pakistan</option>
-        <option value="Palau">Palau</option>
-        <option value="Panama">Panama</option>
-        <option value="Papua_New_Guinea">Papua New Guinea</option>
-        <option value="Paraguay">Paraguay</option>
-        <option value="Peru">Peru</option>
-        <option value="Philippines">Philippines</option>
-        <option value="Pitcairn">Pitcairn</option>
-        <option value="Poland">Poland</option>
-        <option value="Portugal">Portugal</option>
-        <option value="Puerto_Rico">Puerto Rico</option>
-        <option value="Qatar">Qatar</option>
-        <option value="Reunion">Reunion</option>
-        <option value="Romania">Romania</option>
-        <option value="Russian_Federation">Russian Federation</option>
-        <option value="Rwanda">Rwanda</option>
-        <option value="Saint_Helena">Saint Helena</option>
-        <option value="Saint_Kitts_And_Nevis">Saint Kitts and Nevis</option>
-        <option value="Saint_Lucia">Saint Lucia</option>
-        <option value="Saint_Pierre_And_Miquelon">Saint Pierre and Miquelon</option>
-        <option value="Samoa">Samoa</option>
-        <option value="San_Marino">San Marino</option>
-        <option value="Sao_Tome_And_Principe">Sao Tome and Principe</option>
-        <option value="Saudi_Arabia">Saudi Arabia</option>
-        <option value="Senegal">Senegal</option>
-        <option value="Serbia">Serbia</option>
-        <option value="Seychelles">Seychelles</option>
-        <option value="Sierra_Leone">Sierra Leone</option>
-        <option value="Singapore">Singapore</option>
-        <option value="Slovakia">Slovakia</option>
-        <option value="Slovenia">Slovenia</option>
-        <option value="Solomon_Islands">Solomon Islands</option>
-        <option value="Somalia">Somalia</option>
-        <option value="South_Africa">South Africa</option>
-        <option value="Spain">Spain</option>
-        <option value="Sri_Lanka">Sri Lanka</option>
-        <option value="Sudan">Sudan</option>
-        <option value="Suriname">Suriname</option>
-        <option value="Svalbard_And_Jan_Mayen">Svalbard and Jan Mayen</option>
-        <option value="Swaziland">Swaziland</option>
-        <option value="Sweden">Sweden</option>
-        <option value="Switzerland">Switzerland</option>
-        <option value="Syrian_Arab_Republic">Syrian Arab Republic</option>
-        <option value="Taiwan,_Province_Of_China">Taiwan, Province of China</option>
-        <option value="Tajikistan">Tajikistan</option>
-        <option value="Tanzania,_United_Republic_Of">Tanzania, United Republic of</option>
-        <option value="Thailand">Thailand</option>
-        <option value="Timor-leste">Timor-leste</option>
-        <option value="Togo">Togo</option>
-        <option value="Tokelau">Tokelau</option>
-        <option value="Tonga">Tonga</option>
-        <option value="Trinidad_And_Tobago">Trinidad and Tobago</option>
-        <option value="Tunisia">Tunisia</option>
-        <option value="Turkey">Turkey</option>
-        <option value="Turkmenistan">Turkmenistan</option>
-        <option value="Turks_And_Caicos_Islands">Turks and Caicos Islands</option>
-        <option value="Tuvalu">Tuvalu</option>
-        <option value="Uganda">Uganda</option>
-        <option value="Ukraine">Ukraine</option>
-        <option value="United_Arab_Emirates">United Arab Emirates</option>
-        <option value="United_Kingdom">United Kingdom</option>
-        <option value="United_States">United States</option>
-        <option value="Uruguay">Uruguay</option>
-        <option value="Uzbekistan">Uzbekistan</option>
-        <option value="Vanuatu">Vanuatu</option>
-        <option value="Venezuela">Venezuela</option>
-        <option value="Viet_Nam">Viet Nam</option>
-        <option value="Virgin_Islands,_British">Virgin Islands, British</option>
-        <option value="Virgin_Islands,_U.S.">Virgin Islands, U.S.</option>
-        <option value="Wallis_And_Futuna">Wallis and Futuna</option>
-        <option value="Western_Sahara">Western Sahara</option>
-        <option value="Yemen">Yemen</option>
-        <option value="Zambia">Zambia</option>
-        <option value="Zimbabwe">Zimbabwe</option>
-      </select>
+        <select id="countries" name="countries">
+            <option selected disabled>Choose up to 5 countries</option>
+            <option value="All_Countries">All Countries</option>
+            <option value="Afghanistan">Afghanistan</option>
+            <option value="Albania">Albania</option>
+            <option value="Algeria">Algeria</option>
+            <option value="American_Samoa">American Samoa</option>
+            <option value="Andorra">Andorra</option>
+            <option value="Angola">Angola</option>
+            <option value="Anguilla">Anguilla</option>
+            <option value="Antarctica">Antarctica</option>
+            <option value="Antigua_And_Barbuda">Antigua and Barbuda</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Armenia">Armenia</option>
+            <option value="Aruba">Aruba</option>
+            <option value="Australia">Australia</option>
+            <option value="Austria">Austria</option>
+            <option value="Azerbaijan">Azerbaijan</option>
+            <option value="Bahamas">Bahamas</option>
+            <option value="Bahrain">Bahrain</option>
+            <option value="Bangladesh">Bangladesh</option>
+            <option value="Barbados">Barbados</option>
+            <option value="Belarus">Belarus</option>
+            <option value="Belgium">Belgium</option>
+            <option value="Belize">Belize</option>
+            <option value="Benin">Benin</option>
+            <option value="Bermuda">Bermuda</option>
+            <option value="Bhutan">Bhutan</option>
+            <option value="Bolivia">Bolivia</option>
+            <option value="Bosnia_And_Herzegovina">Bosnia and Herzegovina</option>
+            <option value="Botswana">Botswana</option>
+            <option value="Bouvet_Island">Bouvet Island</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Brunei_Darussalam">Brunei Darussalam</option>
+            <option value="Bulgaria">Bulgaria</option>
+            <option value="Burkina_Faso">Burkina Faso</option>
+            <option value="Burundi">Burundi</option>
+            <option value="Cambodia">Cambodia</option>
+            <option value="Cameroon">Cameroon</option>
+            <option value="Canada">Canada</option>
+            <option value="Cape_Verde">Cape Verde</option>
+            <option value="Cayman_Islands">Cayman Islands</option>
+            <option value="Central_African_Republic">Central African Republic</option>
+            <option value="Chad">Chad</option>
+            <option value="Chile">Chile</option>
+            <option value="China">China</option>
+            <option value="Christmas_Island">Christmas Island</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Comoros">Comoros</option>
+            <option value="Congo">Congo</option>
+            <option value="Cook_Islands">Cook Islands</option>
+            <option value="Costa_Rica">Costa Rica</option>
+            <option value="Cote_D'ivoire">Cote D'ivoire</option>
+            <option value="Croatia">Croatia</option>
+            <option value="Cuba">Cuba</option>
+            <option value="Cyprus">Cyprus</option>
+            <option value="Czech_Republic">Czech Republic</option>
+            <option value="Denmark">Denmark</option>
+            <option value="Djibouti">Djibouti</option>
+            <option value="Dominica">Dominica</option>
+            <option value="Dominican_Republic">Dominican Republic</option>
+            <option value="Ecuador">Ecuador</option>
+            <option value="Egypt">Egypt</option>
+            <option value="El_Salvador">El Salvador</option>
+            <option value="Equatorial_Guinea">Equatorial Guinea</option>
+            <option value="Eritrea">Eritrea</option>
+            <option value="Estonia">Estonia</option>
+            <option value="Ethiopia">Ethiopia</option>
+            <option value="Faroe_Islands">Faroe Islands</option>
+            <option value="Fiji">Fiji</option>
+            <option value="Finland">Finland</option>
+            <option value="France">France</option>
+            <option value="French_Guiana">French Guiana</option>
+            <option value="French_Polynesia">French Polynesia</option>
+            <option value="French_Southern_Territories">French Southern Territories</option>
+            <option value="Gabon">Gabon</option>
+            <option value="Gambia">Gambia</option>
+            <option value="Georgia">Georgia</option>
+            <option value="Germany">Germany</option>
+            <option value="Ghana">Ghana</option>
+            <option value="Gibraltar">Gibraltar</option>
+            <option value="Greece">Greece</option>
+            <option value="Greenland">Greenland</option>
+            <option value="Grenada">Grenada</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Guam">Guam</option>
+            <option value="Guatemala">Guatemala</option>
+            <option value="Guernsey">Guernsey</option>
+            <option value="Guinea">Guinea</option>
+            <option value="Guinea-bissau">Guinea-bissau</option>
+            <option value="Guyana">Guyana</option>
+            <option value="Haiti">Haiti</option>
+            <option value="Honduras">Honduras</option>
+            <option value="Hong_Kong">Hong Kong</option>
+            <option value="Hungary">Hungary</option>
+            <option value="Iceland">Iceland</option>
+            <option value="India">India</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Iran,_Islamic_Republic_Of">Iran, Islamic Republic of</option>
+            <option value="Iraq">Iraq</option>
+            <option value="Ireland">Ireland</option>
+            <option value="Isle_Of_Man">Isle of Man</option>
+            <option value="Israel">Israel</option>
+            <option value="Italy">Italy</option>
+            <option value="Jamaica">Jamaica</option>
+            <option value="Japan">Japan</option>
+            <option value="Jersey">Jersey</option>
+            <option value="Jordan">Jordan</option>
+            <option value="Kazakhstan">Kazakhstan</option>
+            <option value="Kenya">Kenya</option>
+            <option value="Kiribati">Kiribati</option>
+            <option value="Korea,_Republic_Of">Korea, Republic of</option>
+            <option value="Kuwait">Kuwait</option>
+            <option value="Kyrgyzstan">Kyrgyzstan</option>
+            <option value="Latvia">Latvia</option>
+            <option value="Lebanon">Lebanon</option>
+            <option value="Lesotho">Lesotho</option>
+            <option value="Liberia">Liberia</option>
+            <option value="Libyan_Arab_Jamahiriya">Libyan Arab Jamahiriya</option>
+            <option value="Liechtenstein">Liechtenstein</option>
+            <option value="Lithuania">Lithuania</option>
+            <option value="Luxembourg">Luxembourg</option>
+            <option value="Macao">Macao</option>
+            <option value="Madagascar">Madagascar</option>
+            <option value="Malawi">Malawi</option>
+            <option value="Malaysia">Malaysia</option>
+            <option value="Maldives">Maldives</option>
+            <option value="Mali">Mali</option>
+            <option value="Malta">Malta</option>
+            <option value="Marshall_Islands">Marshall Islands</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Mauritania">Mauritania</option>
+            <option value="Mauritius">Mauritius</option>
+            <option value="Mayotte">Mayotte</option>
+            <option value="Mexico">Mexico</option>
+            <option value="Moldova,_Republic_Of">Moldova, Republic of</option>
+            <option value="Monaco">Monaco</option>
+            <option value="Mongolia">Mongolia</option>
+            <option value="Montenegro">Montenegro</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Morocco">Morocco</option>
+            <option value="Mozambique">Mozambique</option>
+            <option value="Myanmar">Myanmar</option>
+            <option value="Namibia">Namibia</option>
+            <option value="Nauru">Nauru</option>
+            <option value="Nepal">Nepal</option>
+            <option value="Netherlands">Netherlands</option>
+            <option value="Netherlands_Antilles">Netherlands Antilles</option>
+            <option value="New_Caledonia">New Caledonia</option>
+            <option value="New_Zealand">New Zealand</option>
+            <option value="Nicaragua">Nicaragua</option>
+            <option value="Niger">Niger</option>
+            <option value="Nigeria">Nigeria</option>
+            <option value="Niue">Niue</option>
+            <option value="Norfolk_Island">Norfolk Island</option>
+            <option value="Northern_Mariana_Islands">Northern Mariana Islands</option>
+            <option value="Norway">Norway</option>
+            <option value="Oman">Oman</option>
+            <option value="Pakistan">Pakistan</option>
+            <option value="Palau">Palau</option>
+            <option value="Panama">Panama</option>
+            <option value="Papua_New_Guinea">Papua New Guinea</option>
+            <option value="Paraguay">Paraguay</option>
+            <option value="Peru">Peru</option>
+            <option value="Philippines">Philippines</option>
+            <option value="Pitcairn">Pitcairn</option>
+            <option value="Poland">Poland</option>
+            <option value="Portugal">Portugal</option>
+            <option value="Puerto_Rico">Puerto Rico</option>
+            <option value="Qatar">Qatar</option>
+            <option value="Reunion">Reunion</option>
+            <option value="Romania">Romania</option>
+            <option value="Russian_Federation">Russian Federation</option>
+            <option value="Rwanda">Rwanda</option>
+            <option value="Saint_Helena">Saint Helena</option>
+            <option value="Saint_Kitts_And_Nevis">Saint Kitts and Nevis</option>
+            <option value="Saint_Lucia">Saint Lucia</option>
+            <option value="Saint_Pierre_And_Miquelon">Saint Pierre and Miquelon</option>
+            <option value="Samoa">Samoa</option>
+            <option value="San_Marino">San Marino</option>
+            <option value="Sao_Tome_And_Principe">Sao Tome and Principe</option>
+            <option value="Saudi_Arabia">Saudi Arabia</option>
+            <option value="Senegal">Senegal</option>
+            <option value="Serbia">Serbia</option>
+            <option value="Seychelles">Seychelles</option>
+            <option value="Sierra_Leone">Sierra Leone</option>
+            <option value="Singapore">Singapore</option>
+            <option value="Slovakia">Slovakia</option>
+            <option value="Slovenia">Slovenia</option>
+            <option value="Solomon_Islands">Solomon Islands</option>
+            <option value="Somalia">Somalia</option>
+            <option value="South_Africa">South Africa</option>
+            <option value="Spain">Spain</option>
+            <option value="Sri_Lanka">Sri Lanka</option>
+            <option value="Sudan">Sudan</option>
+            <option value="Suriname">Suriname</option>
+            <option value="Svalbard_And_Jan_Mayen">Svalbard and Jan Mayen</option>
+            <option value="Swaziland">Swaziland</option>
+            <option value="Sweden">Sweden</option>
+            <option value="Switzerland">Switzerland</option>
+            <option value="Syrian_Arab_Republic">Syrian Arab Republic</option>
+            <option value="Taiwan,_Province_Of_China">Taiwan, Province of China</option>
+            <option value="Tajikistan">Tajikistan</option>
+            <option value="Tanzania,_United_Republic_Of">Tanzania, United Republic of</option>
+            <option value="Thailand">Thailand</option>
+            <option value="Timor-leste">Timor-leste</option>
+            <option value="Togo">Togo</option>
+            <option value="Tokelau">Tokelau</option>
+            <option value="Tonga">Tonga</option>
+            <option value="Trinidad_And_Tobago">Trinidad and Tobago</option>
+            <option value="Tunisia">Tunisia</option>
+            <option value="Turkey">Turkey</option>
+            <option value="Turkmenistan">Turkmenistan</option>
+            <option value="Turks_And_Caicos_Islands">Turks and Caicos Islands</option>
+            <option value="Tuvalu">Tuvalu</option>
+            <option value="Uganda">Uganda</option>
+            <option value="Ukraine">Ukraine</option>
+            <option value="United_Arab_Emirates">United Arab Emirates</option>
+            <option value="United_Kingdom">United Kingdom</option>
+            <option value="United_States">United States</option>
+            <option value="Uruguay">Uruguay</option>
+            <option value="Uzbekistan">Uzbekistan</option>
+            <option value="Vanuatu">Vanuatu</option>
+            <option value="Venezuela">Venezuela</option>
+            <option value="Viet_Nam">Viet Nam</option>
+            <option value="Virgin_Islands,_British">Virgin Islands, British</option>
+            <option value="Virgin_Islands,_U.S.">Virgin Islands, U.S.</option>
+            <option value="Wallis_And_Futuna">Wallis and Futuna</option>
+            <option value="Western_Sahara">Western Sahara</option>
+            <option value="Yemen">Yemen</option>
+            <option value="Zambia">Zambia</option>
+            <option value="Zimbabwe">Zimbabwe</option>
+        </select>
     </div>
     <!-- selected countries go here -->
     <div id="country-output-container">
-      <div id="country-output"></div>
+        <div id="country-output"></div>
     </div>
     <div class="clear"></div>
-    
+
     <!-- parameter block -->
     <div id="param-container">
-      <div id="param-title-text">
-        <p>Use sliders to filter</p>
-      </div>
-      <div id="param-one" class="all-params">
-        <div class="param-title"><p>Param</p></div>
-        <div class="sliders" id="slider-range-one"></div>
-        <div class="value-ranges" id="value-range-one"><p>40 <span class="dash-class">&mdash;</span> 60</p></div>
-        <select name="number" id="param-year-one" class="param-year">
-          <option value="yearsAll" value="yearsAll" selected="selected">All years</option>
-          <option value="years1900to1910">1900 &mdash; 1910</option>
-          <option value="years1911to1920">1911 &mdash; 1920</option>
-          <option value="years1921to1930">1921 &mdash; 1930</option>
-          <option value="years1931to1940">1931 &mdash; 1940</option>
-          <option value="years1941to1950">1941 &mdash; 1950</option>
-          <option value="years1951to1960">1951 &mdash; 1960</option>
-          <option value="years1961to1970">1961 &mdash; 1970</option>    
-          <option value="years1971to1980">1971 &mdash; 1980</option>
-          <option value="years1981to1990">1981 &mdash; 1990</option>
-          <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2005">2001 &mdash; 2005</option>
-          <option value="years2006to2010">2006 &mdash; 2010</option>
-          <option value="years2011to2014">2011 &mdash; 2014</option>
-        </select>
-        <div class="clear"></div>
-      </div>
+        <div id="param-title-text">
+            <p>Use sliders to filter</p>
+        </div>
+        <div id="param-one" class="all-params">
+            <div class="param-title">
+                <p>Param</p>
+            </div>
+            <div class="sliders" id="slider-range-one"></div>
+            <div class="value-ranges" id="value-range-one">
+                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+            </div>
+            <select name="number" id="param-year-one" class="param-year">
+                <option value="yearsAll" value="yearsAll" selected="selected">All years</option>
+                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1911to1920">1911 &mdash; 1920</option>
+                <option value="years1921to1930">1921 &mdash; 1930</option>
+                <option value="years1931to1940">1931 &mdash; 1940</option>
+                <option value="years1941to1950">1941 &mdash; 1950</option>
+                <option value="years1951to1960">1951 &mdash; 1960</option>
+                <option value="years1961to1970">1961 &mdash; 1970</option>
+                <option value="years1971to1980">1971 &mdash; 1980</option>
+                <option value="years1981to1990">1981 &mdash; 1990</option>
+                <option value="years1991to2000">1991 &mdash; 2000</option>
+                <option value="years2001to2005">2001 &mdash; 2005</option>
+                <option value="years2006to2010">2006 &mdash; 2010</option>
+                <option value="years2011to2014">2011 &mdash; 2014</option>
+            </select>
+            <div class="clear"></div>
+        </div>
 
-      <div id="param-two" class="all-params">
-        <div class="param-title"><p>Param</p></div>
-        <div class="sliders" id="slider-range-two"></div>
-        <div class="value-ranges" id="value-range-two"><p>40 <span class="dash-class">&mdash;</span> 60</p></div>
-        <select name="number" id="param-year-two" class="param-year">
-          <option value="yearsAll" selected="selected">All years</option>
-          <option value="years1900to1910">1900 &mdash; 1910</option>
-          <option value="years1911to1920">1911 &mdash; 1920</option>
-          <option value="years1921to1930">1921 &mdash; 1930</option>
-          <option value="years1931to1940">1931 &mdash; 1940</option>
-          <option value="years1941to1950">1941 &mdash; 1950</option>
-          <option value="years1951to1960">1951 &mdash; 1960</option>
-          <option value="years1961to1970">1961 &mdash; 1970</option>    
-          <option value="years1971to1980">1971 &mdash; 1980</option>
-          <option value="years1981to1990">1981 &mdash; 1990</option>
-          <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2005">2001 &mdash; 2005</option>
-          <option value="years2006to2010">2006 &mdash; 2010</option>
-          <option value="years2011to2014">2011 &mdash; 2014</option>
-        </select>
-        <div class="clear"></div>
-      </div>
+        <div id="param-two" class="all-params">
+            <div class="param-title">
+                <p>Param</p>
+            </div>
+            <div class="sliders" id="slider-range-two"></div>
+            <div class="value-ranges" id="value-range-two">
+                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+            </div>
+            <select name="number" id="param-year-two" class="param-year">
+                <option value="yearsAll" selected="selected">All years</option>
+                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1911to1920">1911 &mdash; 1920</option>
+                <option value="years1921to1930">1921 &mdash; 1930</option>
+                <option value="years1931to1940">1931 &mdash; 1940</option>
+                <option value="years1941to1950">1941 &mdash; 1950</option>
+                <option value="years1951to1960">1951 &mdash; 1960</option>
+                <option value="years1961to1970">1961 &mdash; 1970</option>
+                <option value="years1971to1980">1971 &mdash; 1980</option>
+                <option value="years1981to1990">1981 &mdash; 1990</option>
+                <option value="years1991to2000">1991 &mdash; 2000</option>
+                <option value="years2001to2005">2001 &mdash; 2005</option>
+                <option value="years2006to2010">2006 &mdash; 2010</option>
+                <option value="years2011to2014">2011 &mdash; 2014</option>
+            </select>
+            <div class="clear"></div>
+        </div>
 
-      <div id="param-three" class="all-params">
-        <div class="param-title"><p>Param</p></div>
-        <div class="sliders" id="slider-range-three"></div>
-        <div class="value-ranges" id="value-range-three"><p>40 <span class="dash-class">&mdash;</span> 60</p></div>
-        <select name="number" id="param-year-three" class="param-year">
-          <option value="yearsAll" selected="selected">All years</option>
-          <option value="years1900to1910">1900 &mdash; 1910</option>
-          <option value="years1911to1920">1911 &mdash; 1920</option>
-          <option value="years1921to1930">1921 &mdash; 1930</option>
-          <option value="years1931to1940">1931 &mdash; 1940</option>
-          <option value="years1941to1950">1941 &mdash; 1950</option>
-          <option value="years1951to1960">1951 &mdash; 1960</option>
-          <option value="years1961to1970">1961 &mdash; 1970</option>    
-          <option value="years1971to1980">1971 &mdash; 1980</option>
-          <option value="years1981to1990">1981 &mdash; 1990</option>
-          <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2005">2001 &mdash; 2005</option>
-          <option value="years2006to2010">2006 &mdash; 2010</option>
-          <option value="years2011to2014">2011 &mdash; 2014</option>
-        </select>
-        <div class="clear"></div>
-      </div>
+        <div id="param-three" class="all-params">
+            <div class="param-title">
+                <p>Param</p>
+            </div>
+            <div class="sliders" id="slider-range-three"></div>
+            <div class="value-ranges" id="value-range-three">
+                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+            </div>
+            <select name="number" id="param-year-three" class="param-year">
+                <option value="yearsAll" selected="selected">All years</option>
+                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1911to1920">1911 &mdash; 1920</option>
+                <option value="years1921to1930">1921 &mdash; 1930</option>
+                <option value="years1931to1940">1931 &mdash; 1940</option>
+                <option value="years1941to1950">1941 &mdash; 1950</option>
+                <option value="years1951to1960">1951 &mdash; 1960</option>
+                <option value="years1961to1970">1961 &mdash; 1970</option>
+                <option value="years1971to1980">1971 &mdash; 1980</option>
+                <option value="years1981to1990">1981 &mdash; 1990</option>
+                <option value="years1991to2000">1991 &mdash; 2000</option>
+                <option value="years2001to2005">2001 &mdash; 2005</option>
+                <option value="years2006to2010">2006 &mdash; 2010</option>
+                <option value="years2011to2014">2011 &mdash; 2014</option>
+            </select>
+            <div class="clear"></div>
+        </div>
 
-      <div id="param-four" class="all-params">
-        <div class="param-title"><p>Param</p></div>
-        <div class="sliders" id="slider-range-four"></div>
-        <div class="value-ranges" id="value-range-four"><p>40 <span class="dash-class">&mdash;</span> 60</p></div>
-        <select name="number" id="param-year-four" class="param-year">
-          <option value="yearsAll" selected="selected">All years</option>
-          <option value="years1900to1910">1900 &mdash; 1910</option>
-          <option value="years1911to1920">1911 &mdash; 1920</option>
-          <option value="years1921to1930">1921 &mdash; 1930</option>
-          <option value="years1931to1940">1931 &mdash; 1940</option>
-          <option value="years1941to1950">1941 &mdash; 1950</option>
-          <option value="years1951to1960">1951 &mdash; 1960</option>
-          <option value="years1961to1970">1961 &mdash; 1970</option>    
-          <option value="years1971to1980">1971 &mdash; 1980</option>
-          <option value="years1981to1990">1981 &mdash; 1990</option>
-          <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2005">2001 &mdash; 2005</option>
-          <option value="years2006to2010">2006 &mdash; 2010</option>
-          <option value="years2011to2014">2011 &mdash; 2014</option>
-        </select>
-        <div class="clear"></div>
-      </div>
+        <div id="param-four" class="all-params">
+            <div class="param-title">
+                <p>Param</p>
+            </div>
+            <div class="sliders" id="slider-range-four"></div>
+            <div class="value-ranges" id="value-range-four">
+                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+            </div>
+            <select name="number" id="param-year-four" class="param-year">
+                <option value="yearsAll" selected="selected">All years</option>
+                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1911to1920">1911 &mdash; 1920</option>
+                <option value="years1921to1930">1921 &mdash; 1930</option>
+                <option value="years1931to1940">1931 &mdash; 1940</option>
+                <option value="years1941to1950">1941 &mdash; 1950</option>
+                <option value="years1951to1960">1951 &mdash; 1960</option>
+                <option value="years1961to1970">1961 &mdash; 1970</option>
+                <option value="years1971to1980">1971 &mdash; 1980</option>
+                <option value="years1981to1990">1981 &mdash; 1990</option>
+                <option value="years1991to2000">1991 &mdash; 2000</option>
+                <option value="years2001to2005">2001 &mdash; 2005</option>
+                <option value="years2006to2010">2006 &mdash; 2010</option>
+                <option value="years2011to2014">2011 &mdash; 2014</option>
+            </select>
+            <div class="clear"></div>
+        </div>
 
-      <div id="param-five" class="all-params">
-        <div class="param-title"><p>Param</p></div>
-        <div class="sliders" id="slider-range-five"></div>
-        <div class="value-ranges" id="value-range-five"><p>40 <span class="dash-class">&mdash;</span> 60</p></div>
-        <select name="number" id="param-year-five" class="param-year">
-          <option value="yearsAll" selected="selected">All years</option>
-          <option value="years1900to1910">1900 &mdash; 1910</option>
-          <option value="years1911to1920">1911 &mdash; 1920</option>
-          <option value="years1921to1930">1921 &mdash; 1930</option>
-          <option value="years1931to1940">1931 &mdash; 1940</option>
-          <option value="years1941to1950">1941 &mdash; 1950</option>
-          <option value="years1951to1960">1951 &mdash; 1960</option>
-          <option value="years1961to1970">1961 &mdash; 1970</option>    
-          <option value="years1971to1980">1971 &mdash; 1980</option>
-          <option value="years1981to1990">1981 &mdash; 1990</option>
-          <option value="years1991to2000">1991 &mdash; 2000</option>
-          <option value="years2001to2005">2001 &mdash; 2005</option>
-          <option value="years2006to2010">2006 &mdash; 2010</option>
-          <option value="years2011to2014">2011 &mdash; 2014</option>
-        </select>
-        <div class="clear"></div>
-      </div>                
+        <div id="param-five" class="all-params">
+            <div class="param-title">
+                <p>Param</p>
+            </div>
+            <div class="sliders" id="slider-range-five"></div>
+            <div class="value-ranges" id="value-range-five">
+                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+            </div>
+            <select name="number" id="param-year-five" class="param-year">
+                <option value="yearsAll" selected="selected">All years</option>
+                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1911to1920">1911 &mdash; 1920</option>
+                <option value="years1921to1930">1921 &mdash; 1930</option>
+                <option value="years1931to1940">1931 &mdash; 1940</option>
+                <option value="years1941to1950">1941 &mdash; 1950</option>
+                <option value="years1951to1960">1951 &mdash; 1960</option>
+                <option value="years1961to1970">1961 &mdash; 1970</option>
+                <option value="years1971to1980">1971 &mdash; 1980</option>
+                <option value="years1981to1990">1981 &mdash; 1990</option>
+                <option value="years1991to2000">1991 &mdash; 2000</option>
+                <option value="years2001to2005">2001 &mdash; 2005</option>
+                <option value="years2006to2010">2006 &mdash; 2010</option>
+                <option value="years2011to2014">2011 &mdash; 2014</option>
+            </select>
+            <div class="clear"></div>
+        </div>
     </div>
 
     <div id="landing-submit">
-      <p>View Results</p>
+        <p>View Results</p>
     </div>
     <div id="landing-results-output-test">
     </div>
     <div id="landing-footer">
-      <p>By Derek Willis<br/>& Explain Corp.</p>
+        <p>By Derek Willis
+            <br/>& Explain Corp.</p>
     </div>
-  </div>
+</div>
 
-  <div id="results-viz">
+<div id="results-viz">
     <div class="results-header">
-      <h2><a href="/">Malaria Data Visualization Tool</a></h2>
-      <div class="results-header-countries">
-        <h3>Active Country</h3>
-      </div>
+        <h2><a href="/">Malaria Data Visualization Tool</a></h2>
+        <div class="results-header-countries">
+            <h3 class="nav-active-countries">Active Country</h3>
+        </div>
     </div>
     <div id="results-nav-risks">
-      <ul id="nav-risks">
-        <li class="risks-active" id="risks-population_RISK_FACTOR">Total Population</li>
-        <li id="risks-pop_at_risk_RISK_FACTOR">Population at risk</li>
-        <li id="risks-funding_RISK_FACTOR">Funding*</li>
-        <li id="risks-GDP_per_capita_RISK_FACTOR">GDP per capita*</li>
-        <li id="risks-ALL_larval_control_RISK_FACTOR">Larval control</li>
-        <li id="risks-ALL_nets_RISK_FACTOR">Insecticidal nets</li>
-        <li id="risks-IRS_RISK_FACTOR">Indoor residual spraying</li>
-        <li id="risks-drugs_RISK_FACTOR">Antimalarial drugs</li>
-        <li id="risks-insecticide_resistance_RISK_FACTOR">Insecticide resistance</li>
-        <li id="risks-drug_resistance_RISK_FACTOR">Drug resistance</li>
-      </ul>
-      <div class="clear"></div>
+        <ul id="nav-risks">
+            <li class="risks-active" id="risks-population_RISK_FACTOR">Total Population</li>
+            <li id="risks-GDP_per_capita_RISK_FACTOR">GDP per capita*</li>
+            <li id="risks-IRS_RISK_FACTOR">Indoor residual spraying</li>
+            <li id="risks-ALL_nets_RISK_FACTOR">Insecticidal nets</li>
+            <li id="risks-insecticide_resistance_RISK_FACTOR">Insecticide resistance</li>
+            <li id="risks-pop_at_risk_RISK_FACTOR">Population at risk</li>
+            <li id="risks-funding_RISK_FACTOR">Funding*</li>
+            <li id="risks-ALL_larval_control_RISK_FACTOR">Larval control</li>
+            <li id="risks-drugs_RISK_FACTOR">Antimalarial drugs</li>
+            <li id="risks-drug_resistance_RISK_FACTOR">Drug resistance</li>
+        </ul>
+        <div class="clear"></div>
     </div>
     <div id="results-nav-left">
-      <p>Select up to five countries</p>
-      <ul id="nav-left">
-        <li>Loading...</li>
-      </ul>
-      <div class="clear"></div>
+        <p>Select up to five countries</p>
+        <ul id="nav-left">
+            <li>Loading...</li>
+        </ul>
+        <div class="clear"></div>
     </div>
     <div id="results-content">
-      <p style="font-size:150px;color:#ddd;letter-spacing:-10px;position:relative;margin-left:20px">Loading...</p>
-      <div class="results-content-risk"></div>
+        <p style="font-size:150px;color:#ddd;letter-spacing:-10px;position:relative;margin-left:20px">Loading...</p>
+        <div class="results-content-risk"></div>
 
     </div>
     <div class="clear"></div>
 
     <div id="cases-deaths">
-      <div id="cd-nav-left">
-        <p>Cases and deaths</p>
-        <ul id="cd-nav-left">
-          <li class="cd-nav-left-active">Cases</li>
-          <li>Deaths</li>
-          <li>Both</li> 
-        </ul>
+        <div id="cd-nav-left">
+            <p>Cases and deaths</p>
+            <ul id="cd-nav-left">
+                <li class="cd-nav-left-active">Cases</li>
+                <li>Deaths</li>
+                <li>Both</li>
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div id="cd-results-content">
+            <div class="cd-results-content-risk"></div>
+        </div>
         <div class="clear"></div>
-      </div>
-      <div id="cd-results-content">
-        <div class="cd-results-content-risk"></div> 
-      </div>
-    <div class="clear"></div>      
-
     </div>
-  </div>
+    <div id="footer">
+      <h4><span class="footer-method">Methodology</span> &mdash; <span class="footer-explain">Made by Explain Corp.</span></h4>
+    </div>
+</div>
 </body>
 </html>
