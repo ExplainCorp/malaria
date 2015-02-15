@@ -98,9 +98,8 @@
   #results-viz #nav-left .nav-left-active-4:hover { background:rgb(251, 154, 153);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-close { background:#ccc; position:absolute;top:-7px;right:0px;font-size:10px;padding:5px;color:#444;border-radius:25%;display:none;}
   #results-viz #nav-left .nav-left-active:hover > .nav-left-close { background:#222; color:#ccc; }
-  #results-viz #footer { font-size:14px;line-height:22px;margin:100px 0px 0px 0px;color:#777; }   
+  #results-viz #footer { font-size:14px;line-height:22px;margin:100px 0px 0px 0px;color:#777; }
   /** d3 stuff **/
-  
   #results-viz #viz_population_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
   #results-viz #viz_pop_at_risk_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
   #results-viz #viz_GDP_per_capita_RISK_FACTOR .background-class {fill:rgba(178,223,138, .15)  ;}
@@ -126,7 +125,7 @@
   .y .domain { display:none;}
   .viz-risks { margin-left:25px;}
   /** cases death **/
-  #results-viz #cases-death { width:1100px;height:300px;}
+  #results-viz #cases-deaths { width:1100px;height:300px;display: none}
   #results-viz #cd-results-content { float:left;width:955px;background:white;position:relative;}
   #results-viz #cd-nav-left { width:145px;background:white;float:left;}
   #results-viz #cd-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
@@ -455,8 +454,7 @@
         $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
 
         navLeftEvents();
-
-
+        $("#results-viz #cases-deaths").show();
       }
 
       function navLeftEvents() {
@@ -532,7 +530,6 @@
         country_list = [];
         country_list.push("Brazil", "Chad", "Congo", "Nigeria", "Kenya", "Tanzania", "Ghana", "Angola", "Mali");
         drawNav(country_list);
-
       }
 
       // for hovers, bring line to front
@@ -678,11 +675,10 @@
         varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
                                                                     
         // target data
-        // there might be a better way to do this, will revisit later
         if (risksID == "population_RISK_FACTOR") getidx = 0;          
         if (risksID == "pop_at_risk_RISK_FACTOR") getidx = 1;
-        if (risksID == "funding_RISK_FACTOR") getidx = 2;
-        if (risksID == "GDP_per_capita_RISK_FACTOR") getidx = 3;
+        if (risksID == "GDP_per_capita_RISK_FACTOR") getidx = 2;        
+        if (risksID == "funding_RISK_FACTOR") getidx = 3;
         if (risksID == "ALL_larval_control_RISK_FACTOR") getidx = 4;
         if (risksID == "ALL_nets_RISK_FACTOR") getidx = 5;
         if (risksID == "IRS_RISK_FACTOR") getidx = 6;
@@ -1558,7 +1554,7 @@
     <div class="results-header">
         <h2><a href="/">Malaria Data Visualization Tool</a></h2>
         <div class="results-header-countries">
-            <h3 class="nav-active-countries">Active Country</h3>
+            <h3 class="nav-active-countries">Loading...</h3>
         </div>
     </div>
     <div id="results-nav-risks">
