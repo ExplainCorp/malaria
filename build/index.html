@@ -690,26 +690,56 @@
           return {
             name: name,
             values: data.map(function (d) {
-              return {name: name, label: d[labelVar], value: +d[name], country:country};
+                return {name: name, label: d[labelVar], value: +d[name], country:country};
             })
           };
         });
    
+        //console.log(seriesData);
+        //return xpos(format_date(d.label));
+        //return ypos(d.value);             
         // isolate risk data
-        newdata = seriesData[getidx];
+        _newdata = seriesData[getidx];
+
+
+        // remove NA values from data         
+        var newdataB = {};
+
+        newdataB = {
+            "name": null,
+            "values": []
+        }
+
+        for (var i in _newdata.values) {
+            //if (isNaN(_newdata.values[i].value) != true) {
+                newdataB.name = _newdata.values[i].name;
+                var _dataFilter = {
+                    "label": _newdata.values[i].label,
+                    "name": _newdata.values[i].name,
+                    "country": _newdata.values[i].country,
+                    "value": _newdata.values[i].value
+                }
+                newdataB.values.push(_dataFilter);
+
+            //}
+        }
+
+
+        newdata = newdataB;
 
         var line = d3.svg.line()
           .interpolate("monotone")
-          .x(function (d) { return xpos(format_date(d.label));  })
-          .y(function (d) { return ypos(d.value); });
+          .x(function (d) { return xpos(format_date(d.label))  })
+          .y(function (d) { return ypos(d.value) }).defined(function(d) { return !isNaN(d.value); })
 
         var series = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
           .append("path")
           .attr("class", "lines lines-"+country+" lines-"+color_idx)
           .attr("id", function(d) { return "line-"+country+"-"+d.name })
-          .attr("d", function (d) { return line(d.values); })
+          .attr("d", function (d) { return line(d.values)  })
 
+        /*
         var series_text = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
           .append("text")
@@ -717,6 +747,7 @@
           .attr("y", function(d) { return ypos(d.values[0].value)-10 })
           .text(country)
           .style("display","none")
+        */
 
         // format voronoi data
         var voronoi_data = function(input) {
@@ -728,9 +759,10 @@
             .map(function(d) { return d.values });    
             vData = uniqueData;        
         }
-
+        
         // each risk needs its own data set
         // there must be a better way to do this, but it works, so i'm happy.
+        
         if (risksID == "population_RISK_FACTOR") {
           vData_population.push(newdata);
           voronoi_data(vData_population);        
@@ -779,8 +811,8 @@
             .attr("class", "voronoi");
 
           var voronoi = d3.geom.voronoi()
-            .x(function(d) { return xpos(format_date(d.label)); })
-            .y(function(d) { return ypos(d.value); })
+            .x(function (d) { return xpos(format_date(d.label)); })
+            .y(function (d) { return ypos(d.value) })
             .clipExtent([[0, 0], [w - (p*2), h - p]]);
       
           var focus = d3.select("#results-content #viz_"+risksID).append("g")
@@ -798,13 +830,13 @@
             .enter().append("path")
             .style("fill", "none")
             .style("stroke", "white")
-            .style("stroke-opacity",0)
+            .style("stroke-opacity",1)
             .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
             .datum(function(d) { return d.point })
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);            
         }
-
+      
       function mouseover(d) {
         d3.selectAll("#results-content .lines").style("opacity", "0.25")
         d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true).moveToFront();
@@ -818,7 +850,7 @@
         d3.selectAll("#results-content .lines").style("opacity", "1")
         focus.attr("transform", "translate(-100,-100)");
       }   
-
+      
         // ** to do
         // add axis [done]
         // new: call axis only once per risk, currently multiple [done]
