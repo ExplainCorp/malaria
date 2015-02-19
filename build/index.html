@@ -711,7 +711,7 @@
         }
 
         for (var i in _newdata.values) {
-            //if (isNaN(_newdata.values[i].value) != true) {
+            if (isNaN(_newdata.values[i].value) != true) {
                 newdataB.name = _newdata.values[i].name;
                 var _dataFilter = {
                     "label": _newdata.values[i].label,
@@ -720,8 +720,7 @@
                     "value": _newdata.values[i].value
                 }
                 newdataB.values.push(_dataFilter);
-
-            //}
+            }
         }
 
 
