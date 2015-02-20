@@ -608,7 +608,7 @@
 
         minDate = new Date("1/1/1898");
         // temporary, pull from sheet
-        maxDate = new Date("1/1/2014");
+        maxDate = new Date("1/1/2015");
 
         xpos = d3.time.scale()
           .domain([minDate,maxDate])
@@ -701,7 +701,6 @@
         // isolate risk data
         _newdata = seriesData[getidx];
 
-
         // remove NA values from data         
         var newdataB = {};
 
@@ -711,7 +710,8 @@
         }
 
         for (var i in _newdata.values) {
-            if (isNaN(_newdata.values[i].value) != true) {
+            if (isNaN(_newdata.values[i].value) != true && _newdata.values[i].value != 0) {
+              
                 newdataB.name = _newdata.values[i].name;
                 var _dataFilter = {
                     "label": _newdata.values[i].label,
@@ -723,13 +723,13 @@
             }
         }
 
-
         newdata = newdataB;
 
         var line = d3.svg.line()
-          .interpolate("monotone")
+          //.interpolate("monotone")
           .x(function (d) { return xpos(format_date(d.label))  })
-          .y(function (d) { return ypos(d.value) }).defined(function(d) { return !isNaN(d.value); })
+          .y(function (d) { return ypos(d.value) })
+          //.defined(function(d) { return !isNaN(d.value); })
 
         var series = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
@@ -829,7 +829,7 @@
             .enter().append("path")
             .style("fill", "none")
             .style("stroke", "white")
-            .style("stroke-opacity",1)
+            .style("stroke-opacity",0)
             .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
             .datum(function(d) { return d.point })
             .on("mouseover", mouseover)
@@ -999,8 +999,54 @@
           };
         });
 
+
+        //console.log(seriesDataCD)
+
+        // isolate series data and filter NA and missing values
+        newdataC = {
+            "name": null,
+            "values": []
+        }
+        _seriesCases = seriesDataCD[0];
+
+        for (var i in _seriesCases.values) {
+            if (isNaN(_seriesCases.values[i].value) != true && _seriesCases.values[i].value != 0) {
+              
+                newdataC.name = _seriesCases.values[i].name;
+                var _dataFilter = {
+                    "label": _seriesCases.values[i].label,
+                    "name": _seriesCases.values[i].name,
+                    "country": _seriesCases.values[i].country,
+                    "value": _seriesCases.values[i].value
+                }
+                newdataC.values.push(_dataFilter);
+            }
+        }
+
+        newdataD = {
+            "name": null,
+            "values": []
+        }
+        _seriesDeaths = seriesDataCD[1];
+
+        for (var i in _seriesDeaths.values) {
+            if (isNaN(_seriesDeaths.values[i].value) != true && _seriesDeaths.values[i].value != 0) {
+              
+                newdataD.name = _seriesDeaths.values[i].name;
+                var _dataFilter = {
+                    "label": _seriesDeaths.values[i].label,
+                    "name": _seriesDeaths.values[i].name,
+                    "country": _seriesDeaths.values[i].country,
+                    "value": _seriesDeaths.values[i].value
+                }
+                newdataD.values.push(_dataFilter);
+            }
+        }
+
+        //console.log(seriesDataCD)
+
         var line = d3.svg.line()
-          .interpolate("monotone")
+          //.interpolate("monotone")
           .x(function (d) { return xpos(format_date(d.label));  })
           .y(function (d) { return yposCD(d.value); });
 
@@ -1019,21 +1065,21 @@
         if (casesdeaths=="Cases") {
 
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[0])
+            .datum(newdataC)
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
-            .attr("id", function(d) { return "cd-"+d.name+"-"+country })
+            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) });
-
+          
           var series_text = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[0])
+            .datum(newdataC)
             .append("text")
             .attr("class", "cd-text-cases")
             .attr("x", 5)
             .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
             .text("Cases: "+country) 
 
-          v_cd.push(seriesDataCD[0]) 
+          v_cd.push(newdataC) 
           voronoi_dataCD(v_cd)        
         }
         //
@@ -1042,21 +1088,21 @@
         if (casesdeaths=="Deaths") {
         
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[1])
+            .datum(newdataD)
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
-            .attr("id", function(d) { return "cd-"+d.name+"-"+country })
+            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) })
   
           var series_text = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[1])
+            .datum(newdataD)
             .append("text")
             .attr("class", "cd-text-deaths")
             .attr("x", 5)
-            .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
+            .attr("y", function (d) { return yposCD(d.values[0].value)-10 })
             .text("Deaths: "+country)   
 
-          v_cd.push(seriesDataCD[1])
+          v_cd.push(newdataD)
           voronoi_dataCD(v_cd)
         }
         //
@@ -1065,14 +1111,14 @@
         if (casesdeaths=="Both") {
 
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[0])
+            .datum(newdataC)
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
-            .attr("id", function(d) { return "cd-"+d.name+"-"+country })
+            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) });
 
           var series_text = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[0])
+            .datum(newdataC)
             .append("text")
             .attr("class", "cd-text-cases")
             .attr("x", 5)
@@ -1080,22 +1126,22 @@
             .text("Cases: "+country) 
 
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[1])
+            .datum(newdataD)
             .append("path")
-            .attr("class", function(d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
-            .attr("id", function(d) { return "cd-"+d.name+"-"+country })
+            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) })
   
           var series_text = d3.select("#cd-results-content #viz_CD")
-            .datum(seriesDataCD[1])
+            .datum(newdataD)
             .append("text")
             .attr("class", "cd-text-deaths")
             .attr("x", 5)
             .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
             .text("Deaths: "+country)   
 
-          v_cd.push(seriesDataCD[0])
-          v_cd.push(seriesDataCD[1])
+          v_cd.push(newdataC)
+          v_cd.push(newdataD)
           voronoi_dataCD(v_cd)
         }
         
@@ -1126,8 +1172,8 @@
             .style("fill", "none")
             .style("stroke", "white")
             .style("stroke-opacity", 0)
-            .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
-            .datum(function(d) { return d.point })
+            .attr("d", function (d) { return "M" + d.join("L") + "Z"; })
+            .datum(function (d) { return d.point })
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);            
         }
@@ -1456,7 +1502,7 @@
                 <option value="years1991to2000">1991 &mdash; 2000</option>
                 <option value="years2001to2005">2001 &mdash; 2005</option>
                 <option value="years2006to2010">2006 &mdash; 2010</option>
-                <option value="years2011to2014">2011 &mdash; 2014</option>
+                <option value="years2011to2015">2011 &mdash; 2015</option>
             </select>
             <div class="clear"></div>
         </div>
@@ -1483,7 +1529,7 @@
                 <option value="years1991to2000">1991 &mdash; 2000</option>
                 <option value="years2001to2005">2001 &mdash; 2005</option>
                 <option value="years2006to2010">2006 &mdash; 2010</option>
-                <option value="years2011to2014">2011 &mdash; 2014</option>
+                <option value="years2011to2015">2011 &mdash; 2015</option>
             </select>
             <div class="clear"></div>
         </div>
@@ -1510,7 +1556,7 @@
                 <option value="years1991to2000">1991 &mdash; 2000</option>
                 <option value="years2001to2005">2001 &mdash; 2005</option>
                 <option value="years2006to2010">2006 &mdash; 2010</option>
-                <option value="years2011to2014">2011 &mdash; 2014</option>
+                <option value="years2011to2015">2011 &mdash; 2015</option>
             </select>
             <div class="clear"></div>
         </div>
@@ -1537,7 +1583,7 @@
                 <option value="years1991to2000">1991 &mdash; 2000</option>
                 <option value="years2001to2005">2001 &mdash; 2005</option>
                 <option value="years2006to2010">2006 &mdash; 2010</option>
-                <option value="years2011to2014">2011 &mdash; 2014</option>
+                <option value="years2011to2015">2011 &mdash; 2015</option>
             </select>
             <div class="clear"></div>
         </div>
@@ -1564,7 +1610,7 @@
                 <option value="years1991to2000">1991 &mdash; 2000</option>
                 <option value="years2001to2005">2001 &mdash; 2005</option>
                 <option value="years2006to2010">2006 &mdash; 2010</option>
-                <option value="years2011to2014">2011 &mdash; 2014</option>
+                <option value="years2011to2015">2011 &mdash; 2015</option>
             </select>
             <div class="clear"></div>
         </div>
