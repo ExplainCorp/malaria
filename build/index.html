@@ -528,7 +528,7 @@
       function visualize(datarisk) {
         // for testing purposes, some countries here
         country_list = [];
-        country_list.push("Cambodia","Laos","Myanmar","Thailand","Vietnam","Botswana","Namibia","South Africa","Swaziland");
+        country_list.push("Cambodia","Laos","Myanmar","Thailand","Vietnam","Botswana","Namibia","South_Africa","Swaziland");
         drawNav(country_list);
       }
 
@@ -872,7 +872,7 @@
       function createSVG_CD(countries, getNav) {
         p = 25; // padding
         w = 955;
-        hCD = 300;
+        hCD = 500;
         count = 3;
 
         vizCD = d3.select("#results-viz .cd-results-content-risk").append("svg")
