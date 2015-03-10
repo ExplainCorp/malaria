@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/reset.css">
   <style type="text/css">
   body { font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;font-size:16px;}
-  #landing-page { margin-top:50px; display:none;}
+  #landing-page { margin-top:50px; }
   #landing-page #landing-header { width:740px;margin:0px auto;text-align: center}
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
@@ -239,7 +239,7 @@
         datarisk = data;
         datariskCD = data;
         // temporary, comment this out when landing-page is visible
-        visualize(datarisk);
+        //visualize(datarisk);
       }      
 
       // ** init param object and country list 
@@ -266,7 +266,7 @@
                     $(".value-ranges p").eq(n).html(ui.values[0] + " <span class='dash-class'>&mdash;</span> " + ui.values[1]);
                     params["param" + (n + 1) + "a"] = ui.values[0];
                     params["param" + (n + 1) + "b"] = ui.values[1];
-                    console.log(params)
+                    //console.log(params)
                 }
             });
         });
@@ -274,7 +274,7 @@
           $(this).selectmenu({
             change: function(event,data) {
               params["param" + (n + 1) + "year"] = data.item.value;
-              console.log(params)
+              //console.log(params)
             }
           })
         })
@@ -344,15 +344,79 @@
 
       $("#landing-submit").on("click", function(e) {
         e.preventDefault();
+        var start = 0; var end = 100;
+        var param1check = false;
+        var param2check = false;
+        var param3check = false;
+        var param4check = false;
+        var param5check = false;
+
+        // param1 = transmission_index_PARAM
+        // param2 = climate_index_PARAM
+        // param3 = vector_behavior_index_PARAM
+        // param4 = development_index_PARAM
+        // param5 = intervention_index_PARAM
+
         if (country_list.length == 0) {
-          country_list.push("All_Countries");
+          //country_list.push("All_Countries");
+          
+          for (i in datarisk) {
+            if(params["param1year"]=="years1900to1910") start = 0; end = 9;
+            if(datarisk[i].elements[start]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[start]["transmission_index_PARAM"]<=params["param1b"]) {
+              param1check = true;
+            }
+            if(datarisk[i].elements[start]["climate_index_PARAM"]>=params["param2a"]&&datarisk[i].elements[start]["climate_index_PARAM"]<=params["param2b"]) {
+              param2check = true;
+            }
+            if(datarisk[i].elements[start]["vector_behavior_index_PARAM"]>=params["param3a"]&&datarisk[i].elements[start]["vector_behavior_index_PARAM"]<=params["param3b"]) {
+              param3check = true;
+            }
+            if(datarisk[i].elements[start]["development_index_PARAM"]>=params["param4a"]&&datarisk[i].elements[start]["development_index_PARAM"]<=params["param4b"]) {
+              param4check = true;
+            }
+            if(datarisk[i].elements[start]["intervention_index_PARAM"]>=params["param5a"]&&datarisk[i].elements[start]["intervention_index_PARAM"]<=params["param5b"]) {
+              param5check = true;
+            }
+            if (param1check==true&&param2check==true&&param3check==true&&param4&&param5check==true) {
+              console.log(datarisk[i].name)
+            }                                                
+          }
+            //for (j in datarisk[i].elements) {
+                //console.log(j)
+              /*
+                if(j == start) continue;
+                  if(datarisk[i].elements[j]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[j]["transmission_index_PARAM"]<=params["param1b"]) {
+                    console.log("YES")  
+                  } else {
+                    console.log("NO")
+                  }
+                if(j == end)  break; 
+                
+              
+                if(datarisk[i].elements[j]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[j]["transmission_index_PARAM"]<=params["param1b"]) {
+                  console.log("YES")  
+                } else {
+                  console.log("NO")
+                }
+                
+                
+              
+            }
+            
+
+          
         }
-        /* testing purposes
+          //console.log(params["param1a"])
+          */
+        }
+        ///* testing purposes
         $("#landing-results-output-test").html("Countries: "+country_list);
         for (p in params) {
           $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
+
         }
-        */
+
+
         visualize();
       });
 
@@ -499,6 +563,7 @@
                 }
                 exit_idx = get_id_idx;
                 console.log(exit_idx+" "+exit_idxx)
+                console.log(navArrayIdx)
                 navArrayIdx.splice($.inArray(_tempArr[get_id_idx], navArrayIdx), 1);
                 console.log((navArray));
 
@@ -1222,7 +1287,7 @@
         $(this).toggleClass("cd-nav-left-active");
         getCDid = $(this).text();
         initNavCD = true;
-        console.log(getCDid);
+        //console.log(getCDid);
         $("#results-viz .cd-results-content-risk").html("");
         createSVG_CD(cntrys_all, getCDid);
       })
