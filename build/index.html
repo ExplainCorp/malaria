@@ -61,20 +61,20 @@
   #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
   /** nav risks **/
   #results-nav-risks { margin:25px 0px 35px 0px;background:white;}
-  #results-viz #nav-risks li { float:left;padding:15px 0px 15px 15px;color:#444;margin-left:1px;cursor:pointer;font-size:13px;width:204px;margin-top:1px;text-transform: uppercase;}
+  #results-viz #nav-risks li { float:left;padding:15px 0px 15px 15px;color:#444;margin-left:1px;cursor:pointer;font-size:13px;width:200px;margin-top:1px;text-transform: uppercase;}
   #results-viz #nav-risks li:hover { background:#222 !important;color:white;}
   #results-viz #nav-risks li:first-child, #results-viz #nav-risks li:nth-child(6) { margin-left:0px;}
   #results-viz #nav-risks .risks-active { color: black;font-weight:bold;}
-  #results-viz #nav-risks #risks-population_RISK_FACTOR {background:rgba(166,206,227,.20);}
-  #results-viz #nav-risks #risks-pop_at_risk_RISK_FACTOR {background:rgba(166,206,227,.20);}
-  #results-viz #nav-risks #risks-GDP_per_capita_RISK_FACTOR {background:rgba(178,223,138, .15)  ;}
-  #results-viz #nav-risks #risks-funding_RISK_FACTOR {background:rgba(178,223,138,.15) ;}
-  #results-viz #nav-risks #risks-IRS_RISK_FACTOR {background:rgba(202,178,214,.30);}
-  #results-viz #nav-risks #risks-ALL_nets_RISK_FACTOR {background:rgba(202,178,214,.40);}
-  #results-viz #nav-risks #risks-insecticide_resistance_RISK_FACTOR {background:rgba(202,178,214,.40);}
-  #results-viz #nav-risks #risks-ALL_larval_control_RISK_FACTOR {background:rgba(202,178,214,.20);}  
-  #results-viz #nav-risks #risks-drugs_RISK_FACTOR {background:rgba(202,178,214,.60);}
-  #results-viz #nav-risks #risks-drug_resistance_RISK_FACTOR {background:rgba(202,178,214,.60);}
+  #results-viz #nav-risks #risks-population_RISK_FACTOR {background:rgba(166,206,227,.20);border-left:1px solid #444;border-right:1px solid #444;}
+  #results-viz #nav-risks #risks-pop_at_risk_RISK_FACTOR {background:rgba(166,206,227,.20);border-left:1px solid #444;border-right:1px solid #444;border-bottom: 1px solid #444}
+  #results-viz #nav-risks #risks-GDP_per_capita_RISK_FACTOR {background:rgba(178,223,138,.15);border-right:1px solid #444;}
+  #results-viz #nav-risks #risks-funding_RISK_FACTOR {background:rgba(178,223,138,.15);border-right:1px solid #444;border-bottom: 1px solid #444}
+  #results-viz #nav-risks #risks-IRS_RISK_FACTOR {background:rgba(200,200,200,.4);}
+  #results-viz #nav-risks #risks-ALL_nets_RISK_FACTOR {background:rgba(200,200,200,.4);}
+  #results-viz #nav-risks #risks-insecticide_resistance_RISK_FACTOR {background:rgba(200,200,200,.4);border-right:1px solid #444;}
+  #results-viz #nav-risks #risks-ALL_larval_control_RISK_FACTOR {background:rgba(200,200,200,.4);border-bottom:1px solid #444;}  
+  #results-viz #nav-risks #risks-drugs_RISK_FACTOR {background:rgba(200,200,200,.4);border-bottom:1px solid #444;}
+  #results-viz #nav-risks #risks-drug_resistance_RISK_FACTOR {background:rgba(200,200,200,.4);border-bottom:1px solid #444;border-right:1px solid #444;}
   /** nav left **/
   #results-viz #results-nav-left { width:145px;background:white;float:left;}
   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
@@ -216,6 +216,7 @@
       var getCDid = "Cases";
       var tooltip;
       var exit_idx = null;
+      var exit_idxx = null;
       var navArrayIdx = ["a"];
 
       // ** pull data from spreadsheet into json via tabletop.js
@@ -235,7 +236,6 @@
         // to do: 
         // data will load every sheet, write function to sort through sheets
         // active countries draw left-nav [done]
-        console.log(data);
         datarisk = data;
         datariskCD = data;
         // temporary, comment this out when landing-page is visible
@@ -478,6 +478,7 @@
         $("#results-nav-left #nav-left li").on("click", function(e) {
             e.preventDefault();
             get_id = $(this).attr("id");
+            get_class = $(this).attr("class");
 
             if ($.inArray(get_id, navArray) >= 0) {
                 //console.log("in>out")
@@ -489,19 +490,29 @@
                 if (get_id_idx == 4) _color = "e";
 
                 navArray.splice($.inArray(get_id, navArray), 1);
-                $(this).toggleClass("nav-left-active nav-left-active-" + get_id_idx);
+
                 $(this).find("span").hide();
+                $(this).removeAttr("class")
                 // store exit idx to splice and join into array
+                if (exit_idx!=null) {
+                  exit_idxx = get_id_idx+1;
+                }
                 exit_idx = get_id_idx;
+                console.log(exit_idx+" "+exit_idxx)
                 navArrayIdx.splice($.inArray(_tempArr[get_id_idx], navArrayIdx), 1);
+                console.log((navArray));
 
             } else if ($.inArray(get_id, navArray) < 0 && navArray.length <= 4) {
 
-                if (exit_idx != null) {
+                if (exit_idx != null && exit_idx==null) {
                     navArray.splice(exit_idx, 0, get_id)
                     navArrayIdx.splice(exit_idx, 0, _color);
+                } else if (exit_idx!=null && exit_idxx != null) {
+                    navArray.splice(exit_idxx, 0, get_id)
+                    navArrayIdx.splice(exit_idxx, 0, _color);                  
                 } else {
                     navArray.push(get_id);
+                    console.log(navArray)
                     get_id_idx = navArray.indexOf(get_id);
                     if (get_id_idx == 0) _color = "a";
                     if (get_id_idx == 1) _color = "b";
@@ -511,24 +522,33 @@
                     navArrayIdx.push(_color);
                 }
 
-                $(this).toggleClass("nav-left-active nav-left-active-" + get_id_idx);
+                $(this).addClass("nav-left-active nav-left-active-" + get_id_idx);
                 $(this).find("span").show();
-                //console.log(get_id + " " + get_id_idx + " " + exit_idx)
+
                 exit_idx = null;
+                exit_idxx = null;
+
+                // the order of the array is messed up, it cant remember last 2
+                console.log((navArray));
             }
-            //console.log(navArray)
-            //console.log(navArrayIdx);
 
             get_ctry = $(this).text();
             navEvents(get_ctry, navArrayIdx);
             //if (get_cnty_cnt == 0) $(this).addClass("nav-left-active");
+            
+            
         });
       }
 
       function visualize(datarisk) {
-        // for testing purposes, some countries here
         country_list = [];
+        // for testing purposes, some countries here
         country_list.push("Cambodia","Laos","Myanmar","Thailand","Vietnam","Botswana","Namibia","South_Africa","Swaziland");
+        /*
+        for (name in datarisk) {
+          country_list.push(name)
+        }
+        */
         drawNav(country_list);
       }
 
@@ -940,7 +960,7 @@
           if ((j+1)==countries.length) {
             voronoiCD = true;
           }
-          viz_CD(datariskCD[countries[j]].elements, countries[j], getCDid, voronoiCD);
+          viz_CD(datariskCD[countries[j]].elements, countries[j], getCDid, voronoiCD, navArrayIdx[j]);
         }
       createTT("cd");
         
@@ -983,7 +1003,7 @@
       } 
 
       // visualize cases and deaths
-      function viz_CD(data, country, cd, _voronoiCD) {
+      function viz_CD(data, country, cd, _voronoiCD, color_idx) {
 
         casesdeaths = cd;
         voronoiCD = _voronoiCD;
@@ -1067,7 +1087,7 @@
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
             .datum(newdataC)
             .append("path")
-            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("class", function (d) { return "lines lines-"+color_idx+" cd-"+d.name+" cd-"+country})
             .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) });
           
@@ -1090,7 +1110,7 @@
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
             .datum(newdataD)
             .append("path")
-            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("class", function (d) { return "lines lines-"+color_idx+" cd-"+d.name+" cd-"+country})
             .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) })
   
@@ -1113,7 +1133,7 @@
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
             .datum(newdataC)
             .append("path")
-            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("class", function (d) { return "lines lines-"+color_idx+" cd-"+d.name+" cd-"+country})
             .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) });
 
@@ -1128,7 +1148,7 @@
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
             .datum(newdataD)
             .append("path")
-            .attr("class", function (d) { return "lines lines-cd cd-"+d.name+" cd-"+country})
+            .attr("class", function (d) { return "lines lines-"+color_idx+" cd-"+d.name+" cd-"+country})
             .attr("id", function (d) { return "cd-"+d.name+"-"+country })
             .attr("d", function (d) { return line(d.values) })
   
