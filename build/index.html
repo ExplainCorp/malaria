@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="css/reset.css">
   <style type="text/css">
   body { font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;font-size:16px;}
-  #landing-page { margin-top:50px; }
+  #landing-page { margin-top:50px;display:none; }
   #landing-page #landing-header { width:740px;margin:0px auto;text-align: center}
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
@@ -218,6 +218,7 @@
       var exit_idx = null;
       var exit_idxx = null;
       var navArrayIdx = ["a"];
+      var colorObj = {};
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -239,7 +240,7 @@
         datarisk = data;
         datariskCD = data;
         // temporary, comment this out when landing-page is visible
-        //visualize(datarisk);
+        visualize(datarisk);
       }      
 
       // ** init param object and country list 
@@ -417,7 +418,7 @@
         }
 
 
-        visualize();
+        //visualize();
       });
 
       // arrays for selected navigation items
@@ -526,6 +527,35 @@
         // call first graph here
         navEvents("Cambodia");
         var navArray = ["Cambodia"];
+
+        colorObj.colorA = "Cambodia";
+        colorObj.colorB = null;
+        colorObj.colorC = null;
+        colorObj.colorD = null;
+        colorObj.colorE = null;        
+
+        $("#results-nav-left #nav-left li").on("click", function(e) {
+            e.preventDefault();
+            get_id = $(this).attr("id");
+
+
+            for (o in colorObj) {
+                if (colorObj[o] == get_id) {
+                    colorObj[o] = null;
+                    $(this).removeClass("nav-left-active")
+                } else if (colorObj[o] == null) {
+                    colorObj[o] = get_id;
+                    $(this).addClass("nav-left-active")
+                    break;
+                }
+
+            }
+            console.log(colorObj)
+            
+        })
+
+
+        /*
         navArrayIdx = ["a"]
         var _tempArr = ["a","b","c","d","e"];
         var _color;
@@ -603,8 +633,9 @@
             
             
         });
+        */
       }
-
+      
       function visualize(datarisk) {
         country_list = [];
         // for testing purposes, some countries here
