@@ -478,6 +478,7 @@
               createSVG(risks_all[i], risks_height, count, i);
               // create tooltips
               createTT(risks_all[i]);
+              console.log("...svg created")
           }
 
           vData = [];
@@ -511,6 +512,7 @@
       // first draw it off of country_list [done]
       // after draw it off of all_countries + params
       function drawNav(countries) {
+        console.log("...drawNav")
         //console.log(countries.length)
         $("#results-viz #nav-left").html("");
         for (i=0;i<countries.length;i++) {
@@ -520,14 +522,15 @@
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-a");
         $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
 
-        navLeftEvents();
+        
+        navEvents("Cambodia");
         $("#results-viz #cases-deaths").show();
       }
 
       function navLeftEvents() {
-
+        console.log("...navLeftEvents")
         // call first graph here
-        navEvents("Cambodia");
+        
         //var navArray = ["Cambodia"];
 
         colorObj.a = "Cambodia";
@@ -562,7 +565,7 @@
                 colorObj[o] = get_id;
                 $(this).addClass("nav-left-active nav-left-active-"+o)
                 console.log(".lines-"+get_id)
-                $("#results-viz #results-content .results-content-risk").css({"background":"black"})
+                $("#results-viz #results-content").html(" ")
                 //.attr("class", "lines lines-"+country+" lines-"+color_idx)
                 orderObj[o] = o;
                 break;
@@ -1218,6 +1221,7 @@
         
         // this may change, only want to apply to last instance of loop
         if (voronoiCD==true) {
+          navLeftEvents();
           var vor = d3.select("#cd-results-content #viz_CD").append("g")
             .attr("id", "paths")
             .attr("class", "voronoi");
