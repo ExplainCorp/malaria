@@ -545,10 +545,17 @@
         orderObj.d = null;
         orderObj.e = null;   
 
-        var colorCheck = false;  
-        var get_id;
+        
+      }
+      function eventTrigger() {
+        $("#results-viz").on("click", "#results-content", function(e) {
 
-        $("#results-nav-left #nav-left li").on("click", function(e) {
+            console.log($(this).find(".viz-risks").remove())
+
+            var colorCheck = false;  
+            var get_id;          
+            console.log("clicked")
+            $(".viz-risks").remove()
             colorCheck = false;
             e.preventDefault();
             get_id = $(this).attr("id");
@@ -565,7 +572,7 @@
                 colorObj[o] = get_id;
                 $(this).addClass("nav-left-active nav-left-active-"+o)
                 console.log(".lines-"+get_id)
-                $("#results-viz #results-content").html(" ")
+                
                 //.attr("class", "lines lines-"+country+" lines-"+color_idx)
                 orderObj[o] = o;
                 break;
@@ -592,7 +599,7 @@
             navEvents(get_id, navArrayIdx);
         })
       }
-      
+
       function visualize(datarisk) {
         country_list = [];
         // for testing purposes, some countries here
@@ -879,6 +886,7 @@
 
         // this may change, only want to apply to last instance of loop
         if (voronoi==true) {
+          eventTrigger();
           var vor = d3.select("#results-content #viz_"+risksID).append("g")
             .attr("id", "paths")
             .attr("class", "voronoi");
