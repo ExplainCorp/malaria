@@ -86,16 +86,16 @@
   #results-viz .results-content-risk .results-risks-title { position:absolute;top:15px;left:5px;font-size:16px;color:#777;}
   #results-viz .results-content-risk:first-child { margin-top:0px;height:600px;}
   #results-viz #nav-left .nav-left-active {   background:rgb(255,127,0);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-0 { background:rgb(255,127,0);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-1 { background:rgb(31,120,180);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-2 { background:rgb(227, 26, 28);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-3 { background:rgb(106, 61, 154);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-4 { background:rgb(251, 154, 153);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-0:hover { background:rgb(255,127,0);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-1:hover { background:rgb(31,120,180);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-2:hover { background:rgb(227, 26, 28);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-3:hover { background:rgb(106, 61, 154);color:white;border-radius:5px;}
-  #results-viz #nav-left .nav-left-active-4:hover { background:rgb(251, 154, 153);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-a { background:rgb(255,127,0);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-b { background:rgb(31,120,180);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-c { background:rgb(227, 26, 28);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-d { background:rgb(106, 61, 154);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-e { background:rgb(251, 154, 153);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-a:hover { background:rgb(255,127,0);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-b:hover { background:rgb(31,120,180);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-c:hover { background:rgb(227, 26, 28);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-d:hover { background:rgb(106, 61, 154);color:white;border-radius:5px;}
+  #results-viz #nav-left .nav-left-active-e:hover { background:rgb(251, 154, 153);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-close { background:#ccc; position:absolute;top:-7px;right:0px;font-size:10px;padding:5px;color:#444;border-radius:25%;display:none;}
   #results-viz #nav-left .nav-left-active:hover > .nav-left-close { background:#222; color:#ccc; }
   #results-viz #footer { font-size:14px;line-height:22px;margin:100px 0px 0px 0px;color:#777; }
@@ -219,6 +219,7 @@
       var exit_idxx = null;
       var navArrayIdx = ["a"];
       var colorObj = {};
+      var orderObj = {};
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -501,6 +502,7 @@
               }
               for (k = 0; k < risks_all.length; k++) {
                   graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi, j, navArrayIdx[j])
+                    //console.log(navArrayIdx)
               }
           }
       }
@@ -515,7 +517,7 @@
           $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"<span class='nav-left-close'>&#10006;</span></li>")
         }
 
-        $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-0");
+        $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-a");
         $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
 
         navLeftEvents();
@@ -526,114 +528,66 @@
 
         // call first graph here
         navEvents("Cambodia");
-        var navArray = ["Cambodia"];
+        //var navArray = ["Cambodia"];
 
-        colorObj.colorA = "Cambodia";
-        colorObj.colorB = null;
-        colorObj.colorC = null;
-        colorObj.colorD = null;
-        colorObj.colorE = null;        
+        colorObj.a = "Cambodia";
+        colorObj.b = null;
+        colorObj.c = null;
+        colorObj.d = null;
+        colorObj.e = null;   
+
+        orderObj.a = "a";
+        orderObj.b = null;
+        orderObj.c = null;
+        orderObj.d = null;
+        orderObj.e = null;   
+
+        var colorCheck = false;  
+        var get_id;
 
         $("#results-nav-left #nav-left li").on("click", function(e) {
+            colorCheck = false;
             e.preventDefault();
             get_id = $(this).attr("id");
-
+            //navArrayIdx = [];
 
             for (o in colorObj) {
-                if (colorObj[o] == get_id) {
-                    colorObj[o] = null;
-                    $(this).removeClass("nav-left-active")
-                } else if (colorObj[o] == null) {
-                    colorObj[o] = get_id;
-                    $(this).addClass("nav-left-active")
-                    break;
-                }
-
+              if(colorObj[o]==get_id) {
+                colorCheck=true;
+              }
             }
-            console.log(colorObj)
-            
-        })
 
-
-        /*
-        navArrayIdx = ["a"]
-        var _tempArr = ["a","b","c","d","e"];
-        var _color;
-
-        // somewhat confusing code below
-        // on click
-        // creates an array of active countries
-        // if country is in array on toggle, remove it, and also track it's 
-        // original array position
-        // add new country to that previous position to maintain colors
-
-        // mirror this process with _tempArray
-        // for 5 color states applied to paths
-        $("#results-nav-left #nav-left li").on("click", function(e) {
-            e.preventDefault();
-            get_id = $(this).attr("id");
-            get_class = $(this).attr("class");
-
-            if ($.inArray(get_id, navArray) >= 0) {
-                //console.log("in>out")
-                get_id_idx = navArray.indexOf(get_id);
-                if (get_id_idx == 0) _color = "a";
-                if (get_id_idx == 1) _color = "b";
-                if (get_id_idx == 2) _color = "c";
-                if (get_id_idx == 3) _color = "d";
-                if (get_id_idx == 4) _color = "e";
-
-                navArray.splice($.inArray(get_id, navArray), 1);
-
-                $(this).find("span").hide();
+            for (o in colorObj) {
+              if (colorCheck==false&&colorObj[o]==null) {
+                colorObj[o] = get_id;
+                $(this).addClass("nav-left-active nav-left-active-"+o)
+                console.log(".lines-"+get_id)
+                $("#results-viz #results-content .results-content-risk").css({"background":"black"})
+                //.attr("class", "lines lines-"+country+" lines-"+color_idx)
+                orderObj[o] = o;
+                break;
+              }
+              if (colorCheck==true&&colorObj[o]==get_id) {
+                colorObj[o] = null;
                 $(this).removeAttr("class")
-                // store exit idx to splice and join into array
-                if (exit_idx!=null) {
-                  exit_idxx = get_id_idx+1;
-                }
-                exit_idx = get_id_idx;
-                console.log(exit_idx+" "+exit_idxx)
-                console.log(navArrayIdx)
-                navArrayIdx.splice($.inArray(_tempArr[get_id_idx], navArrayIdx), 1);
-                console.log((navArray));
-
-            } else if ($.inArray(get_id, navArray) < 0 && navArray.length <= 4) {
-
-                if (exit_idx != null && exit_idx==null) {
-                    navArray.splice(exit_idx, 0, get_id)
-                    navArrayIdx.splice(exit_idx, 0, _color);
-                } else if (exit_idx!=null && exit_idxx != null) {
-                    navArray.splice(exit_idxx, 0, get_id)
-                    navArrayIdx.splice(exit_idxx, 0, _color);                  
-                } else {
-                    navArray.push(get_id);
-                    console.log(navArray)
-                    get_id_idx = navArray.indexOf(get_id);
-                    if (get_id_idx == 0) _color = "a";
-                    if (get_id_idx == 1) _color = "b";
-                    if (get_id_idx == 2) _color = "c";
-                    if (get_id_idx == 3) _color = "d";
-                    if (get_id_idx == 4) _color = "e";
-                    navArrayIdx.push(_color);
-                }
-
-                $(this).addClass("nav-left-active nav-left-active-" + get_id_idx);
-                $(this).find("span").show();
-
-                exit_idx = null;
-                exit_idxx = null;
-
-                // the order of the array is messed up, it cant remember last 2
-                console.log((navArray));
+                orderObj[o] = null;
+              }
             }
 
-            get_ctry = $(this).text();
-            navEvents(get_ctry, navArrayIdx);
-            //if (get_cnty_cnt == 0) $(this).addClass("nav-left-active");
-            
-            
-        });
-        */
+            console.log(colorObj)
+            console.log(orderObj)
+
+            navArrayIdx = [];
+
+            for (k in orderObj) {
+              if (orderObj[k]!=null) {
+                navArrayIdx.push(orderObj[k])
+              }
+            }
+
+            console.log(navArrayIdx)
+            navEvents(get_id, navArrayIdx);
+        })
       }
       
       function visualize(datarisk) {
@@ -850,7 +804,8 @@
         var series = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
           .append("path")
-          .attr("class", "lines lines-"+country+" lines-"+color_idx)
+          //.attr("class", "lines lines-"+country+" lines-"+color_idx)
+          .attr("class", "lines lines-"+country)
           .attr("id", function(d) { return "line-"+country+"-"+d.name })
           .attr("d", function (d) { return line(d.values)  })
 
