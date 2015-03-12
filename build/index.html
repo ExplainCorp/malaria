@@ -220,6 +220,7 @@
       var navArrayIdx = ["a"];
       var colorObj = {};
       var orderObj = {};
+      var checker = false;
 
       // ** pull data from spreadsheet into json via tabletop.js
       var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
@@ -383,33 +384,6 @@
               console.log(datarisk[i].name)
             }                                                
           }
-            //for (j in datarisk[i].elements) {
-                //console.log(j)
-              /*
-                if(j == start) continue;
-                  if(datarisk[i].elements[j]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[j]["transmission_index_PARAM"]<=params["param1b"]) {
-                    console.log("YES")  
-                  } else {
-                    console.log("NO")
-                  }
-                if(j == end)  break; 
-                
-              
-                if(datarisk[i].elements[j]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[j]["transmission_index_PARAM"]<=params["param1b"]) {
-                  console.log("YES")  
-                } else {
-                  console.log("NO")
-                }
-                
-                
-              
-            }
-            
-
-          
-        }
-          //console.log(params["param1a"])
-          */
         }
         ///* testing purposes
         $("#landing-results-output-test").html("Countries: "+country_list);
@@ -433,7 +407,7 @@
           if (get_risk_cnt == 0) $(this).addClass("risks-active")
       })
 
-      function navEvents(navActive, navArrayIdx) {
+      function navEvents(navActive, country_object, color_obj) {
           // reset arrays on every click
           risks_all.length = 0;
           cntrys_all.length = 0;
@@ -451,7 +425,7 @@
               cntrys_all.push(cntrys);
           });
 
-          divideSpaces(risks_all, get_risk_cnt, cntrys_all, navArrayIdx);
+          divideSpaces(risks_all, get_risk_cnt, cntrys_all, country_object, color_obj);
           $(".nav-active-countries").html(cntrys_all.join(", "))
 
           // this area is for drawing cases/deaths for selected countries
@@ -459,7 +433,7 @@
           createSVG_CD(cntrys_all, getCDid);
       }
 
-      function divideSpaces(risks, count, countries, clr_idx) {
+      function divideSpaces(risks, count, countries, country_object, color_obj) {
           $("#results-viz #results-content").html("");
 
           // set height of first div that divides
@@ -494,6 +468,7 @@
           vData_insecticide_resistance = [];
           vData_drug_resistance = [];
           voronoi = false;
+          checker = false;
 
           // call risks viz function here
           for (j = 0; j < countries.length; j++) {
@@ -502,10 +477,25 @@
                   voronoi = true;
               }
               for (k = 0; k < risks_all.length; k++) {
-                  graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi, j, navArrayIdx[j])
+                  graph_risks(datarisk[countries[j]].elements, risks_all[k], risks_height, countries[j], count, k, voronoi, j,runColorCheck(colorObj,countries[j]))
+                    //console.log(colorObj[j])
                     //console.log(navArrayIdx)
               }
           }
+      }
+
+      // this gets the key of the value
+      Object.prototype.getKeyByValue = function( value ) {
+          for( var prop in this ) {
+              if( this.hasOwnProperty( prop ) ) {
+                   if( this[ prop ] === value )
+                       return prop;
+              }
+          }
+      }
+
+      function runColorCheck(colorObj,cntry) {
+        return (colorObj.getKeyByValue(cntry))
       }
 
       // draw left-nav based off country_list or param filters w/ All Countries
@@ -516,23 +506,23 @@
         //console.log(countries.length)
         $("#results-viz #nav-left").html("");
         for (i=0;i<countries.length;i++) {
+          $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"</li>") 
+          /*
           $("#results-viz #nav-left").append("<li id="+countries[i]+">"+countries[i]+"<span class='nav-left-close'>&#10006;</span></li>")
+          */
         }
 
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-a");
         $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
 
-        
-        navEvents("Cambodia");
+          navLeftEvents();
         $("#results-viz #cases-deaths").show();
       }
 
       function navLeftEvents() {
         console.log("...navLeftEvents")
-        // call first graph here
-        
-        //var navArray = ["Cambodia"];
 
+        // call first graph here
         colorObj.a = "Cambodia";
         colorObj.b = null;
         colorObj.c = null;
@@ -545,60 +535,47 @@
         orderObj.d = null;
         orderObj.e = null;   
 
+        navEvents("Cambodia", colorObj); 
+
+        $("#results-nav-left #nav-left li").on("click", function(e) {
+          e.preventDefault();
+          var colorCheck = false;
+          var get_id;
+
+          colorCheck = false;
+          get_id = $(this).attr("id");
+          //navArrayIdx = [];
+
+          for (o in colorObj) {
+              if (colorObj[o] == get_id) {
+                  colorCheck = true;
+              }
+          }
+
+          for (o in colorObj) {
+              if (colorCheck == false && colorObj[o] == null) {
+                  colorObj[o] = get_id;
+                  $(this).addClass("nav-left-active nav-left-active-" + o)
+                  orderObj[o] = o;
+                  break;
+              }
+              if (colorCheck == true && colorObj[o] == get_id) {
+                  colorObj[o] = null;
+                  $(this).removeAttr("class")
+                  orderObj[o] = null;
+              }
+          }
+
+          //console.log(colorObj)
+          //console.log(orderObj)
+
+          navArrayIdx = [];
+
+          navEvents(get_id, colorObj);
+        })
         
       }
-      function eventTrigger() {
-        $("#results-viz").on("click", "#results-content", function(e) {
 
-            console.log($(this).find(".viz-risks").remove())
-
-            var colorCheck = false;  
-            var get_id;          
-            console.log("clicked")
-            $(".viz-risks").remove()
-            colorCheck = false;
-            e.preventDefault();
-            get_id = $(this).attr("id");
-            //navArrayIdx = [];
-
-            for (o in colorObj) {
-              if(colorObj[o]==get_id) {
-                colorCheck=true;
-              }
-            }
-
-            for (o in colorObj) {
-              if (colorCheck==false&&colorObj[o]==null) {
-                colorObj[o] = get_id;
-                $(this).addClass("nav-left-active nav-left-active-"+o)
-                console.log(".lines-"+get_id)
-                
-                //.attr("class", "lines lines-"+country+" lines-"+color_idx)
-                orderObj[o] = o;
-                break;
-              }
-              if (colorCheck==true&&colorObj[o]==get_id) {
-                colorObj[o] = null;
-                $(this).removeAttr("class")
-                orderObj[o] = null;
-              }
-            }
-
-            console.log(colorObj)
-            console.log(orderObj)
-
-            navArrayIdx = [];
-
-            for (k in orderObj) {
-              if (orderObj[k]!=null) {
-                navArrayIdx.push(orderObj[k])
-              }
-            }
-
-            console.log(navArrayIdx)
-            navEvents(get_id, navArrayIdx);
-        })
-      }
 
       function visualize(datarisk) {
         country_list = [];
@@ -744,6 +721,8 @@
       // visualize risks
       function graph_risks(data,risksID,h2,country,count, idx, v, cntry_idx, color_idx) {      
 
+        //console.log(color_idx)
+
         if ((idx+1)==count) { 
           h = h2;
         } else {
@@ -814,8 +793,7 @@
         var series = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
           .append("path")
-          //.attr("class", "lines lines-"+country+" lines-"+color_idx)
-          .attr("class", "lines lines-"+country)
+          .attr("class", "lines lines-"+country+" lines-"+color_idx)
           .attr("id", function(d) { return "line-"+country+"-"+d.name })
           .attr("d", function (d) { return line(d.values)  })
 
@@ -886,7 +864,6 @@
 
         // this may change, only want to apply to last instance of loop
         if (voronoi==true) {
-          eventTrigger();
           var vor = d3.select("#results-content #viz_"+risksID).append("g")
             .attr("id", "paths")
             .attr("class", "voronoi");
@@ -1022,7 +999,7 @@
           if ((j+1)==countries.length) {
             voronoiCD = true;
           }
-          viz_CD(datariskCD[countries[j]].elements, countries[j], getCDid, voronoiCD, navArrayIdx[j]);
+          viz_CD(datariskCD[countries[j]].elements, countries[j], getCDid, voronoiCD, runColorCheck(colorObj,countries[j]));
         }
       createTT("cd");
         
@@ -1080,9 +1057,6 @@
             })
           };
         });
-
-
-        //console.log(seriesDataCD)
 
         // isolate series data and filter NA and missing values
         newdataC = {
@@ -1187,9 +1161,8 @@
           v_cd.push(newdataD)
           voronoi_dataCD(v_cd)
         }
-        //
 
-        // cases and deahts       
+        // cases and deaths       
         if (casesdeaths=="Both") {
 
           var seriesCD_c = d3.select("#cd-results-content #viz_CD")
@@ -1229,7 +1202,6 @@
         
         // this may change, only want to apply to last instance of loop
         if (voronoiCD==true) {
-          navLeftEvents();
           var vor = d3.select("#cd-results-content #viz_CD").append("g")
             .attr("id", "paths")
             .attr("class", "voronoi");
