@@ -56,9 +56,9 @@
   /** results viz **/
   #results-viz { width:1100px;margin:50px auto 50px auto;background:white;}
   #results-viz a { text-decoration: none;}
-  #results-viz h2 a { color:#22b573;font-size:30px;font-weight:bold;}
+  #results-viz h2 a { color:#22b573;font-size:35px;font-weight:bold;letter-spacing:-2px;}
   #results-viz .results-header-countries { margin-top:15px;}
-  #results-viz h3 { font-size:50px;color:#4d4d4d;letter-spacing:-2px;}
+  #results-viz h3 { font-size:35px;color:#4d4d4d;letter-spacing:-2px;}
   /** nav risks **/
   #results-nav-risks { margin:25px 0px 35px 0px;background:white;}
   #results-viz #nav-risks li { float:left;padding:15px 0px 15px 15px;color:#444;margin-left:1px;cursor:pointer;font-size:13px;width:200px;margin-top:1px;text-transform: uppercase;}
@@ -78,8 +78,23 @@
   /** nav left **/
   #results-viz #results-nav-left { width:145px;background:white;float:left;}
   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
-  #results-viz #nav-left {color:#666666;}
-  #results-viz #nav-left li { padding:15px;cursor:pointer;position:relative;}
+  #results-viz #nav-left {color:#666666;width:135px;}
+  #results-viz #nav-left { height:513px;overflow-y:auto;overflow-x:hidden;}
+#results-viz #nav-left::-webkit-scrollbar {
+    width: 10px;
+}
+#results-viz #nav-left::-webkit-scrollbar-track {
+    background-color: #f9f9f9;
+    border-left: 0px solid #ccc;
+}
+#results-viz #nav-left::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+}
+#results-viz #nav-left::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
+  #results-viz #nav-left li { padding:15px;margin-right:10px;cursor:pointer;position:relative;}
   #results-viz #nav-left li:hover { background:black;color:white;border-radius:5px;}
   #results-viz #results-content { float:left;width:955px;background:white;margin-bottom:30px;position:relative;}
   #results-viz .results-content-risk { background:white;margin-bottom:15px;position: relative;margin-left:15px;margin-right:35px;}
@@ -515,15 +530,15 @@
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-a");
         $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
 
-          navLeftEvents();
+          navLeftEvents(countries);
         $("#results-viz #cases-deaths").show();
       }
 
-      function navLeftEvents() {
+      function navLeftEvents(countries) {
         console.log("...navLeftEvents")
 
         // call first graph here
-        colorObj.a = "Cambodia";
+        colorObj.a = countries[0];
         colorObj.b = null;
         colorObj.c = null;
         colorObj.d = null;
@@ -535,7 +550,7 @@
         orderObj.d = null;
         orderObj.e = null;   
 
-        navEvents("Cambodia", colorObj); 
+        navEvents(countries[0], colorObj); 
 
         $("#results-nav-left #nav-left li").on("click", function(e) {
           e.preventDefault();
@@ -578,14 +593,18 @@
 
 
       function visualize(datarisk) {
-        country_list = [];
-        // for testing purposes, some countries here
-        country_list.push("Cambodia","Laos","Myanmar","Thailand","Vietnam","Botswana","Haiti","Namibia","South_Africa","Swaziland");
-        /*
-        for (name in datarisk) {
-          country_list.push(name)
+        // push countries from spreadsheet into nav
+        country_list.length = 0;
+
+        for (d in datarisk) {
+          if (datarisk[d].name!=="") country_list.push(datarisk[d].name)
         }
-        */
+        // alphabetize
+        country_list.sort();
+        console.log(country_list)
+        // for testing purposes, some countries here
+        //country_list.push("Cambodia","Laos","Myanmar","Thailand","Vietnam","Botswana","Haiti","Namibia","South_Africa","Swaziland");
+
         drawNav(country_list);
       }
 
