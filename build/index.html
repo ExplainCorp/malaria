@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Malaria</title>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,400' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
-  <script src="js/d3.v3.min.js" charset="utf-8"></script>
+  <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,400' rel='stylesheet' type='text/css'>-->
   <script src="js/tabletop.js"></script>
+  <script src="js/jquery-1.11.3.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/d3.v3.min.js" charset="utf-8"></script>
   <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/jquery-ui.css">  
   <style type="text/css">
   body { font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;font-size:16px;}
-  #landing-page { margin-top:50px;display:none; }
+  #landing-page { margin-top:50px; }
   #landing-page #landing-header { width:740px;margin:0px auto;text-align: center}
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
@@ -157,16 +157,15 @@
   .focus { pointer-events:none; }
   /** tooltip **/
   .results-content-risk { position:relative;}
-  .tt { margin-left:-75px;margin-top:-75px;position:absolute;z-index:999;pointer-events:none;}
-  .tt #tipContainer { background:#1a1a1a;width:150px;height:100px;font-size:25px;text-align:center;border-radius:5px;}
+  .tt { margin-left:-100px;margin-top:-75px;position:absolute;z-index:999;pointer-events:none;width:200px;}
+  .tt #tipContainer { background:#1a1a1a;padding:0px 10px;font-size:20px;text-align:center;border-radius:5px;}
   .tt #tipDate { color:#777;font-size:14px;padding-top:15px;}
   .tt #tipLocation {  color:white;padding-top:5px;}
-  .tt #tipData { color:#ddd;margin-top:5px; }
+  .tt #tipData { color:#ddd;margin-top:7px;padding-bottom:15px; }
 
   </style>
   <script>
   $(document).ready(function() {
-
       // ** global variables **
       var params = {};
       var country_list = []; 
@@ -238,11 +237,16 @@
       var checker = false;
 
       // ** pull data from spreadsheet into json via tabletop.js
-      var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
+      // var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
+      
+      //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
+
+      var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1_AObh_CEQRZ18F_v1944l3VwFx9jgVJmA38NdfrE9Vg/pubhtml';
 
       function initTabletop() {
         Tabletop.init( { key: public_spreadsheet_url,
                          callback: showInfo,
+                         //proxy: 'http://localhost:8080/cache/',
                          simpleSheet: false,
                          parseNumbers: false } )
       }
@@ -257,14 +261,14 @@
         datarisk = data;
         datariskCD = data;
         // temporary, comment this out when landing-page is visible
-        visualize(datarisk);
+        //visualize(datarisk);
       }      
 
       // ** init param object and country list 
       function initParams() {
           for (i = 1; i <= 5; i++) {
-              params["param" + i + "a"] = 40;
-              params["param" + i + "b"] = 60;
+              params["param" + i + "a"] = 0;
+              params["param" + i + "b"] = 100;
               params["param" + i + "year"] = "yearsAll";
           }
         initSliders();
@@ -279,7 +283,7 @@
                 range: true,
                 min: 0,
                 max: 100,
-                values: [40, 60],
+                values: [0, 100],
                 slide: function(event, ui) {
                     $(".value-ranges p").eq(n).html(ui.values[0] + " <span class='dash-class'>&mdash;</span> " + ui.values[1]);
                     params["param" + (n + 1) + "a"] = ui.values[0];
@@ -368,6 +372,7 @@
         var param3check = false;
         var param4check = false;
         var param5check = false;
+        var datariskFiltered;
 
         // param1 = transmission_index_PARAM
         // param2 = climate_index_PARAM
@@ -377,39 +382,104 @@
 
         if (country_list.length == 0) {
           //country_list.push("All_Countries");
-          
+
+          // push the selected into new data object
           for (i in datarisk) {
-            if(params["param1year"]=="years1900to1910") start = 0; end = 9;
-            if(datarisk[i].elements[start]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[start]["transmission_index_PARAM"]<=params["param1b"]) {
+
+            //checkParams(datarisk[i]);
+
+            //console.log(datarisk[i].elements.length)
+            //console.log(datarisk["Germany"])
+            // this runs through all three and all the years/params
+
+
+            var end = 0;
+            var start = 0;
+            //for (q in datarisk[i].elements) {
+            for (q=start; q<datarisk[i].elements.length-end; q++) {
+              //console.log(datarisk[i].elements[1]["transmission_index_PARAM"])
+            
+
+
+            //console.log(q)
+            //if(params["param1year"]=="years1900to1910") start = 0; end = 9;
+
+            //console.log(datarisk[i].elements[q]["transmission_index_PARAM"]+" "+params["param1a"]+" "+datarisk[i].elements[end]["transmission_index_PARAM"]+ " "+params["param1b"])
+
+            console.log(q + " : transmission_param: " + datarisk[i].elements[q]["transmission_index_PARAM"] + " : "+ params["param1a"])
+
+
+
+
+
+
+
+            if(datarisk[i].elements[q]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[q]["transmission_index_PARAM"]<=params["param1b"]) {
               param1check = true;
-            }
-            if(datarisk[i].elements[start]["climate_index_PARAM"]>=params["param2a"]&&datarisk[i].elements[start]["climate_index_PARAM"]<=params["param2b"]) {
+              
+            } 
+
+            
+            if(datarisk[i].elements[q]["climate_index_PARAM"]>=params["param2a"]&&datarisk[i].elements[q]["climate_index_PARAM"]<=params["param2b"]) {
               param2check = true;
+              //console.log(param2check)
             }
-            if(datarisk[i].elements[start]["vector_behavior_index_PARAM"]>=params["param3a"]&&datarisk[i].elements[start]["vector_behavior_index_PARAM"]<=params["param3b"]) {
+            if(datarisk[i].elements[q]["vector_behavior_index_PARAM"]>=params["param3a"]&&datarisk[i].elements[q]["vector_behavior_index_PARAM"]<=params["param3b"]) {
               param3check = true;
+              //console.log(param3check)
             }
-            if(datarisk[i].elements[start]["development_index_PARAM"]>=params["param4a"]&&datarisk[i].elements[start]["development_index_PARAM"]<=params["param4b"]) {
+            if(datarisk[i].elements[q]["development_index_PARAM"]>=params["param4a"]&&datarisk[i].elements[q]["development_index_PARAM"]<=params["param4b"]) {
               param4check = true;
+              //console.log(param4check)
             }
-            if(datarisk[i].elements[start]["intervention_index_PARAM"]>=params["param5a"]&&datarisk[i].elements[start]["intervention_index_PARAM"]<=params["param5b"]) {
+            if(datarisk[i].elements[q]["intervention_index_PARAM"]>=params["param5a"]&&datarisk[i].elements[q]["intervention_index_PARAM"]<=params["param5b"]) {
               param5check = true;
+              //console.log(param5check)
             }
-            if (param1check==true&&param2check==true&&param3check==true&&param4&&param5check==true) {
-              console.log(datarisk[i].name)
-            }                                                
+            }
+            // push to new object would go here, maybe instead of loading the whole spreadsheet
+            // i only load the countries that are selected, that will reduce lag
+
+            // all 5 need to be false
+            //console.log(param1check + " " + param2check + " " + param3check + " " + param4check + " " + param5check)
+            if (param1check!=true||param2check!=true||param3check!=true||param4check!=true||param5check!=true) {
+              //console.log(i)
+              console.log("deleted: " + datarisk[i].name)
+              delete datarisk[i];
+            } else {
+              country_list.push(datarisk[i].name)
+            } 
+param1check = false;
+param2check = false;
+param3check = false;
+param4check = false;
+param5check = false;      
+            //console.log(param1check + " " + param2check + " " + param3check + " " + param4check + " " + param5check)
+
           }
         }
+        //console.log(param1check)
+        //console.log(country_list)
         ///* testing purposes
         $("#landing-results-output-test").html("Countries: "+country_list);
         for (p in params) {
           $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
 
+        
+
         }
-
-
-        //visualize();
+  
+        // *******************
+        // uncomment when landing page is hidden
+        // *******************
+        visualize(datarisk);
       });
+
+      var checkParams = function(_data) {
+        for (q in _data.elements) {
+          console.log(_data.elements[q]["transmission_index_PARAM"]<6)
+        }
+      }
 
       // arrays for selected navigation items
       var risks_all = [];
@@ -441,12 +511,22 @@
           });
 
           divideSpaces(risks_all, get_risk_cnt, cntrys_all, country_object, color_obj);
-          $(".nav-active-countries").html(cntrys_all.join(", "))
 
+          //$(".nav-active-countries").append(cntrys_all.join(", "))
+          // color the country headers here by getting color from left nav
+          $(".nav-active-countries").html("");
+          for (k=0;k<cntrys_all.length;k++) {
+            get_nav_color = $("#nav-left #"+cntrys_all[k]).css("background-color")
+            if (k==(cntrys_all.length-1)) {
+              $(".nav-active-countries").append("<span class='nav-cntry' style='color:"+get_nav_color+"''>"+cntrys_all[k]+"</span>");  
+            } else {
+            $(".nav-active-countries").append("<span class='nav-cntry' style='color:"+get_nav_color+"''>"+cntrys_all[k]+"</span><span>, </span>");
+            }
+          }
           // this area is for drawing cases/deaths for selected countries
           $("#results-viz .cd-results-content-risk").html("");
           createSVG_CD(cntrys_all, getCDid);
-      }
+      } 
 
       function divideSpaces(risks, count, countries, country_object, color_obj) {
           $("#results-viz #results-content").html("");
@@ -500,6 +580,9 @@
       }
 
       // this gets the key of the value
+      // this is breaking the slider!
+      
+      /*
       Object.prototype.getKeyByValue = function( value ) {
           for( var prop in this ) {
               if( this.hasOwnProperty( prop ) ) {
@@ -508,9 +591,20 @@
               }
           }
       }
+      */
+      
+      // this gets the key of the value [[fixed]]
+      var getKeyByValue = function( obj, value ) {
+          for( var prop in obj ) {
+              if( obj.hasOwnProperty( prop ) ) {
+                   if( obj[ prop ] === value )
+                       return prop;
+              }
+          }
+      }
 
       function runColorCheck(colorObj,cntry) {
-        return (colorObj.getKeyByValue(cntry))
+        return (getKeyByValue(colorObj, cntry))
       }
 
       // draw left-nav based off country_list or param filters w/ All Countries
@@ -559,6 +653,7 @@
 
           colorCheck = false;
           get_id = $(this).attr("id");
+          console.log(get_id)
           //navArrayIdx = [];
 
           for (o in colorObj) {
@@ -594,11 +689,13 @@
 
       function visualize(datarisk) {
         // push countries from spreadsheet into nav
+        console.log(datarisk)
         country_list.length = 0;
-
+        
         for (d in datarisk) {
           if (datarisk[d].name!=="") country_list.push(datarisk[d].name)
         }
+        
         // alphabetize
         country_list.sort();
         console.log(country_list)
@@ -816,16 +913,15 @@
           .attr("id", function(d) { return "line-"+country+"-"+d.name })
           .attr("d", function (d) { return line(d.values)  })
 
-        /*
+        
         var series_text = d3.select("#results-content #viz_"+risksID)
           .datum(newdata)
           .append("text")
           .attr("x", 5)
-          .attr("y", function(d) { return ypos(d.values[0].value)-10 })
+          .attr("y", function (d) { return ypos(d.values[0].value)-10 })
           .text(country)
-          .style("display","none")
-        */
-
+          //.style("display","none")
+        
         // format voronoi data
         var voronoi_data = function(input) {
           vData_input = input;
