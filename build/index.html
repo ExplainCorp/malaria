@@ -16,12 +16,16 @@
   #landing-page #landing-header { width:740px;margin:0px auto;text-align: center}
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
-  #param-container { width:710px;margin:100px auto 35px auto;color:#777;}
+  #loading_block { display:none;}
+  #loading_msg { width: 800px; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 150px; letter-spacing: -10px;
+}}
+  #loading_msg p { font-size:1500px;}
+  #param-container { width:820px;margin:100px auto 35px auto;color:#777;}
   #param-container .all-params { margin-top:50px;}
   #param-container .all-params p { padding-right:15px;}
-  #param-container .param-title { width:100px;float:left;text-align: right}
+  #param-container .param-title { width:200px;float:left;text-align: right}
   #param-container .sliders { width:380px;float:left;}
-  #param-container .value-ranges { width:100px;float:left;color:#22B573;}
+  #param-container .value-ranges { width:120px;float:left;color:#22B573;}
   #param-container .value-ranges p { padding-left:20px;}
   #param-container .param-year { width:120px;float:left;}
   #param-title-text { text-align:center}
@@ -37,6 +41,7 @@
   select[disabled] { color:#f7f7f7; }
   .dash-class { color:#ccc;}
   #landing-submit { padding:15px;font-size:18px;font-weight:bold;color:#555;border:1px solid silver;width:200px;text-align: center;margin:0px auto;cursor:pointer;}
+  #no_results { display:none;padding:15px;font-size:18px;font-weight:bold;color:#fff;width:200px;text-align: center;margin:0px auto;background-color: #f00000}
   #landing-submit:hover { color:white;background-color:#22B573;}
   #landing-footer { width:200px;text-align:center;font-size:16px;line-height:22px;margin:50px auto;color:#777;}
   #landing-results-output-test { width:400px;font-size:18px;color:#555;text-align:center;margin:20px auto;}
@@ -54,7 +59,7 @@
   #country-container .ui-selectmenu-button { width:300px !important;}
   #country-container .ui-selectmenu-button span.ui-selectmenu-text { line-height:25px;}
   /** results viz **/
-  #results-viz { width:1100px;margin:50px auto 50px auto;background:white;}
+  #results-viz { width:1100px;margin:50px auto 50px auto;background:white; display: none}
   #results-viz a { text-decoration: none;}
   #results-viz h2 a { color:#22b573;font-size:35px;font-weight:bold;letter-spacing:-2px;}
   #results-viz .results-header-countries { margin-top:15px;}
@@ -239,9 +244,28 @@
       // ** pull data from spreadsheet into json via tabletop.js
       // var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
       
-      //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
+      //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1_AObh_CEQRZ18F_v1944l3VwFx9jgVJmA38NdfrE9Vg/pubhtml';
 
-      var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1_AObh_CEQRZ18F_v1944l3VwFx9jgVJmA38NdfrE9Vg/pubhtml';
+      var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
+
+      var public_spreadsheet_url_2 = 'https://docs.google.com/spreadsheets/d/1Brtc5zKreUDG8mmD4xJWaEgGp4PaVLvlRz8ziAy32VE/pubhtml';
+
+      function init() {
+        a = Tabletop({
+            key: public_spreadsheet_url_1,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+        b = Tabletop({
+            key: public_spreadsheet_url_2,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+      }
+
+      //init();
 
       function initTabletop() {
         Tabletop.init( { key: public_spreadsheet_url,
@@ -251,29 +275,53 @@
                          parseNumbers: false } )
       }
 
+      cx = 0;
+
+      var sheet_1 = 0;
+      var sheet_2 = 0;
+      var sheet_3 = 0;
+      var sheet_4 = 0;
+      var sheet_5 = 0;
+
       function showInfo(data, tabletop) {
         console.log("Successfully processed!")
-        // how to sort transmission index if no specific year is selected? Ask Derek
 
-        // to do: 
-        // data will load every sheet, write function to sort through sheets
-        // active countries draw left-nav [done]
-        datarisk = data;
-        datariskCD = data;
+        if (cx == 0) sheet_1 = data; 
+        if (cx == 1) sheet_2 = data;         
+        if (cx == 2) sheet_3 = data; 
+        if (cx == 3) sheet_4 = data; 
+        if (cx == 4) sheet_5 = data;
+
         // temporary, comment this out when landing-page is visible
         //visualize(datarisk);
+        if (cx==1) mergeSheets();
+        cx++;
+
       }      
+
+      function mergeSheets() {
+        datarisk = {};
+        datariskCD = {};
+        $.extend(datarisk, sheet_1, sheet_2);
+
+        datariskCD = datarisk;
+        $("#loading_msg").hide();
+        $("#loading_block").fadeIn();
+        //console.log(datarisk)
+
+      }
 
       // ** init param object and country list 
       function initParams() {
           for (i = 1; i <= 5; i++) {
-              params["param" + i + "a"] = 0;
-              params["param" + i + "b"] = 100;
+              params["param" + i + "a"] = 40;
+              params["param" + i + "b"] = 60;
               params["param" + i + "year"] = "yearsAll";
           }
         initSliders();
         initCountries();
-        initTabletop();
+        init();
+        //initTabletop();
       }
 
       // ** sliders
@@ -283,7 +331,7 @@
                 range: true,
                 min: 0,
                 max: 100,
-                values: [0, 100],
+                values: [40, 60],
                 slide: function(event, ui) {
                     $(".value-ranges p").eq(n).html(ui.values[0] + " <span class='dash-class'>&mdash;</span> " + ui.values[1]);
                     params["param" + (n + 1) + "a"] = ui.values[0];
@@ -322,6 +370,7 @@
           }
         }) 
         $("#country-output").on("click", ".countries-output", function(e) {
+          ctry="";
           e.preventDefault();
           get_ctry = $(this).attr("id");
           index = country_list.indexOf(get_ctry);
@@ -335,26 +384,32 @@
           }
           $("#countries option[value=" + get_ctry + "]").attr('disabled',false);
           $("#countries").selectmenu("refresh");
+          checkCountryLength();
         })          
       }
 
       // ** max 5 countries drop down
       function checkCountryLength() {
-        if (country_list.length == 5) {
-          console.log("yes")
+        if (country_list.length == 5 || ctry=="All_Countries") {
+          console.log("disabled")
           $("#countries").selectmenu().selectmenu("disable");  
         } else {
-          console.log("no")
-          $("#countries").selectmenu().selectmenu("enable");   
+          $("#countries").selectmenu().selectmenu("enable");
+          console.log("enabled")   
         }        
       }
 
       // disable if All Countries selected
       function disableDD() {
         if (ctry=="All_Countries") {
-          $("#countries").selectmenu("disable");
+          console.log("all_countries-selected")
+          $("#countries").selectmenu().selectmenu("disable");  
+          $("#param-container").fadeIn();
+          $("#landing-submit").css({"margin-top":"0px"})
         } else {
           $("#countries").selectmenu().selectmenu("enable"); 
+          $("#param-container").fadeOut();
+          $("#landing-submit").css({"margin-top":"80px"})
         }
       }
 
@@ -366,7 +421,12 @@
 
       $("#landing-submit").on("click", function(e) {
         e.preventDefault();
-        var start = 0; var end = 100;
+        var param1_start, param1_end = 0;
+        var param2_start, param2_end = 0;
+        var param3_start, param3_end = 0;
+        var param4_start, param4_end = 0;
+        var param5_start, param5_end = 0;
+
         var param1check = false;
         var param2check = false;
         var param3check = false;
@@ -379,100 +439,177 @@
         // param3 = vector_behavior_index_PARAM
         // param4 = development_index_PARAM
         // param5 = intervention_index_PARAM
-
         if (country_list.length == 0) {
-          //country_list.push("All_Countries");
 
-          // push the selected into new data object
-          for (i in datarisk) {
+            if (params["param1year"]=="yearsAll") param1_start = 0; param1_end = datarisk["Africa-Algeria"].elements.length;
+            if (params["param2year"]=="yearsAll") param2_start = 0; param2_end = datarisk["Africa-Algeria"].elements.length;
+            if (params["param3year"]=="yearsAll") param3_start = 0; param3_end = datarisk["Africa-Algeria"].elements.length;
+            if (params["param4year"]=="yearsAll") param4_start = 0; param4_end = datarisk["Africa-Algeria"].elements.length;
+            if (params["param5year"]=="yearsAll") param5_start = 0; param5_end = datarisk["Africa-Algeria"].elements.length;
 
-            //checkParams(datarisk[i]);
+            if (params["param1year"]=="years1898to1910") param1_start = 0; param1_end = 12;
+            if (params["param2year"]=="years1898to1910") param2_start = 0; param2_end = 12;
+            if (params["param3year"]=="years1898to1910") param3_start = 0; param3_end = 12;
+            if (params["param4year"]=="years1898to1910") param4_start = 0; param4_end = 12;
+            if (params["param5year"]=="years1898to1910") param5_start = 0; param5_end = 12;
 
-            //console.log(datarisk[i].elements.length)
-            //console.log(datarisk["Germany"])
-            // this runs through all three and all the years/params
+            if (params["param1year"]=="years1911to1920") param1_start = 13; param1_end = 22;
+            if (params["param2year"]=="years1911to1920") param2_start = 13; param2_end = 22;
+            if (params["param3year"]=="years1911to1920") param3_start = 13; param3_end = 22;
+            if (params["param4year"]=="years1911to1920") param4_start = 13; param4_end = 22;
+            if (params["param5year"]=="years1911to1920") param5_start = 13; param5_end = 22;  
 
+            if (params["param1year"]=="years1921to1930") param1_start = 23; param1_end = 32;
+            if (params["param2year"]=="years1921to1930") param2_start = 23; param2_end = 32;
+            if (params["param3year"]=="years1921to1930") param3_start = 23; param3_end = 32;
+            if (params["param4year"]=="years1921to1930") param4_start = 23; param4_end = 32;
+            if (params["param5year"]=="years1921to1930") param5_start = 23; param5_end = 32;                        
 
-            var end = 0;
-            var start = 0;
-            //for (q in datarisk[i].elements) {
-            for (q=start; q<datarisk[i].elements.length-end; q++) {
-              //console.log(datarisk[i].elements[1]["transmission_index_PARAM"])
-            
+            if (params["param1year"]=="years1931to1940") param1_start = 33; param1_end = 42;
+            if (params["param2year"]=="years1931to1940") param2_start = 33; param2_end = 42;
+            if (params["param3year"]=="years1931to1940") param3_start = 33; param3_end = 42;
+            if (params["param4year"]=="years1931to1940") param4_start = 33; param4_end = 42;
+            if (params["param5year"]=="years1931to1940") param5_start = 33; param5_end = 42;   
 
+            if (params["param1year"]=="years1941to1950") param1_start = 43; param1_end = 52;
+            if (params["param2year"]=="years1941to1950") param2_start = 43; param2_end = 52;
+            if (params["param3year"]=="years1941to1950") param3_start = 43; param3_end = 52;
+            if (params["param4year"]=="years1941to1950") param4_start = 43; param4_end = 52;
+            if (params["param5year"]=="years1941to1950") param5_start = 43; param5_end = 52;
 
-            //console.log(q)
-            //if(params["param1year"]=="years1900to1910") start = 0; end = 9;
+            if (params["param1year"]=="years1951to1960") param1_start = 53; param1_end = 62;
+            if (params["param2year"]=="years1951to1960") param2_start = 53; param2_end = 62;
+            if (params["param3year"]=="years1951to1960") param3_start = 53; param3_end = 62;
+            if (params["param4year"]=="years1951to1960") param4_start = 53; param4_end = 62;
+            if (params["param5year"]=="years1951to1960") param5_start = 53; param5_end = 62;  
 
-            //console.log(datarisk[i].elements[q]["transmission_index_PARAM"]+" "+params["param1a"]+" "+datarisk[i].elements[end]["transmission_index_PARAM"]+ " "+params["param1b"])
+            if (params["param1year"]=="years1961to1970") param1_start = 63; param1_end = 72;
+            if (params["param2year"]=="years1961to1970") param2_start = 63; param2_end = 72;
+            if (params["param3year"]=="years1961to1970") param3_start = 63; param3_end = 72;
+            if (params["param4year"]=="years1961to1970") param4_start = 63; param4_end = 72;
+            if (params["param5year"]=="years1961to1970") param5_start = 63; param5_end = 72;                        
 
-            console.log(q + " : transmission_param: " + datarisk[i].elements[q]["transmission_index_PARAM"] + " : "+ params["param1a"])
+            if (params["param1year"]=="years1971to1980") param1_start = 73; param1_end = 82;
+            if (params["param2year"]=="years1971to1980") param2_start = 73; param2_end = 82;
+            if (params["param3year"]=="years1971to1980") param3_start = 73; param3_end = 82;
+            if (params["param4year"]=="years1971to1980") param4_start = 73; param4_end = 82;
+            if (params["param5year"]=="years1971to1980") param5_start = 73; param5_end = 82;  
 
+            if (params["param1year"]=="years1981to1990") param1_start = 83; param1_end = 92;
+            if (params["param2year"]=="years1981to1990") param2_start = 83; param2_end = 92;
+            if (params["param3year"]=="years1981to1990") param3_start = 83; param3_end = 92;
+            if (params["param4year"]=="years1981to1990") param4_start = 83; param4_end = 92;
+            if (params["param5year"]=="years1981to1990") param5_start = 83; param5_end = 92;
 
+            if (params["param1year"]=="years1991to2000") param1_start = 93; param1_end = 102;
+            if (params["param2year"]=="years1991to2000") param2_start = 93; param2_end = 102;
+            if (params["param3year"]=="years1991to2000") param3_start = 93; param3_end = 102;
+            if (params["param4year"]=="years1991to2000") param4_start = 93; param4_end = 102;
+            if (params["param5year"]=="years1991to2000") param5_start = 93; param5_end = 102;  
 
+            if (params["param1year"]=="years2001to2005") param1_start = 103; param1_end = 107;
+            if (params["param2year"]=="years2001to2005") param2_start = 103; param2_end = 107;
+            if (params["param3year"]=="years2001to2005") param3_start = 103; param3_end = 107;
+            if (params["param4year"]=="years2001to2005") param4_start = 103; param4_end = 107;
+            if (params["param5year"]=="years2001to2005") param5_start = 103; param5_end = 107;                        
+            if (params["param1year"]=="years2006to2010") param1_start = 108; param1_end = 112;
+            if (params["param2year"]=="years2006to2010") param2_start = 108; param2_end = 112;
+            if (params["param3year"]=="years2006to2010") param3_start = 108; param3_end = 112;
+            if (params["param4year"]=="years2006to2010") param4_start = 108; param4_end = 112;
+            if (params["param5year"]=="years2006to2010") param5_start = 108; param5_end = 112; 
 
+            if (params["param1year"]=="years2011to2015") param1_start = 113; param1_end = 116;
+            if (params["param2year"]=="years2011to2015") param2_start = 113; param2_end = 116;
+            if (params["param3year"]=="years2011to2015") param3_start = 113; param3_end = 116;
+            if (params["param4year"]=="years2011to2015") param4_start = 113; param4_end = 116;
+            if (params["param5year"]=="years2011to2015") param5_start = 113; param5_end = 116; 
 
+            console.log(param3_start)             
 
+            for (i in datarisk) {
 
-            if(datarisk[i].elements[q]["transmission_index_PARAM"]>=params["param1a"]&&datarisk[i].elements[q]["transmission_index_PARAM"]<=params["param1b"]) {
-              param1check = true;
-              
-            } 
+                //console.log(params["param1year"] + " " + params["param2year"])
 
-            
-            if(datarisk[i].elements[q]["climate_index_PARAM"]>=params["param2a"]&&datarisk[i].elements[q]["climate_index_PARAM"]<=params["param2b"]) {
-              param2check = true;
-              //console.log(param2check)
+                // gotta have separate loop for each drop-down range
+                // with respective start_params/end_params
+
+                for (q = param1_start; q < param1_end; q++) {
+
+                    if (datarisk[i].elements[q]["transmission_index_PARAM"] >= params["param1a"] && datarisk[i].elements[q]["transmission_index_PARAM"] <= params["param1b"]) {
+                        param1check = true;
+                    }
+                
+                }
+
+                for (q = param2_start; q < param2_end; q++) {
+
+                    if (datarisk[i].elements[q]["climate_index_PARAM"] >= params["param2a"] && datarisk[i].elements[q]["climate_index_PARAM"] <= params["param2b"]) {
+                        param2check = true;
+                    }
+
+                }
+
+                for (q = param3_start; q < param3_end; q++) {
+
+                    //console.log(q+" "+datarisk[i].elements[q]["vector_behavior_index_PARAM"])
+
+                    if (datarisk[i].elements[q]["vector_behavior_index_PARAM"] >= params["param3a"] && datarisk[i].elements[q]["vector_behavior_index_PARAM"] <= params["param3b"]) {
+                        param3check = true;
+                    }
+                
+                }
+
+                for (q = param4_start; q < param4_end; q++) {
+
+                    if (datarisk[i].elements[q]["development_index_PARAM"] >= params["param4a"] && datarisk[i].elements[q]["development_index_PARAM"] <= params["param4b"]) {
+                        param4check = true;
+                    }
+                
+                }
+
+                for (q = param1_start; q < param1_end; q++) {
+
+                    if (datarisk[i].elements[q]["intervention_index_PARAM"] >= params["param5a"] && datarisk[i].elements[q]["intervention_index_PARAM"] <= params["param5b"]) {
+                        param5check = true;
+                    }
+                
+                }
+
+                if (param1check != true || param2check != true || param3check != true || param4check != true || param5check != true) {
+                    console.log("filtered out: " + datarisk[i].name)
+                    //delete datarisk[i];
+                } else {
+                    country_list.push(datarisk[i].name)
+                }
+
+                param1check = false;
+                param2check = false;
+                param3check = false;
+                param4check = false;
+                param5check = false;
+
             }
-            if(datarisk[i].elements[q]["vector_behavior_index_PARAM"]>=params["param3a"]&&datarisk[i].elements[q]["vector_behavior_index_PARAM"]<=params["param3b"]) {
-              param3check = true;
-              //console.log(param3check)
-            }
-            if(datarisk[i].elements[q]["development_index_PARAM"]>=params["param4a"]&&datarisk[i].elements[q]["development_index_PARAM"]<=params["param4b"]) {
-              param4check = true;
-              //console.log(param4check)
-            }
-            if(datarisk[i].elements[q]["intervention_index_PARAM"]>=params["param5a"]&&datarisk[i].elements[q]["intervention_index_PARAM"]<=params["param5b"]) {
-              param5check = true;
-              //console.log(param5check)
-            }
-            }
-            // push to new object would go here, maybe instead of loading the whole spreadsheet
-            // i only load the countries that are selected, that will reduce lag
-
-            // all 5 need to be false
-            //console.log(param1check + " " + param2check + " " + param3check + " " + param4check + " " + param5check)
-            if (param1check!=true||param2check!=true||param3check!=true||param4check!=true||param5check!=true) {
-              //console.log(i)
-              console.log("deleted: " + datarisk[i].name)
-              delete datarisk[i];
+            console.log(country_list)
+            if (country_list.length>0) {
+              visualize(country_list);
             } else {
-              country_list.push(datarisk[i].name)
-            } 
-param1check = false;
-param2check = false;
-param3check = false;
-param4check = false;
-param5check = false;      
-            //console.log(param1check + " " + param2check + " " + param3check + " " + param4check + " " + param5check)
-
-          }
-        }
-        //console.log(param1check)
-        //console.log(country_list)
-        ///* testing purposes
-        $("#landing-results-output-test").html("Countries: "+country_list);
-        for (p in params) {
-          $("#landing-results-output-test").append("<div>"+p+" : "+params[p]);
-
+              $("#landing-submit").hide();
+              $("#no_results").fadeIn();
+              setTimeout(function(){$('#no_results').hide();}, 2500);
+              $("#landing-submit").delay(2550).fadeIn();
+              console.log("no results!")
+            }
         
-
+        console.log("filtered")
+       
+        } else  {
+          //console.log("selected");
+          //console.log(country_list);
+          //console.log(country_list)
+          //console.log(datarisk)
+          visualize(country_list);
         }
-  
-        // *******************
-        // uncomment when landing page is hidden
-        // *******************
-        visualize(datarisk);
+          
       });
 
       var checkParams = function(_data) {
@@ -578,21 +715,7 @@ param5check = false;
               }
           }
       }
-
-      // this gets the key of the value
-      // this is breaking the slider!
-      
-      /*
-      Object.prototype.getKeyByValue = function( value ) {
-          for( var prop in this ) {
-              if( this.hasOwnProperty( prop ) ) {
-                   if( this[ prop ] === value )
-                       return prop;
-              }
-          }
-      }
-      */
-      
+    
       // this gets the key of the value [[fixed]]
       var getKeyByValue = function( obj, value ) {
           for( var prop in obj ) {
@@ -624,7 +747,7 @@ param5check = false;
         $("#results-nav-left #nav-left li").eq(0).addClass("nav-left-active nav-left-active-a");
         $("#results-nav-left #nav-left li.nav-left-active .nav-left-close").eq(0).show();
 
-          navLeftEvents(countries);
+        navLeftEvents(countries);
         $("#results-viz #cases-deaths").show();
       }
 
@@ -677,28 +800,40 @@ param5check = false;
           }
 
           //console.log(colorObj)
-          //console.log(orderObj)
 
           navArrayIdx = [];
 
           navEvents(get_id, colorObj);
-        })
-        
+        })        
       }
 
-
-      function visualize(datarisk) {
+      function visualize(country_list) {
         // push countries from spreadsheet into nav
-        console.log(datarisk)
-        country_list.length = 0;
-        
-        for (d in datarisk) {
-          if (datarisk[d].name!=="") country_list.push(datarisk[d].name)
-        }
+        $("#landing-page").hide();
+        $("#results-viz").show();
+
+        //_selected_ctrys = selected_ctrys;
+        //console.log(country_list)
+        //console.log(datarisk)
+        //country_list.length = 0;
+        //console.log(_selected_ctrys)
+        //_i = 0;
+        //for (d in _selected_ctrys) {
+
+          // ** PROBLEM IS HERE::NEED TO CHECK! ONE COUNTRY AT A TIME?!
+
+          //console.log(datarisk[d])
+          //if (datarisk[d].name!==_selected_ctrys[_i]) {
+            //console.log(datarisk[d].name + " " + _selected_ctrys[_i])
+            //console.log(_selected_ctrys[d])
+            //country_list.push(datarisk[d].name)
+          //}
+          //_i++;
+       // }
         
         // alphabetize
         country_list.sort();
-        console.log(country_list)
+        //console.log(country_list)
         // for testing purposes, some countries here
         //country_list.push("Cambodia","Laos","Myanmar","Thailand","Vietnam","Botswana","Haiti","Namibia","South_Africa","Swaziland");
 
@@ -1010,36 +1145,20 @@ param5check = false;
             .on("mouseout", mouseout);            
         }
       
-      function mouseover(d) {
-        d3.selectAll("#results-content .lines").style("opacity", "0.25")
-        d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true).moveToFront();
-        tt("risks",d.name,d.country,d.label,d.value, xpos(format_date(d.label)), ypos(d.value))
-        focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
-      }
+        function mouseover(d) {
+          d3.selectAll("#results-content .lines").style("opacity", "0.25")
+          d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", true).moveToFront();
+          tt("risks",d.name,d.country,d.label,d.value, xpos(format_date(d.label)), ypos(d.value))
+          focus.attr("transform", "translate(" + xpos(format_date(d.label)) + "," + ypos(d.value) + ")");
+        }
 
-      function mouseout(d) {
-        d3.selectAll("#results-viz .tt").style("visibility", "hidden");
-        d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", false);
-        d3.selectAll("#results-content .lines").style("opacity", "1")
-        focus.attr("transform", "translate(-100,-100)");
-      }   
-      
-        // ** to do
-        // add axis [done]
-        // new: call axis only once per risk, currently multiple [done]
-        // axis style + dynamic y-axis ticks [done]
-        // cases and deaths [done]
-        // cases and deaths fix svg and country multiple [done]
-        // look into voronoi hover [done]
-        // hover/toggle interaction [done]
-        // voronoi cases/deaths  [done]
-        // colors [done]
-        // style popup [done]
-        // cases/deaths popup [done]
-        // check label coordinates function        
-        // check design for consistency 
-        // spreadsheet country/param integration, set of check loops
-        // test for bugs
+        function mouseout(d) {
+          d3.selectAll("#results-viz .tt").style("visibility", "hidden");
+          d3.selectAll("#results-content .lines-"+d.country).classed("line--hover", false);
+          d3.selectAll("#results-content .lines").style("opacity", "1")
+          focus.attr("transform", "translate(-100,-100)");
+        }   
+
       }
 
       // create one svg for cases and deaths
@@ -1404,255 +1523,116 @@ param5check = false;
     </div>
 
     <!-- placeholder, wait for 100-country list :: generate from spreadsheet -->
-    <div id="country-container">
+    <div id="loading_block">
+
+      <div id="country-container">
         <select id="countries" name="countries">
             <option selected disabled>Choose up to 5 countries</option>
             <option value="All_Countries">All Countries</option>
-            <option value="Afghanistan">Afghanistan</option>
-            <option value="Albania">Albania</option>
-            <option value="Algeria">Algeria</option>
-            <option value="American_Samoa">American Samoa</option>
-            <option value="Andorra">Andorra</option>
-            <option value="Angola">Angola</option>
-            <option value="Anguilla">Anguilla</option>
-            <option value="Antarctica">Antarctica</option>
-            <option value="Antigua_And_Barbuda">Antigua and Barbuda</option>
-            <option value="Argentina">Argentina</option>
-            <option value="Armenia">Armenia</option>
-            <option value="Aruba">Aruba</option>
-            <option value="Australia">Australia</option>
-            <option value="Austria">Austria</option>
-            <option value="Azerbaijan">Azerbaijan</option>
-            <option value="Bahamas">Bahamas</option>
-            <option value="Bahrain">Bahrain</option>
-            <option value="Bangladesh">Bangladesh</option>
-            <option value="Barbados">Barbados</option>
-            <option value="Belarus">Belarus</option>
-            <option value="Belgium">Belgium</option>
-            <option value="Belize">Belize</option>
-            <option value="Benin">Benin</option>
-            <option value="Bermuda">Bermuda</option>
-            <option value="Bhutan">Bhutan</option>
-            <option value="Bolivia">Bolivia</option>
-            <option value="Bosnia_And_Herzegovina">Bosnia and Herzegovina</option>
-            <option value="Botswana">Botswana</option>
-            <option value="Bouvet_Island">Bouvet Island</option>
-            <option value="Brazil">Brazil</option>
-            <option value="Brunei_Darussalam">Brunei Darussalam</option>
-            <option value="Bulgaria">Bulgaria</option>
-            <option value="Burkina_Faso">Burkina Faso</option>
-            <option value="Burundi">Burundi</option>
-            <option value="Cambodia">Cambodia</option>
-            <option value="Cameroon">Cameroon</option>
-            <option value="Canada">Canada</option>
-            <option value="Cape_Verde">Cape Verde</option>
-            <option value="Cayman_Islands">Cayman Islands</option>
-            <option value="Central_African_Republic">Central African Republic</option>
-            <option value="Chad">Chad</option>
-            <option value="Chile">Chile</option>
-            <option value="China">China</option>
-            <option value="Christmas_Island">Christmas Island</option>
-            <option value="Colombia">Colombia</option>
-            <option value="Comoros">Comoros</option>
-            <option value="Congo">Congo</option>
-            <option value="Cook_Islands">Cook Islands</option>
-            <option value="Costa_Rica">Costa Rica</option>
-            <option value="Cote_D'ivoire">Cote D'ivoire</option>
-            <option value="Croatia">Croatia</option>
-            <option value="Cuba">Cuba</option>
-            <option value="Cyprus">Cyprus</option>
-            <option value="Czech_Republic">Czech Republic</option>
-            <option value="Denmark">Denmark</option>
-            <option value="Djibouti">Djibouti</option>
-            <option value="Dominica">Dominica</option>
-            <option value="Dominican_Republic">Dominican Republic</option>
-            <option value="Ecuador">Ecuador</option>
-            <option value="Egypt">Egypt</option>
-            <option value="El_Salvador">El Salvador</option>
-            <option value="Equatorial_Guinea">Equatorial Guinea</option>
-            <option value="Eritrea">Eritrea</option>
-            <option value="Estonia">Estonia</option>
-            <option value="Ethiopia">Ethiopia</option>
-            <option value="Faroe_Islands">Faroe Islands</option>
-            <option value="Fiji">Fiji</option>
-            <option value="Finland">Finland</option>
-            <option value="France">France</option>
-            <option value="French_Guiana">French Guiana</option>
-            <option value="French_Polynesia">French Polynesia</option>
-            <option value="French_Southern_Territories">French Southern Territories</option>
-            <option value="Gabon">Gabon</option>
-            <option value="Gambia">Gambia</option>
-            <option value="Georgia">Georgia</option>
-            <option value="Germany">Germany</option>
-            <option value="Ghana">Ghana</option>
-            <option value="Gibraltar">Gibraltar</option>
-            <option value="Greece">Greece</option>
-            <option value="Greenland">Greenland</option>
-            <option value="Grenada">Grenada</option>
-            <option value="Guadeloupe">Guadeloupe</option>
-            <option value="Guam">Guam</option>
-            <option value="Guatemala">Guatemala</option>
-            <option value="Guernsey">Guernsey</option>
-            <option value="Guinea">Guinea</option>
-            <option value="Guinea-bissau">Guinea-bissau</option>
-            <option value="Guyana">Guyana</option>
-            <option value="Haiti">Haiti</option>
-            <option value="Honduras">Honduras</option>
-            <option value="Hong_Kong">Hong Kong</option>
-            <option value="Hungary">Hungary</option>
-            <option value="Iceland">Iceland</option>
-            <option value="India">India</option>
-            <option value="Indonesia">Indonesia</option>
-            <option value="Iran,_Islamic_Republic_Of">Iran, Islamic Republic of</option>
-            <option value="Iraq">Iraq</option>
-            <option value="Ireland">Ireland</option>
-            <option value="Isle_Of_Man">Isle of Man</option>
-            <option value="Israel">Israel</option>
-            <option value="Italy">Italy</option>
-            <option value="Jamaica">Jamaica</option>
-            <option value="Japan">Japan</option>
-            <option value="Jersey">Jersey</option>
-            <option value="Jordan">Jordan</option>
-            <option value="Kazakhstan">Kazakhstan</option>
-            <option value="Kenya">Kenya</option>
-            <option value="Kiribati">Kiribati</option>
-            <option value="Korea,_Republic_Of">Korea, Republic of</option>
-            <option value="Kuwait">Kuwait</option>
-            <option value="Kyrgyzstan">Kyrgyzstan</option>
-            <option value="Latvia">Latvia</option>
-            <option value="Lebanon">Lebanon</option>
-            <option value="Lesotho">Lesotho</option>
-            <option value="Liberia">Liberia</option>
-            <option value="Libyan_Arab_Jamahiriya">Libyan Arab Jamahiriya</option>
-            <option value="Liechtenstein">Liechtenstein</option>
-            <option value="Lithuania">Lithuania</option>
-            <option value="Luxembourg">Luxembourg</option>
-            <option value="Macao">Macao</option>
-            <option value="Madagascar">Madagascar</option>
-            <option value="Malawi">Malawi</option>
-            <option value="Malaysia">Malaysia</option>
-            <option value="Maldives">Maldives</option>
-            <option value="Mali">Mali</option>
-            <option value="Malta">Malta</option>
-            <option value="Marshall_Islands">Marshall Islands</option>
-            <option value="Martinique">Martinique</option>
-            <option value="Mauritania">Mauritania</option>
-            <option value="Mauritius">Mauritius</option>
-            <option value="Mayotte">Mayotte</option>
-            <option value="Mexico">Mexico</option>
-            <option value="Moldova,_Republic_Of">Moldova, Republic of</option>
-            <option value="Monaco">Monaco</option>
-            <option value="Mongolia">Mongolia</option>
-            <option value="Montenegro">Montenegro</option>
-            <option value="Montserrat">Montserrat</option>
-            <option value="Morocco">Morocco</option>
-            <option value="Mozambique">Mozambique</option>
-            <option value="Myanmar">Myanmar</option>
-            <option value="Namibia">Namibia</option>
-            <option value="Nauru">Nauru</option>
-            <option value="Nepal">Nepal</option>
-            <option value="Netherlands">Netherlands</option>
-            <option value="Netherlands_Antilles">Netherlands Antilles</option>
-            <option value="New_Caledonia">New Caledonia</option>
-            <option value="New_Zealand">New Zealand</option>
-            <option value="Nicaragua">Nicaragua</option>
-            <option value="Niger">Niger</option>
-            <option value="Nigeria">Nigeria</option>
-            <option value="Niue">Niue</option>
-            <option value="Norfolk_Island">Norfolk Island</option>
-            <option value="Northern_Mariana_Islands">Northern Mariana Islands</option>
-            <option value="Norway">Norway</option>
-            <option value="Oman">Oman</option>
-            <option value="Pakistan">Pakistan</option>
-            <option value="Palau">Palau</option>
-            <option value="Panama">Panama</option>
-            <option value="Papua_New_Guinea">Papua New Guinea</option>
-            <option value="Paraguay">Paraguay</option>
-            <option value="Peru">Peru</option>
-            <option value="Philippines">Philippines</option>
-            <option value="Pitcairn">Pitcairn</option>
-            <option value="Poland">Poland</option>
-            <option value="Portugal">Portugal</option>
-            <option value="Puerto_Rico">Puerto Rico</option>
-            <option value="Qatar">Qatar</option>
-            <option value="Reunion">Reunion</option>
-            <option value="Romania">Romania</option>
-            <option value="Russian_Federation">Russian Federation</option>
-            <option value="Rwanda">Rwanda</option>
-            <option value="Saint_Helena">Saint Helena</option>
-            <option value="Saint_Kitts_And_Nevis">Saint Kitts and Nevis</option>
-            <option value="Saint_Lucia">Saint Lucia</option>
-            <option value="Saint_Pierre_And_Miquelon">Saint Pierre and Miquelon</option>
-            <option value="Samoa">Samoa</option>
-            <option value="San_Marino">San Marino</option>
-            <option value="Sao_Tome_And_Principe">Sao Tome and Principe</option>
-            <option value="Saudi_Arabia">Saudi Arabia</option>
-            <option value="Senegal">Senegal</option>
-            <option value="Serbia">Serbia</option>
-            <option value="Seychelles">Seychelles</option>
-            <option value="Sierra_Leone">Sierra Leone</option>
-            <option value="Singapore">Singapore</option>
-            <option value="Slovakia">Slovakia</option>
-            <option value="Slovenia">Slovenia</option>
-            <option value="Solomon_Islands">Solomon Islands</option>
-            <option value="Somalia">Somalia</option>
-            <option value="South_Africa">South Africa</option>
-            <option value="Spain">Spain</option>
-            <option value="Sri_Lanka">Sri Lanka</option>
-            <option value="Sudan">Sudan</option>
-            <option value="Suriname">Suriname</option>
-            <option value="Svalbard_And_Jan_Mayen">Svalbard and Jan Mayen</option>
-            <option value="Swaziland">Swaziland</option>
-            <option value="Sweden">Sweden</option>
-            <option value="Switzerland">Switzerland</option>
-            <option value="Syrian_Arab_Republic">Syrian Arab Republic</option>
-            <option value="Taiwan,_Province_Of_China">Taiwan, Province of China</option>
-            <option value="Tajikistan">Tajikistan</option>
-            <option value="Tanzania,_United_Republic_Of">Tanzania, United Republic of</option>
-            <option value="Thailand">Thailand</option>
-            <option value="Timor-leste">Timor-leste</option>
-            <option value="Togo">Togo</option>
-            <option value="Tokelau">Tokelau</option>
-            <option value="Tonga">Tonga</option>
-            <option value="Trinidad_And_Tobago">Trinidad and Tobago</option>
-            <option value="Tunisia">Tunisia</option>
-            <option value="Turkey">Turkey</option>
-            <option value="Turkmenistan">Turkmenistan</option>
-            <option value="Turks_And_Caicos_Islands">Turks and Caicos Islands</option>
-            <option value="Tuvalu">Tuvalu</option>
-            <option value="Uganda">Uganda</option>
-            <option value="Ukraine">Ukraine</option>
-            <option value="United_Arab_Emirates">United Arab Emirates</option>
-            <option value="United_Kingdom">United Kingdom</option>
-            <option value="United_States">United States</option>
-            <option value="Uruguay">Uruguay</option>
-            <option value="Uzbekistan">Uzbekistan</option>
-            <option value="Vanuatu">Vanuatu</option>
-            <option value="Venezuela">Venezuela</option>
-            <option value="Viet_Nam">Viet Nam</option>
-            <option value="Virgin_Islands,_British">Virgin Islands, British</option>
-            <option value="Virgin_Islands,_U.S.">Virgin Islands, U.S.</option>
-            <option value="Wallis_And_Futuna">Wallis and Futuna</option>
-            <option value="Western_Sahara">Western Sahara</option>
-            <option value="Yemen">Yemen</option>
-            <option value="Zambia">Zambia</option>
-            <option value="Zimbabwe">Zimbabwe</option>
+            <option value="Africa-Algeria">Africa-Algeria</option>
+            <option value="Africa-Angola">Africa-Angola</option>
+            <option value="Africa-Benin">Africa-Benin</option>
+            <option value="Africa-Botswana">Africa-Botswana</option>
+            <option value="Africa-Burkina_Faso">Africa-Burkina_Faso</option>
+            <option value="Africa-Burundi">Africa-Burundi</option>
+            <option value="Africa-Cameroon">Africa-Cameroon</option>
+            <option value="Africa-Cape_Verde">Africa-Cape_Verde</option>
+            <option value="Africa-Centr.Afr.Repub.">Africa-Centr.Afr.Repub.</option>
+            <option value="Africa-Chad">Africa-Chad</option>
+            <option value="Africa-Comoro_Islands">Africa-Comoro_Islands</option>
+            <option value="Africa-Congo_Brazzaville">Africa-Congo_Brazzaville</option>
+            <option value="Africa-Cote_d-Ivoire">Africa-Cote_d-Ivoire</option>
+            <option value="Africa-DemocRepubCongo">Africa-DemocRepubCongo</option>
+            <option value="Africa-Djibouti">Africa-Djibouti</option>
+            <option value="Africa-Egypt">Africa-Egypt</option>
+            <option value="Africa-Equatorial_Guinea">Africa-Equatorial_Guinea</option>
+            <option value="Africa-Eritrea_and_Ethiopia">Africa-Eritrea_and_Ethiopia</option>
+            <option value="Africa-Gabon">Africa-Gabon</option>
+            <option value="Africa-Gambia">Africa-Gambia</option>
+            <option value="Africa-Ghana">Africa-Ghana</option>
+            <option value="Africa-Guinea">Africa-Guinea</option>
+            <option value="Africa-Guinea_Bissau">Africa-Guinea_Bissau</option>
+            <option value="Africa-Kenya">Africa-Kenya</option>
+            <option value="Africa-Lesotho">Africa-Lesotho</option>
+            <option value="Africa-Liberia">Africa-Liberia</option>
+            <option value="Africa-Libya">Africa-Libya</option>
+            <option value="Africa-Madagascar">Africa-Madagascar</option>
+            <option value="Africa-Malawi">Africa-Malawi</option>
+            <option value="Africa-Mali">Africa-Mali</option>
+            <option value="Africa-Mauritania">Africa-Mauritania</option>
+            <option value="Africa-Mauritius">Africa-Mauritius</option>
+            <option value="Africa-Morocco">Africa-Morocco</option>
+            <option value="Africa-Mozambique">Africa-Mozambique</option>
+            <option value="Africa-Namibia">Africa-Namibia</option>
+            <option value="Africa-Niger">Africa-Niger</option>
+            <option value="Africa-Nigeria">Africa-Nigeria</option>
+            <option value="Africa-Rwanda">Africa-Rwanda</option>
+            <option value="Africa-S.Tome_and_Principe">Africa-S.Tome_and_Principe</option>
+            <option value="Africa-Senegal">Africa-Senegal</option>
+            <option value="Africa-Seychelles">Africa-Seychelles</option>
+            <option value="Africa-Sierra_Leone">Africa-Sierra_Leone</option>
+            <option value="Africa-Somalia">Africa-Somalia</option>
+            <option value="Africa-South_Africa">Africa-South_Africa</option>
+            <option value="Africa-Sudan">Africa-Sudan</option>
+            <option value="Africa-Swaziland">Africa-Swaziland</option>
+            <option value="Africa-Tanzania">Africa-Tanzania</option>
+            <option value="Africa-Togo">Africa-Togo</option>
+            <option value="Africa-Tunisia">Africa-Tunisia</option>
+            <option value="Africa-Uganda">Africa-Uganda</option>
+            <option value="Africa-Zambia">Africa-Zambia</option>
+            <option value="Africa-Zimbabwe">Africa-Zimbabwe</option>
+            <option value="Asia-Hong_Kong">Asia-Hong_Kong</option>
+            <option value="Asia-India">Asia-India</option>
+            <option value="Asia-Indonesia">Asia-Indonesia</option>
+            <option value="Asia-Israel">Asia-Israel</option>
+            <option value="Asia-Laos">Asia-Laos</option>
+            <option value="Asia-Lebanon">Asia-Lebanon</option>
+            <option value="Asia-Malaysia">Asia-Malaysia</option>
+            <option value="Asia-Philippines">Asia-Philippines</option>
+            <option value="Asia-Singapore">Asia-Singapore</option>
+            <option value="Asia-Sri_Lanka">Asia-Sri_Lanka</option>
+            <option value="Asia-Taiwan">Asia-Taiwan</option>
+            <option value="Asia-Thailand">Asia-Thailand</option>
+            <option value="N-America-USA">N-America-USA</option>
+            <option value="S-America-Argentina">S-America-Argentina</option>
+            <option value="S-America-Bolivia">S-America-Bolivia</option>
+            <option value="S-America-Brazil">S-America-Brazil</option>
+            <option value="S-America-Chile">S-America-Chile</option>
+            <option value="S-America-Colombia">S-America-Colombia</option>
+            <option value="S-America-CostaRica">S-America-CostaRica</option>
+            <option value="S-America-Cuba">S-America-Cuba</option>
+            <option value="S-America-Dominican_Republic">S-America-Dominican_Republic</option>
+            <option value="S-America-Ecuador">S-America-Ecuador</option>
+            <option value="S-America-El_Salvador">S-America-El_Salvador</option>
+            <option value="S-America-Guatemala">S-America-Guatemala</option>
+            <option value="S-America-Haiti">S-America-Haiti</option>
+            <option value="S-America-Honduras">S-America-Honduras</option>
+            <option value="S-America-Jamaica">S-America-Jamaica</option>
+            <option value="S-America-Mexico">S-America-Mexico</option>
+            <option value="S-America-Nicaragua">S-America-Nicaragua</option>
+            <option value="S-America-Panama">S-America-Panama</option>
+            <option value="S-America-Paraguay">S-America-Paraguay</option>
+            <option value="S-America-Peru">S-America-Peru</option>
+            <option value="S-America-Puerto_Rico">S-America-Puerto_Rico</option>
+            <option value="S-America-Trinidad_Tobago">S-America-Trinidad_Tobago</option>
+            <option value="S-America-Uruguay">S-America-Uruguay</option>
+            <option value="S-America-Venezuela">S-America-Venezuela</option>
         </select>
-    </div>
-    <!-- selected countries go here -->
-    <div id="country-output-container">
+      </div>
+      <!-- selected countries go here -->
+      <div id="country-output-container">
         <div id="country-output"></div>
-    </div>
-    <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
 
-    <!-- parameter block -->
-    <div id="param-container">
+      <!-- parameter block -->
+      <div id="param-container">
         <div id="param-title-text">
-            <p>Use sliders to filter</p>
+            <p>Or use sliders to filter through all countries</p>
         </div>
         <div id="param-one" class="all-params">
             <div class="param-title">
-                <p>Param</p>
+                <p>Transmission Index</p>
             </div>
             <div class="sliders" id="slider-range-one"></div>
             <div class="value-ranges" id="value-range-one">
@@ -1660,7 +1640,7 @@ param5check = false;
             </div>
             <select name="number" id="param-year-one" class="param-year">
                 <option value="yearsAll" value="yearsAll" selected="selected">All years</option>
-                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1898to1910">1898 &mdash; 1910</option>
                 <option value="years1911to1920">1911 &mdash; 1920</option>
                 <option value="years1921to1930">1921 &mdash; 1930</option>
                 <option value="years1931to1940">1931 &mdash; 1940</option>
@@ -1679,7 +1659,7 @@ param5check = false;
 
         <div id="param-two" class="all-params">
             <div class="param-title">
-                <p>Param</p>
+                <p>Climate Index</p>
             </div>
             <div class="sliders" id="slider-range-two"></div>
             <div class="value-ranges" id="value-range-two">
@@ -1687,7 +1667,7 @@ param5check = false;
             </div>
             <select name="number" id="param-year-two" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
-                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1898to1910">1898 &mdash; 1910</option>
                 <option value="years1911to1920">1911 &mdash; 1920</option>
                 <option value="years1921to1930">1921 &mdash; 1930</option>
                 <option value="years1931to1940">1931 &mdash; 1940</option>
@@ -1706,7 +1686,7 @@ param5check = false;
 
         <div id="param-three" class="all-params">
             <div class="param-title">
-                <p>Param</p>
+                <p>Vector Behavior Index</p>
             </div>
             <div class="sliders" id="slider-range-three"></div>
             <div class="value-ranges" id="value-range-three">
@@ -1714,7 +1694,7 @@ param5check = false;
             </div>
             <select name="number" id="param-year-three" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
-                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1898to1910">1898 &mdash; 1910</option>
                 <option value="years1911to1920">1911 &mdash; 1920</option>
                 <option value="years1921to1930">1921 &mdash; 1930</option>
                 <option value="years1931to1940">1931 &mdash; 1940</option>
@@ -1733,7 +1713,7 @@ param5check = false;
 
         <div id="param-four" class="all-params">
             <div class="param-title">
-                <p>Param</p>
+                <p>Development Index</p>
             </div>
             <div class="sliders" id="slider-range-four"></div>
             <div class="value-ranges" id="value-range-four">
@@ -1741,7 +1721,7 @@ param5check = false;
             </div>
             <select name="number" id="param-year-four" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
-                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1898to1910">1898 &mdash; 1910</option>
                 <option value="years1911to1920">1911 &mdash; 1920</option>
                 <option value="years1921to1930">1921 &mdash; 1930</option>
                 <option value="years1931to1940">1931 &mdash; 1940</option>
@@ -1760,7 +1740,7 @@ param5check = false;
 
         <div id="param-five" class="all-params">
             <div class="param-title">
-                <p>Param</p>
+                <p>Intervention Index</p>
             </div>
             <div class="sliders" id="slider-range-five"></div>
             <div class="value-ranges" id="value-range-five">
@@ -1768,7 +1748,7 @@ param5check = false;
             </div>
             <select name="number" id="param-year-five" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
-                <option value="years1900to1910">1900 &mdash; 1910</option>
+                <option value="years1898to1910">1898 &mdash; 1910</option>
                 <option value="years1911to1920">1911 &mdash; 1920</option>
                 <option value="years1921to1930">1921 &mdash; 1930</option>
                 <option value="years1931to1940">1931 &mdash; 1940</option>
@@ -1784,13 +1764,20 @@ param5check = false;
             </select>
             <div class="clear"></div>
         </div>
-    </div>
+      </div>
+      <div id="no_results">
+      <p>No Results &ndash; Try Again</p>
+      </div>
+      <div id="landing-submit">
+          <p>View Results</p>
+      </div>
+      <div id="landing-results-output-test"></div>
 
-    <div id="landing-submit">
-        <p>View Results</p>
     </div>
-    <div id="landing-results-output-test">
+    <div id="loading_msg">
+      <p>Loading...</p>
     </div>
+      
     <div id="landing-footer">
         <p>By Derek Willis
             <br/>& Explain Corp.</p>
