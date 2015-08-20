@@ -17,7 +17,7 @@
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
   #loading_block { display:none;}
-  #loading_msg { width: 800px; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 150px; letter-spacing: -10px;
+  #loading_msg { width: 1100px; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 135px; letter-spacing: -10px;
 }}
   #loading_msg p { font-size:1500px;}
   #param-container { width:820px;margin:100px auto 35px auto;color:#777;}
@@ -52,6 +52,7 @@
   #landing-page .ui-slider-handle { margin-top:-8px;cursor:pointer;}
   #landing-page .ui-slider-range { background:#22B573;height:3px;margin-top:-2px;}
   #landing-page .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { background:white;}
+  #country-container .overflow { height:300px !important;overflow: auto !important}
   #landing-page .ui-state-active { border:0px solid #22B573;}
   #landing-page .ui-selectmenu-button { padding:10px;}
   #param-container .ui-selectmenu-button { margin-top:-10px;}
@@ -124,12 +125,12 @@
   #results-viz #viz_pop_at_risk_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
   #results-viz #viz_GDP_per_capita_RISK_FACTOR .background-class {fill:rgba(178,223,138, .15)  ;}
   #results-viz #viz_funding_RISK_FACTOR .background-class {fill:rgba(178,223,138,.15) ;}
-  #results-viz #viz_IRS_RISK_FACTOR .background-class {fill:rgba(202,178,214,.20);}
-  #results-viz #viz_ALL_nets_RISK_FACTOR .background-class {fill:rgba(202,178,214,.30);}
-  #results-viz #viz_insecticide_resistance_RISK_FACTOR .background-class {fill:rgba(202,178,214,.30);}
-  #results-viz #viz_ALL_larval_control_RISK_FACTOR .background-class {fill:rgba(202,178,214,.10);}  
-  #results-viz #viz_drugs_RISK_FACTOR .background-class {fill:rgba(202,178,214,.50);}
-  #results-viz #viz_drug_resistance_RISK_FACTOR .background-class {fill:rgba(202,178,214,.50);}    
+  #results-viz #viz_IRS_RISK_FACTOR .background-class {fill:rgba(200,200,200,0.4);}
+  #results-viz #viz_ALL_nets_RISK_FACTOR .background-class {fill:rgba(200,200,200,0.4);}
+  #results-viz #viz_insecticide_resistance_RISK_FACTOR .background-class {fill:rgba(200,200,200,0.4);}
+  #results-viz #viz_ALL_larval_control_RISK_FACTOR .background-class {fill:rgba(200,200,200,0.4);}  
+  #results-viz #viz_drugs_RISK_FACTOR .background-class {fill:rgba(200,200,200,0.4);}
+  #results-viz #viz_drug_resistance_RISK_FACTOR .background-class {fill:rgba(200,200,200,0.4);}    
   .lines { stroke:#999;fill:none;stroke-width:3px;pointer-events:none;}
   .lines-a { stroke:rgb(255,127,0);fill:none;stroke-width:3px;}
   .lines-b { stroke:rgb(31,120,180);fill:none;stroke-width:3px;}
@@ -263,8 +264,25 @@
             simpleSheet: false,
             parseNumbers: false
         });
-      }
-
+        c = Tabletop({
+            key: public_spreadsheet_url_1,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+        d = Tabletop({
+            key: public_spreadsheet_url_2,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });    
+        e = Tabletop({
+            key: public_spreadsheet_url_2,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+      }  
       //init();
 
       function initTabletop() {
@@ -284,17 +302,16 @@
       var sheet_5 = 0;
 
       function showInfo(data, tabletop) {
-        console.log("Successfully processed!")
-
-        if (cx == 0) sheet_1 = data; 
-        if (cx == 1) sheet_2 = data;         
-        if (cx == 2) sheet_3 = data; 
-        if (cx == 3) sheet_4 = data; 
-        if (cx == 4) sheet_5 = data;
+        console.log("Successfully processed sheet: "+(cx+1));
+        if (cx == 0) { sheet_1 = data; $(".data_progress").html("1"); }
+        if (cx == 1) { sheet_2 = data; $(".data_progress").html("2"); }
+        if (cx == 2) { sheet_3 = data; $(".data_progress").html("3"); }
+        if (cx == 3) { sheet_4 = data; $(".data_progress").html("4"); }
+        if (cx == 4) { sheet_5 = data; $(".data_progress").html("5"); }
 
         // temporary, comment this out when landing-page is visible
         //visualize(datarisk);
-        if (cx==1) mergeSheets();
+        if (cx==4) mergeSheets();
         cx++;
 
       }      
@@ -302,7 +319,7 @@
       function mergeSheets() {
         datarisk = {};
         datariskCD = {};
-        $.extend(datarisk, sheet_1, sheet_2);
+        $.extend(datarisk, sheet_1, sheet_2, sheet_3, sheet_4, sheet_5);
 
         datariskCD = datarisk;
         $("#loading_msg").hide();
@@ -368,7 +385,7 @@
             checkCountryLength();
             $(this).selectmenu("refresh");            
           }
-        }) 
+        })
         $("#country-output").on("click", ".countries-output", function(e) {
           ctry="";
           e.preventDefault();
@@ -1775,7 +1792,7 @@
 
     </div>
     <div id="loading_msg">
-      <p>Loading...</p>
+      <p>Loading data...<span class="data_progress">0</span>/5</p>
     </div>
       
     <div id="landing-footer">
@@ -1836,7 +1853,7 @@
         <div class="clear"></div>
     </div>
     <div id="footer">
-      <h4><span class="footer-method">Methodology</span> &mdash; <span class="footer-explain">Made by Explain Corp.</span></h4>
+      <h4><span class="pdflink">LINK TO PDF: TITLE HERE?</span> &mdash; <span class="footer-method">Methodology</span> &mdash; <span class="footer-explain">Made by Explain Corp.</span></h4>
     </div>
 </div>
 </body>
