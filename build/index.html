@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Malaria</title>
-  <!--<link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,400' rel='stylesheet' type='text/css'>-->
+  <meta property="og:title" content="Malaria Data Visualization Tool"/>
+  <meta property="og:image" content=""/>
+  <meta property="og:site_name" content="Malaria Data Visualization Tool"/>
+  <meta property="og:description" content="">
+  <title>Malaria Data Visualization Tool</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,400' rel='stylesheet' type='text/css'>
   <script src="js/tabletop.js"></script>
   <script src="js/jquery-1.11.3.min.js"></script>
   <script src="js/jquery-ui.js"></script>
@@ -17,10 +21,9 @@
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
   #loading_block { display:none;}
-  #loading_msg { width: 1100px; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 135px; letter-spacing: -10px;
-}}
-  #loading_msg p { font-size:1500px;}
-  #param-container { width:820px;margin:100px auto 35px auto;color:#777;}
+  #loading_msg { width: 1100px; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 135px; letter-spacing: -10px; }
+  #loading_msg p { font-size:135px;}
+  #param-container { width:840px;margin:100px auto 35px auto;color:#777;}
   #param-container .all-params { margin-top:50px;}
   #param-container .all-params p { padding-right:15px;}
   #param-container .param-title { width:200px;float:left;text-align: right}
@@ -84,7 +87,7 @@
   /** nav left **/
   #results-viz #results-nav-left { width:145px;background:white;float:left;}
   #results-viz #results-nav-left p { font-size:17px;font-weight:bold;color:#4d4d4d;padding:15px 5px 15px 15px}
-  #results-viz #nav-left {color:#666666;width:135px;}
+  #results-viz #nav-left {color:#666666;}
   #results-viz #nav-left { height:513px;overflow-y:auto;overflow-x:hidden;}
 #results-viz #nav-left::-webkit-scrollbar {
     width: 10px;
@@ -119,7 +122,10 @@
   #results-viz #nav-left .nav-left-active-e:hover { background:rgb(251, 154, 153);color:white;border-radius:5px;}
   #results-viz #nav-left .nav-left-close { background:#ccc; position:absolute;top:-7px;right:0px;font-size:10px;padding:5px;color:#444;border-radius:25%;display:none;}
   #results-viz #nav-left .nav-left-active:hover > .nav-left-close { background:#222; color:#ccc; }
-  #results-viz #footer { font-size:14px;line-height:22px;margin:100px 0px 0px 0px;color:#777; }
+  #results-viz #index { margin-top:60px;margin-left:150px;font-size:35px;letter-spacing: -1px}
+  #results-viz #index a { color:#999;text-decoration:none;padding:10px;border-radius:5px;}
+  #results-viz #index a:hover { background:#22b573;color:white;text-decoration:none;}
+  #results-viz #footer { font-size:14px;line-height:22px;margin:50px 0px 0px 160px;color:#777; }
   /** d3 stuff **/
   #results-viz #viz_population_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
   #results-viz #viz_pop_at_risk_RISK_FACTOR .background-class {fill:rgba(166,206,227,.10);}
@@ -1070,7 +1076,14 @@
           .datum(newdata)
           .append("text")
           .attr("x", 5)
-          .attr("y", function (d) { return ypos(d.values[0].value)-10 })
+          .attr("y", function (d) { 
+            if (d.values[0].value>=80 && d.values[0].value <= 100)
+            {
+              return ypos(d.values[0].value)+50 
+            } else {
+              return ypos(d.values[0].value)-10
+            }
+          })
           .text(country)
           //.style("display","none")
         
@@ -1383,7 +1396,14 @@
             .append("text")
             .attr("class", "cd-text-cases")
             .attr("x", 5)
-            .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
+            .attr("y", function (d) { 
+              if (d.values[0].value>=80 && d.values[0].value <= 100)
+              {
+                return yposCD(d.values[0].value)+50 
+              } else {
+                return yposCD(d.values[0].value)-10
+              }
+            })
             .text("Cases: "+country) 
 
           v_cd.push(newdataC) 
@@ -1406,7 +1426,14 @@
             .append("text")
             .attr("class", "cd-text-deaths")
             .attr("x", 5)
-            .attr("y", function (d) { return yposCD(d.values[0].value)-10 })
+            .attr("y", function (d) { 
+              if (d.values[0].value>=80 && d.values[0].value <= 100)
+              {
+                return yposCD(d.values[0].value)+50 
+              } else {
+                return yposCD(d.values[0].value)-10
+              }
+            })
             .text("Deaths: "+country)   
 
           v_cd.push(newdataD)
@@ -1428,7 +1455,14 @@
             .append("text")
             .attr("class", "cd-text-cases")
             .attr("x", 5)
-            .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
+            .attr("y", function (d) { 
+              if (d.values[0].value>=80 && d.values[0].value <= 100)
+              {
+                return yposCD(d.values[0].value)+50 
+              } else {
+                return yposCD(d.values[0].value)-10
+              }
+            })
             .text("Cases: "+country) 
 
           var seriesCD_d = d3.select("#cd-results-content #viz_CD")
@@ -1443,7 +1477,14 @@
             .append("text")
             .attr("class", "cd-text-deaths")
             .attr("x", 5)
-            .attr("y", function(d) { return yposCD(d.values[0].value)-10 })
+            .attr("y", function (d) { 
+              if (d.values[0].value>=80 && d.values[0].value <= 100)
+              {
+                return yposCD(d.values[0].value)+50 
+              } else {
+                return yposCD(d.values[0].value)-10
+              }
+            })
             .text("Deaths: "+country)   
 
           v_cd.push(newdataC)
@@ -1525,10 +1566,13 @@
         }
         $("#results-viz .cd-results-content-risk .cd-results-risks-title").remove();
         $("#results-viz .cd-results-content-risk").append("<div class='cd-results-risks-title'>"+titleChange+"</div></div>");
-
       }
 
-
+      $("#index").on("click", function(e) {
+        e.preventDefault();
+        $("#results-viz").hide();  
+        $("#landing-page").fadeIn();      
+      })    
   });
   </script>
 </head>
@@ -1554,7 +1598,7 @@
             <option value="Africa-Burundi">Africa-Burundi</option>
             <option value="Africa-Cameroon">Africa-Cameroon</option>
             <option value="Africa-Cape_Verde">Africa-Cape_Verde</option>
-            <option value="Africa-Centr.Afr.Repub.">Africa-Centr.Afr.Repub.</option>
+            <option value="Africa-Cent_Af_Rep">Africa-Cent_Af_Rep</option>
             <option value="Africa-Chad">Africa-Chad</option>
             <option value="Africa-Comoro_Islands">Africa-Comoro_Islands</option>
             <option value="Africa-Congo_Brazzaville">Africa-Congo_Brazzaville</option>
@@ -1851,6 +1895,9 @@
             <div class="cd-results-content-risk"></div>
         </div>
         <div class="clear"></div>
+    </div>
+    <div id="index">
+      <p><a href="#">Back to Search Index</a></p>
     </div>
     <div id="footer">
       <h4><span class="pdflink">LINK TO PDF: TITLE HERE?</span> &mdash; <span class="footer-method">Methodology</span> &mdash; <span class="footer-explain">Made by Explain Corp.</span></h4>
