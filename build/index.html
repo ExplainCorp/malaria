@@ -252,10 +252,10 @@
       // var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
       
       //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1_AObh_CEQRZ18F_v1944l3VwFx9jgVJmA38NdfrE9Vg/pubhtml';
+      //var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
+      var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1g5wCiT3hak0H-QfUPfaj3JyNnw4pgwYeRt-mbM3nZKE/pubhtml';
 
-      var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
-
-      var public_spreadsheet_url_2 = 'https://docs.google.com/spreadsheets/d/1Brtc5zKreUDG8mmD4xJWaEgGp4PaVLvlRz8ziAy32VE/pubhtml';
+      var public_spreadsheet_url_2 = 'https://docs.google.com/spreadsheets/d/1g5wCiT3hak0H-QfUPfaj3JyNnw4pgwYeRt-mbM3nZKE/pubhtml';
 
       function init() {
         a = Tabletop({
@@ -264,12 +264,14 @@
             simpleSheet: false,
             parseNumbers: false
         });
+        
         b = Tabletop({
             key: public_spreadsheet_url_2,
             callback: showInfo,
             simpleSheet: false,
             parseNumbers: false
         });
+        /*
         c = Tabletop({
             key: public_spreadsheet_url_1,
             callback: showInfo,
@@ -288,6 +290,7 @@
             simpleSheet: false,
             parseNumbers: false
         });
+        */
       }  
       //init();
 
@@ -317,7 +320,7 @@
 
         // temporary, comment this out when landing-page is visible
         //visualize(datarisk);
-        if (cx==4) mergeSheets();
+        if (cx==1) mergeSheets();
         cx++;
 
       }      
@@ -1005,7 +1008,7 @@
 
         voronoi = v;
 
-        varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
+        varNames = d3.keys(data[0]).filter(function (key) { return key != 0 && key !=labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
                                                                     
         // target data
         if (risksID == "population_RISK_FACTOR") getidx = 0;          
@@ -1598,16 +1601,18 @@
             <option value="Africa-Burundi">Africa-Burundi</option>
             <option value="Africa-Cameroon">Africa-Cameroon</option>
             <option value="Africa-Cape_Verde">Africa-Cape_Verde</option>
-            <option value="Africa-Cent_Af_Rep">Africa-Cent_Af_Rep</option>
+            <option value="Africa-Cen_Afr_Repub">Africa-Cen_Afr_Repub</option>
             <option value="Africa-Chad">Africa-Chad</option>
             <option value="Africa-Comoro_Islands">Africa-Comoro_Islands</option>
             <option value="Africa-Congo_Brazzaville">Africa-Congo_Brazzaville</option>
             <option value="Africa-Cote_d-Ivoire">Africa-Cote_d-Ivoire</option>
-            <option value="Africa-DemocRepubCongo">Africa-DemocRepubCongo</option>
+            <option value="Africa-Repub_of_Congo">Africa-Republic_of_Congo</option>
+            <option value="Africa-Democ_Repub_Congo">Africa-DemocRepubCongo</option>
             <option value="Africa-Djibouti">Africa-Djibouti</option>
             <option value="Africa-Egypt">Africa-Egypt</option>
             <option value="Africa-Equatorial_Guinea">Africa-Equatorial_Guinea</option>
-            <option value="Africa-Eritrea_and_Ethiopia">Africa-Eritrea_and_Ethiopia</option>
+            <option value="Africa-Ethiopia">Africa-Ethiopia</option> 
+            <option value="Africa-Eritrea">Africa-Eritrea</option>
             <option value="Africa-Gabon">Africa-Gabon</option>
             <option value="Africa-Gambia">Africa-Gambia</option>
             <option value="Africa-Ghana">Africa-Ghana</option>
