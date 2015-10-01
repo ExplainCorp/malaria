@@ -21,8 +21,8 @@
   #landing-page h1 { font-size:40px;color:#22B573;margin-bottom:28px;}
   #landing-page h2 { font-size:16px;color:#777;line-height:28px;}
   #loading_block { display:none;}
-  #loading_msg { width: 1100px; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 135px; letter-spacing: -10px; }
-  #loading_msg p { font-size:135px;}
+  #loading_msg { width: 100%; margin: 25px auto; font-weight: bold; color: #eee; text-align: center; font-size: 125px; letter-spacing: -10px; }
+  #loading_msg p { font-size:125px;}
   #param-container { width:840px;margin:100px auto 35px auto;color:#777;}
   #param-container .all-params { margin-top:50px;}
   #param-container .all-params p { padding-right:15px;}
@@ -254,8 +254,19 @@
       //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1_AObh_CEQRZ18F_v1944l3VwFx9jgVJmA38NdfrE9Vg/pubhtml';
       //var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
       var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1g5wCiT3hak0H-QfUPfaj3JyNnw4pgwYeRt-mbM3nZKE/pubhtml';
-
-      var public_spreadsheet_url_2 = 'https://docs.google.com/spreadsheets/d/1g5wCiT3hak0H-QfUPfaj3JyNnw4pgwYeRt-mbM3nZKE/pubhtml';
+      var public_spreadsheet_url_2 = 'https://docs.google.com/spreadsheets/d/1rozIt4e_U6ofno0Mpg7LRDzeDxBDSowaBDuJeRQV9Ek/pubhtml';
+      var public_spreadsheet_url_3 = 'https://docs.google.com/spreadsheets/d/1_J4OHi9RgzaTJN2JbpXhzt00BhalDUIfARudv5qEfd0/pubhtml';
+      var public_spreadsheet_url_4 = 'https://docs.google.com/spreadsheets/d/15liN0vN_TDDtOHBhvQvQ5WMYm3yblP7RhVI79w5OTSw/pubhtml';
+      var public_spreadsheet_url_5 = 'https://docs.google.com/spreadsheets/d/11vbj91ODayH32PciVe1FOX0AIH-GkOEYetGBhvQ6y-I/pubhtml';
+      var public_spreadsheet_url_6 = 'https://docs.google.com/spreadsheets/d/1hPTJKkEHA6k2mlTtnix6Ww2zy_EERo4vZUVN5Agf37Y/pubhtml';
+      var public_spreadsheet_url_7 = 'https://docs.google.com/spreadsheets/d/1YMGMrdh-OALDjKBAVlTNoueb1SwbB3UqENzPITV8Cw4/pubhtml';
+      var public_spreadsheet_url_8 = 'https://docs.google.com/spreadsheets/d/1GaOqzb2Jtc4mgITgDm5UcI8hjqeJSKWer1DqmxUMtEY/pubhtml';
+      var public_spreadsheet_url_9 = 'https://docs.google.com/spreadsheets/d/1gpqp8_6F3B__3BNFtFRCm3jFCbMJBXLl5oPIVbisnaY/pubhtml';
+      var public_spreadsheet_url_10 = 'https://docs.google.com/spreadsheets/d/1awzG3UqpLverE6MH6PKwxuVXBE3SllsVX_ZCynj7Hv0/pubhtml';
+      var public_spreadsheet_url_11 = 'https://docs.google.com/spreadsheets/d/1EGAxXTn5evnP026-7rE1r5Z-HPFs3X8kSB9qOEb0sB4/pubhtml';
+      var public_spreadsheet_url_12 = 'https://docs.google.com/spreadsheets/d/1Ahf9SDttIVKd7iXYjSGVZc4wfkE4JHOa6n8emx3JkTs/pubhtml';
+      var public_spreadsheet_url_13 = 'https://docs.google.com/spreadsheets/d/1CLt4Lqpfpns-CLZKNtA5UFtawtVYpUZ6oUak1DPLzoQ/pubhtml';
+      var public_spreadsheet_url_14 = 'https://docs.google.com/spreadsheets/d/1cN_vWot03UDAenGs9VNo06KHK1b0Xb4pbld_tBMAVww/pubhtml';
 
       function init() {
         a = Tabletop({
@@ -264,33 +275,93 @@
             simpleSheet: false,
             parseNumbers: false
         });
-        
+
         b = Tabletop({
             key: public_spreadsheet_url_2,
             callback: showInfo,
             simpleSheet: false,
             parseNumbers: false
         });
-        /*
+        
         c = Tabletop({
-            key: public_spreadsheet_url_1,
+            key: public_spreadsheet_url_3,
             callback: showInfo,
             simpleSheet: false,
             parseNumbers: false
         });
+
         d = Tabletop({
-            key: public_spreadsheet_url_2,
+            key: public_spreadsheet_url_4,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        }); 
+
+        e = Tabletop({
+            key: public_spreadsheet_url_5,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+
+        f = Tabletop({
+            key: public_spreadsheet_url_6,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+        
+        g = Tabletop({
+            key: public_spreadsheet_url_7,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+        
+        h = Tabletop({
+            key: public_spreadsheet_url_8,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+        i = Tabletop({
+            key: public_spreadsheet_url_9,
             callback: showInfo,
             simpleSheet: false,
             parseNumbers: false
         });    
-        e = Tabletop({
-            key: public_spreadsheet_url_2,
+        j = Tabletop({
+            key: public_spreadsheet_url_10,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });   
+
+        k = Tabletop({
+            key: public_spreadsheet_url_11,
             callback: showInfo,
             simpleSheet: false,
             parseNumbers: false
         });
-        */
+        
+        l = Tabletop({
+            key: public_spreadsheet_url_12,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });
+        m = Tabletop({
+            key: public_spreadsheet_url_13,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });    
+        n = Tabletop({
+            key: public_spreadsheet_url_14,
+            callback: showInfo,
+            simpleSheet: false,
+            parseNumbers: false
+        });              
       }  
       //init();
 
@@ -309,6 +380,15 @@
       var sheet_3 = 0;
       var sheet_4 = 0;
       var sheet_5 = 0;
+      var sheet_6 = 0;
+      var sheet_7 = 0;
+      var sheet_8 = 0;
+      var sheet_9 = 0;
+      var sheet_10 = 0;
+      var sheet_11 = 0;
+      var sheet_12 = 0;
+      var sheet_13 = 0;
+      var sheet_14 = 0;
 
       function showInfo(data, tabletop) {
         console.log("Successfully processed sheet: "+(cx+1));
@@ -317,10 +397,18 @@
         if (cx == 2) { sheet_3 = data; $(".data_progress").html("3"); }
         if (cx == 3) { sheet_4 = data; $(".data_progress").html("4"); }
         if (cx == 4) { sheet_5 = data; $(".data_progress").html("5"); }
-
+        if (cx == 5) { sheet_6 = data; $(".data_progress").html("6"); }
+        if (cx == 6) { sheet_7 = data; $(".data_progress").html("7"); }
+        if (cx == 7) { sheet_8 = data; $(".data_progress").html("8"); }
+        if (cx == 8) { sheet_9 = data; $(".data_progress").html("9"); }
+        if (cx == 9) { sheet_10 = data; $(".data_progress").html("10"); }
+        if (cx == 10) { sheet_11 = data; $(".data_progress").html("11"); }
+        if (cx == 11) { sheet_12 = data; $(".data_progress").html("12"); }
+        if (cx == 12) { sheet_13 = data; $(".data_progress").html("13"); }
+        if (cx == 13) { sheet_14 = data; $(".data_progress").html("14"); }     
         // temporary, comment this out when landing-page is visible
         //visualize(datarisk);
-        if (cx==1) mergeSheets();
+        if (cx==13) mergeSheets();
         cx++;
 
       }      
@@ -328,7 +416,7 @@
       function mergeSheets() {
         datarisk = {};
         datariskCD = {};
-        $.extend(datarisk, sheet_1, sheet_2, sheet_3, sheet_4, sheet_5);
+        $.extend(datarisk, sheet_1, sheet_2, sheet_3, sheet_4, sheet_5, sheet_6, sheet_7, sheet_8, sheet_9, sheet_10, sheet_11, sheet_12, sheet_13, sheet_14);
 
         datariskCD = datarisk;
         $("#loading_msg").hide();
@@ -340,8 +428,8 @@
       // ** init param object and country list 
       function initParams() {
           for (i = 1; i <= 5; i++) {
-              params["param" + i + "a"] = 40;
-              params["param" + i + "b"] = 60;
+              params["param" + i + "a"] = 0;
+              params["param" + i + "b"] = 100;
               params["param" + i + "year"] = "yearsAll";
           }
         initSliders();
@@ -357,7 +445,7 @@
                 range: true,
                 min: 0,
                 max: 100,
-                values: [40, 60],
+                values: [0,100],
                 slide: function(event, ui) {
                     $(".value-ranges p").eq(n).html(ui.values[0] + " <span class='dash-class'>&mdash;</span> " + ui.values[1]);
                     params["param" + (n + 1) + "a"] = ui.values[0];
@@ -1008,7 +1096,7 @@
 
         voronoi = v;
 
-        varNames = d3.keys(data[0]).filter(function (key) { return key != 0 && key !=labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
+        varNames = d3.keys(data[0]).filter(function (key) { return key != labelVar && key != param1 && key != param2 && key != param3 && key != param4 && key != param5 && key != mc && key != md;});
                                                                     
         // target data
         if (risksID == "population_RISK_FACTOR") getidx = 0;          
@@ -1601,23 +1689,21 @@
             <option value="Africa-Burundi">Africa-Burundi</option>
             <option value="Africa-Cameroon">Africa-Cameroon</option>
             <option value="Africa-Cape_Verde">Africa-Cape_Verde</option>
-            <option value="Africa-Cen_Afr_Repub">Africa-Cen_Afr_Repub</option>
+            <option value="Africa-Central_African_Republic">Africa-Central_African_Republic</option>
             <option value="Africa-Chad">Africa-Chad</option>
             <option value="Africa-Comoro_Islands">Africa-Comoro_Islands</option>
-            <option value="Africa-Congo_Brazzaville">Africa-Congo_Brazzaville</option>
-            <option value="Africa-Cote_d-Ivoire">Africa-Cote_d-Ivoire</option>
-            <option value="Africa-Repub_of_Congo">Africa-Republic_of_Congo</option>
-            <option value="Africa-Democ_Repub_Congo">Africa-DemocRepubCongo</option>
+            <option value="Africa-Democratic_Republic_of_the_Congo">Africa-Democratic_Republic_of_the_Congo</option>
             <option value="Africa-Djibouti">Africa-Djibouti</option>
             <option value="Africa-Egypt">Africa-Egypt</option>
             <option value="Africa-Equatorial_Guinea">Africa-Equatorial_Guinea</option>
-            <option value="Africa-Ethiopia">Africa-Ethiopia</option> 
             <option value="Africa-Eritrea">Africa-Eritrea</option>
+            <option value="Africa-Ethiopia">Africa-Ethiopia</option>
             <option value="Africa-Gabon">Africa-Gabon</option>
             <option value="Africa-Gambia">Africa-Gambia</option>
             <option value="Africa-Ghana">Africa-Ghana</option>
             <option value="Africa-Guinea">Africa-Guinea</option>
             <option value="Africa-Guinea_Bissau">Africa-Guinea_Bissau</option>
+            <option value="Africa-Ivory_Coast">Africa-Ivory_Coast</option>
             <option value="Africa-Kenya">Africa-Kenya</option>
             <option value="Africa-Lesotho">Africa-Lesotho</option>
             <option value="Africa-Liberia">Africa-Liberia</option>
@@ -1632,13 +1718,16 @@
             <option value="Africa-Namibia">Africa-Namibia</option>
             <option value="Africa-Niger">Africa-Niger</option>
             <option value="Africa-Nigeria">Africa-Nigeria</option>
+            <option value="Africa-Republic_of_the_Congo">Africa-Republic_of_the_Congo</option>
+            <option value="Africa-Reunion">Africa-Reunion</option>
             <option value="Africa-Rwanda">Africa-Rwanda</option>
-            <option value="Africa-S.Tome_and_Principe">Africa-S.Tome_and_Principe</option>
+            <option value="Africa-Sao_Tome_and_Principe">Africa-Sao_Tome_and_Principe</option>
             <option value="Africa-Senegal">Africa-Senegal</option>
             <option value="Africa-Seychelles">Africa-Seychelles</option>
             <option value="Africa-Sierra_Leone">Africa-Sierra_Leone</option>
             <option value="Africa-Somalia">Africa-Somalia</option>
             <option value="Africa-South_Africa">Africa-South_Africa</option>
+            <option value="Africa-South_Sudan">Africa-South_Sudan</option>
             <option value="Africa-Sudan">Africa-Sudan</option>
             <option value="Africa-Swaziland">Africa-Swaziland</option>
             <option value="Africa-Tanzania">Africa-Tanzania</option>
@@ -1646,43 +1735,152 @@
             <option value="Africa-Tunisia">Africa-Tunisia</option>
             <option value="Africa-Uganda">Africa-Uganda</option>
             <option value="Africa-Zambia">Africa-Zambia</option>
+            <option value="Africa-Zanzibar">Africa-Zanzibar</option>
             <option value="Africa-Zimbabwe">Africa-Zimbabwe</option>
+            <option value="Asia-Afghanistan">Asia-Afghanistan</option>
+            <option value="Asia-Bahrain">Asia-Bahrain</option>
+            <option value="Asia-Bangladesh">Asia-Bangladesh</option>
+            <option value="Asia-Bhutan">Asia-Bhutan</option>
+            <option value="Asia-Brunei">Asia-Brunei</option>
+            <option value="Asia-Cambodia">Asia-Cambodia</option>
+            <option value="Asia-China">Asia-China</option>
+            <option value="Asia-Cyprus">Asia-Cyprus</option>
+            <option value="Asia-East_Timor">Asia-East_Timor</option>
             <option value="Asia-Hong_Kong">Asia-Hong_Kong</option>
             <option value="Asia-India">Asia-India</option>
             <option value="Asia-Indonesia">Asia-Indonesia</option>
+            <option value="Asia-Iran">Asia-Iran</option>
+            <option value="Asia-Iraq">Asia-Iraq</option>
             <option value="Asia-Israel">Asia-Israel</option>
+            <option value="Asia-Japan">Asia-Japan</option>
+            <option value="Asia-Jordan">Asia-Jordan</option>
+            <option value="Asia-Kuwait">Asia-Kuwait</option>
             <option value="Asia-Laos">Asia-Laos</option>
             <option value="Asia-Lebanon">Asia-Lebanon</option>
+            <option value="Asia-Macau">Asia-Macau</option>
             <option value="Asia-Malaysia">Asia-Malaysia</option>
+            <option value="Asia-Maldives">Asia-Maldives</option>
+            <option value="Asia-Mongolia">Asia-Mongolia</option>
+            <option value="Asia-Myanmar">Asia-Myanmar</option>
+            <option value="Asia-Nepal">Asia-Nepal</option>
+            <option value="Asia-North_Korea">Asia-North_Korea</option>
+            <option value="Asia-Oman">Asia-Oman</option>
+            <option value="Asia-Pakistan">Asia-Pakistan</option>
             <option value="Asia-Philippines">Asia-Philippines</option>
+            <option value="Asia-Qatar">Asia-Qatar</option>
+            <option value="Asia-Ryukyu_Island">Asia-Ryukyu_Island</option>
+            <option value="Asia-Saudi_Arabia">Asia-Saudi_Arabia</option>
             <option value="Asia-Singapore">Asia-Singapore</option>
+            <option value="Asia-South_Korea">Asia-South_Korea</option>
             <option value="Asia-Sri_Lanka">Asia-Sri_Lanka</option>
+            <option value="Asia-Syria">Asia-Syria</option>
             <option value="Asia-Taiwan">Asia-Taiwan</option>
             <option value="Asia-Thailand">Asia-Thailand</option>
+            <option value="Asia-Turkey">Asia-Turkey</option>
+            <option value="Asia-United_Arab_Emirates">Asia-United_Arab_Emirates</option>
+            <option value="Asia-Vietnam">Asia-Vietnam</option>
+            <option value="Asia-West_Bank_and_Gaza">Asia-West_Bank_and_Gaza</option>
+            <option value="Asia-Yemen">Asia-Yemen</option>
+            <option value="Europe-Albania">Europe-Albania</option>
+            <option value="Europe-Armenia">Europe-Armenia</option>
+            <option value="Europe-Austria">Europe-Austria</option>
+            <option value="Europe-Azerbaijan">Europe-Azerbaijan</option>
+            <option value="Europe-Belarus">Europe-Belarus</option>
+            <option value="Europe-Belgium">Europe-Belgium</option>
+            <option value="Europe-Bosnia">Europe-Bosnia</option>
+            <option value="Europe-Bulgaria">Europe-Bulgaria</option>
+            <option value="Europe-Croatia">Europe-Croatia</option>
+            <option value="Europe-Cyprus">Europe-Cyprus</option>
+            <option value="Europe-Czech_Republic">Europe-Czech_Republic</option>
+            <option value="Europe-Czecho-slovakia">Europe-Czecho-slovakia</option>
+            <option value="Europe-Denmark">Europe-Denmark</option>
+            <option value="Europe-England">Europe-England</option>
+            <option value="Europe-Estonia">Europe-Estonia</option>
+            <option value="Europe-Finland">Europe-Finland</option>
+            <option value="Europe-France">Europe-France</option>
+            <option value="Europe-Georgia">Europe-Georgia</option>
+            <option value="Europe-Germany">Europe-Germany</option>
+            <option value="Europe-Greece">Europe-Greece</option>
+            <option value="Europe-Hungary">Europe-Hungary</option>
+            <option value="Europe-Ireland">Europe-Ireland</option>
+            <option value="Europe-Isle_of_Man">Europe-Isle_of_Man</option>
+            <option value="Europe-Italy">Europe-Italy</option>
+            <option value="Europe-Kazakhstan">Europe-Kazakhstan</option>
+            <option value="Europe-Kyrgyzstan">Europe-Kyrgyzstan</option>
+            <option value="Europe-Latvia">Europe-Latvia</option>
+            <option value="Europe-Lithuania">Europe-Lithuania</option>
+            <option value="Europe-Macedonia">Europe-Macedonia</option>
+            <option value="Europe-Malta">Europe-Malta</option>
+            <option value="Europe-Moldova">Europe-Moldova</option>
+            <option value="Europe-Netherlands">Europe-Netherlands</option>
+            <option value="Europe-Northern_Ireland">Europe-Northern_Ireland</option>
+            <option value="Europe-Norway">Europe-Norway</option>
+            <option value="Europe-Poland">Europe-Poland</option>
+            <option value="Europe-Portugal">Europe-Portugal</option>
+            <option value="Europe-Romania">Europe-Romania</option>
+            <option value="Europe-Russia">Europe-Russia</option>
+            <option value="Europe-Scotland">Europe-Scotland</option>
+            <option value="Europe-Serbia_Montenegro_Kosovo">Europe-Serbia_Montenegro_Kosovo</option>
+            <option value="Europe-Slovenia">Europe-Slovenia</option>
+            <option value="Europe-Spain">Europe-Spain</option>
+            <option value="Europe-Sweden">Europe-Sweden</option>
+            <option value="Europe-Switzerland">Europe-Switzerland</option>
+            <option value="Europe-Tajikistan">Europe-Tajikistan</option>
+            <option value="Europe-Turk-menistan">Europe-Turk-menistan</option>
+            <option value="Europe-UK">Europe-UK</option>
+            <option value="Europe-USSR">Europe-USSR</option>
+            <option value="Europe-Ukraine">Europe-Ukraine</option>
+            <option value="Europe-Uzbekistan">Europe-Uzbekistan</option>
+            <option value="N-America-Canada">N-America-Canada</option>
             <option value="N-America-USA">N-America-USA</option>
-            <option value="S-America-Argentina">S-America-Argentina</option>
+            <option value="Oceania-Australia">Oceania-Australia</option>
+            <option value="Oceania-Fiji_Islands">Oceania-Fiji_Islands</option>
+            <option value="Oceania-Guam">Oceania-Guam</option>
+            <option value="Oceania-New_Caledonia">Oceania-New_Caledonia</option>
+            <option value="Oceania-New_Zealand">Oceania-New_Zealand</option>
+            <option value="Oceania-Papua_New_Guinea">Oceania-Papua_New_Guinea</option>
+            <option value="Oceania-Solomon_Islands">Oceania-Solomon_Islands</option>
+            <option value="Oceania-Tonga">Oceania-Tonga</option>
+            <option value="Oceania-Vanuatu">Oceania-Vanuatu</option>
             <option value="S-America-Bolivia">S-America-Bolivia</option>
             <option value="S-America-Brazil">S-America-Brazil</option>
             <option value="S-America-Chile">S-America-Chile</option>
             <option value="S-America-Colombia">S-America-Colombia</option>
-            <option value="S-America-CostaRica">S-America-CostaRica</option>
+            <option value="S-America-Costa_Rica">S-America-Costa_Rica</option>
             <option value="S-America-Cuba">S-America-Cuba</option>
+            <option value="S-America-Dominica">S-America-Dominica</option>
             <option value="S-America-Dominican_Republic">S-America-Dominican_Republic</option>
             <option value="S-America-Ecuador">S-America-Ecuador</option>
             <option value="S-America-El_Salvador">S-America-El_Salvador</option>
+            <option value="S-America-French_Guiana">S-America-French_Guiana</option>
+            <option value="S-America-Grenada">S-America-Grenada</option>
+            <option value="S-America-Guadeloupe">S-America-Guadeloupe</option>
             <option value="S-America-Guatemala">S-America-Guatemala</option>
+            <option value="S-America-Guyana">S-America-Guyana</option>
             <option value="S-America-Haiti">S-America-Haiti</option>
             <option value="S-America-Honduras">S-America-Honduras</option>
             <option value="S-America-Jamaica">S-America-Jamaica</option>
+            <option value="S-America-Leeward_Islands">S-America-Leeward_Islands</option>
+            <option value="S-America-Martinique">S-America-Martinique</option>
             <option value="S-America-Mexico">S-America-Mexico</option>
             <option value="S-America-Nicaragua">S-America-Nicaragua</option>
             <option value="S-America-Panama">S-America-Panama</option>
             <option value="S-America-Paraguay">S-America-Paraguay</option>
             <option value="S-America-Peru">S-America-Peru</option>
             <option value="S-America-Puerto_Rico">S-America-Puerto_Rico</option>
+            <option value="S-America-St_Chris_and_Nevis">S-America-St_Chris_and_Nevis</option>
+            <option value="S-America-St_Lucia">S-America-St_Lucia</option>
+            <option value="S-America-St_Vincent">S-America-St_Vincent</option>
+            <option value="S-America-Suriname">S-America-Suriname</option>
             <option value="S-America-Trinidad_Tobago">S-America-Trinidad_Tobago</option>
             <option value="S-America-Uruguay">S-America-Uruguay</option>
             <option value="S-America-Venezuela">S-America-Venezuela</option>
+            <option value="S-America-Virgin_Islands">S-America-Virgin_Islands</option>
+            <option value="South_America-Antigua">South_America-Antigua</option>
+            <option value="South_America-Argentina">South_America-Argentina</option>
+            <option value="South_America-Bahama_Islands">South_America-Bahama_Islands</option>
+            <option value="South_America-Belize">South_America-Belize</option>
+            <option value="South_America-Bermuda">South_America-Bermuda</option>
         </select>
       </div>
       <!-- selected countries go here -->
@@ -1702,7 +1900,7 @@
             </div>
             <div class="sliders" id="slider-range-one"></div>
             <div class="value-ranges" id="value-range-one">
-                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+                <p>0 <span class="dash-class">&mdash;</span> 100</p>
             </div>
             <select name="number" id="param-year-one" class="param-year">
                 <option value="yearsAll" value="yearsAll" selected="selected">All years</option>
@@ -1729,7 +1927,7 @@
             </div>
             <div class="sliders" id="slider-range-two"></div>
             <div class="value-ranges" id="value-range-two">
-                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+                <p>0 <span class="dash-class">&mdash;</span> 100</p>
             </div>
             <select name="number" id="param-year-two" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
@@ -1756,7 +1954,7 @@
             </div>
             <div class="sliders" id="slider-range-three"></div>
             <div class="value-ranges" id="value-range-three">
-                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+                <p>0 <span class="dash-class">&mdash;</span> 100</p>
             </div>
             <select name="number" id="param-year-three" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
@@ -1783,7 +1981,7 @@
             </div>
             <div class="sliders" id="slider-range-four"></div>
             <div class="value-ranges" id="value-range-four">
-                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+                <p>0 <span class="dash-class">&mdash;</span> 100</p>
             </div>
             <select name="number" id="param-year-four" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
@@ -1810,7 +2008,7 @@
             </div>
             <div class="sliders" id="slider-range-five"></div>
             <div class="value-ranges" id="value-range-five">
-                <p>40 <span class="dash-class">&mdash;</span> 60</p>
+                <p>0 <span class="dash-class">&mdash;</span> 100</p>
             </div>
             <select name="number" id="param-year-five" class="param-year">
                 <option value="yearsAll" selected="selected">All years</option>
@@ -1841,7 +2039,7 @@
 
     </div>
     <div id="loading_msg">
-      <p>Loading data...<span class="data_progress">0</span>/5</p>
+      <p>Loading data...<span class="data_progress">0</span>/14</p>
     </div>
       
     <div id="landing-footer">
