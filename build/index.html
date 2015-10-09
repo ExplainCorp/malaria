@@ -247,12 +247,10 @@
       var colorObj = {};
       var orderObj = {};
       var checker = false;
+      var _datarisk = {};
+      var _datariskCD = {};
 
       // ** pull data from spreadsheet into json via tabletop.js
-      // var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1HmW1NzSwOg0F3zwsk2VHnAD00OHRKQykM_gFdrMF_UA/pubhtml';
-      
-      //var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1_AObh_CEQRZ18F_v1944l3VwFx9jgVJmA38NdfrE9Vg/pubhtml';
-      //var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1PHarCLKVOX4568xLfYBSDlENCvcyWDkhoMfCTLZL7Y0/pubhtml';
       var public_spreadsheet_url_1 = 'https://docs.google.com/spreadsheets/d/1g5wCiT3hak0H-QfUPfaj3JyNnw4pgwYeRt-mbM3nZKE/pubhtml';
       var public_spreadsheet_url_2 = 'https://docs.google.com/spreadsheets/d/1rozIt4e_U6ofno0Mpg7LRDzeDxBDSowaBDuJeRQV9Ek/pubhtml';
       var public_spreadsheet_url_3 = 'https://docs.google.com/spreadsheets/d/1_J4OHi9RgzaTJN2JbpXhzt00BhalDUIfARudv5qEfd0/pubhtml';
@@ -282,7 +280,6 @@
             simpleSheet: false,
             parseNumbers: false
         });
-        
         c = Tabletop({
             key: public_spreadsheet_url_3,
             callback: showInfo,
@@ -361,10 +358,11 @@
             callback: showInfo,
             simpleSheet: false,
             parseNumbers: false
-        });              
+        });   
+                
       }  
       //init();
-
+      
       function initTabletop() {
         Tabletop.init( { key: public_spreadsheet_url,
                          callback: showInfo,
@@ -418,7 +416,13 @@
         datariskCD = {};
         $.extend(datarisk, sheet_1, sheet_2, sheet_3, sheet_4, sheet_5, sheet_6, sheet_7, sheet_8, sheet_9, sheet_10, sheet_11, sheet_12, sheet_13, sheet_14);
 
+        // cases and deaths
         datariskCD = datarisk;
+        
+        // store full data in backup objects for additional searches
+        _datarisk = datarisk;
+        _datariskCD = datarisk;
+
         $("#loading_msg").hide();
         $("#loading_block").fadeIn();
         //console.log(datarisk)
@@ -553,112 +557,191 @@
         // param3 = vector_behavior_index_PARAM
         // param4 = development_index_PARAM
         // param5 = intervention_index_PARAM
+
+        // reset
+        datarisk = _datarisk;
+        datariskCD = _datariskCD;
+
         if (country_list.length == 0) {
+            // match drop downs with location in spreadsheets
+            if (params["param1year"]=="years1898to1910") {
+              param1_start = 0; param1_end = 12;
+            } else if (params["param1year"]=="years1911to1920") {
+              param1_start = 13; param1_end = 22;
+            } else if (params["param1year"]=="years1921to1930") {
+              param1_start = 23; param1_end = 32;
+            } else if (params["param1year"]=="years1931to1940") {
+              param1_start = 33; param1_end = 42;
+            } else if (params["param1year"]=="years1941to1950") {
+              param1_start = 43; param1_end = 52;
+            } else if (params["param1year"]=="years1951to1960") {
+              param1_start = 53; param1_end = 62;
+            } else if (params["param1year"]=="years1961to1970") {
+              param1_start = 63; param1_end = 72;
+            } else if (params["param1year"]=="years1971to1980") {
+              param1_start = 73; param1_end = 82;
+            } else if (params["param1year"]=="years1981to1990") {
+              param1_start = 83; param1_end = 92;
+            } else if (params["param1year"]=="years1991to2000") {
+              param1_start = 93; param1_end = 102;
+            } else if (params["param1year"]=="years2001to2005") {
+              param1_start = 103; param1_end = 107;
+            } else if (params["param1year"]=="years2006to2010") {
+              param1_start = 108; param1_end = 112;
+            } else if (params["param1year"]=="years2011to2015") {
+              param1_start = 113; param1_end = 116;
+            } else {
+              param1_start = 0; param1_end = datarisk["Africa-Algeria"].elements.length;
+            }
 
-            if (params["param1year"]=="yearsAll") param1_start = 0; param1_end = datarisk["Africa-Algeria"].elements.length;
-            if (params["param2year"]=="yearsAll") param2_start = 0; param2_end = datarisk["Africa-Algeria"].elements.length;
-            if (params["param3year"]=="yearsAll") param3_start = 0; param3_end = datarisk["Africa-Algeria"].elements.length;
-            if (params["param4year"]=="yearsAll") param4_start = 0; param4_end = datarisk["Africa-Algeria"].elements.length;
-            if (params["param5year"]=="yearsAll") param5_start = 0; param5_end = datarisk["Africa-Algeria"].elements.length;
+            if (params["param2year"]=="years1898to1910") {
+              param2_start = 0; param2_end = 12;
+            } else if (params["param2year"]=="years1911to1920") {
+              param2_start = 13; param2_end = 22;
+            } else if (params["param2year"]=="years1921to1930") {
+              param2_start = 23; param2_end = 32;
+            } else if (params["param2year"]=="years1931to1940") {
+              param2_start = 33; param2_end = 42;
+            } else if (params["param2year"]=="years1941to1950") {
+              param2_start = 43; param2_end = 52;
+            } else if (params["param2year"]=="years1951to1960") {
+              param2_start = 53; param2_end = 62;
+            } else if (params["param2year"]=="years1961to1970") {
+              param2_start = 63; param2_end = 72;
+            } else if (params["param2year"]=="years1971to1980") {
+              param2_start = 73; param2_end = 82;
+            } else if (params["param2year"]=="years1981to1990") {
+              param2_start = 83; param2_end = 92;
+            } else if (params["param2year"]=="years1991to2000") {
+              param2_start = 93; param2_end = 102;
+            } else if (params["param2year"]=="years2001to2005") {
+              param2_start = 103; param2_end = 107;
+            } else if (params["param2year"]=="years2006to2010") {
+              param2_start = 108; param2_end = 112;
+            } else if (params["param2year"]=="years2011to2015") {
+              param2_start = 113; param2_end = 116;
+            } else {
+              param2_start = 0; param2_end = datarisk["Africa-Algeria"].elements.length;
+            }
 
-            if (params["param1year"]=="years1898to1910") param1_start = 0; param1_end = 12;
-            if (params["param2year"]=="years1898to1910") param2_start = 0; param2_end = 12;
-            if (params["param3year"]=="years1898to1910") param3_start = 0; param3_end = 12;
-            if (params["param4year"]=="years1898to1910") param4_start = 0; param4_end = 12;
-            if (params["param5year"]=="years1898to1910") param5_start = 0; param5_end = 12;
+            if (params["param3year"]=="years1898to1910") {
+              param3_start = 0; param3_end = 12;
+            } else if (params["param3year"]=="years1911to1920") {
+              param3_start = 13; param3_end = 22;
+            } else if (params["param3year"]=="years1921to1930") {
+              param3_start = 23; param3_end = 32;
+            } else if (params["param3year"]=="years1931to1940") {
+              param3_start = 33; param3_end = 42;
+            } else if (params["param3year"]=="years1941to1950") {
+              param3_start = 43; param3_end = 52;
+            } else if (params["param3year"]=="years1951to1960") {
+              param3_start = 53; param3_end = 62;
+            } else if (params["param3year"]=="years1961to1970") {
+              param3_start = 63; param3_end = 72;
+            } else if (params["param3year"]=="years1971to1980") {
+              param3_start = 73; param3_end = 82;
+            } else if (params["param3year"]=="years1981to1990") {
+              param3_start = 83; param3_end = 92;
+            } else if (params["param3year"]=="years1991to2000") {
+              param3_start = 93; param3_end = 102;
+            } else if (params["param3year"]=="years2001to2005") {
+              param3_start = 103; param3_end = 107;
+            } else if (params["param3year"]=="years2006to2010") {
+              param3_start = 108; param3_end = 112;
+            } else if (params["param3year"]=="years2011to2015") {
+              param3_start = 113; param3_end = 116;
+            } else {
+              param3_start = 0; param3_end = datarisk["Africa-Algeria"].elements.length;
+            }
 
-            if (params["param1year"]=="years1911to1920") param1_start = 13; param1_end = 22;
-            if (params["param2year"]=="years1911to1920") param2_start = 13; param2_end = 22;
-            if (params["param3year"]=="years1911to1920") param3_start = 13; param3_end = 22;
-            if (params["param4year"]=="years1911to1920") param4_start = 13; param4_end = 22;
-            if (params["param5year"]=="years1911to1920") param5_start = 13; param5_end = 22;  
+            if (params["param4year"]=="years1898to1910") {
+              param4_start = 0; param4_end = 12;
+            } else if (params["param4year"]=="years1911to1920") {
+              param4_start = 13; param4_end = 22;
+            } else if (params["param4year"]=="years1921to1930") {
+              param4_start = 23; param4_end = 32;
+            } else if (params["param4year"]=="years1931to1940") {
+              param4_start = 33; param4_end = 42;
+            } else if (params["param4year"]=="years1941to1950") {
+              param4_start = 43; param4_end = 52;
+            } else if (params["param4year"]=="years1951to1960") {
+              param4_start = 53; param4_end = 62;
+            } else if (params["param4year"]=="years1961to1970") {
+              param4_start = 63; param4_end = 72;
+            } else if (params["param4year"]=="years1971to1980") {
+              param4_start = 73; param4_end = 82;
+            } else if (params["param4year"]=="years1981to1990") {
+              param4_start = 83; param4_end = 92;
+            } else if (params["param4year"]=="years1991to2000") {
+              param4_start = 93; param4_end = 102;
+            } else if (params["param4year"]=="years2001to2005") {
+              param4_start = 103; param4_end = 107;
+            } else if (params["param4year"]=="years2006to2010") {
+              param4_start = 108; param4_end = 112;
+            } else if (params["param4year"]=="years2011to2015") {
+              param4_start = 113; param4_end = 116;
+            } else {
+              param4_start = 0; param4_end = datarisk["Africa-Algeria"].elements.length;
+            }   
 
-            if (params["param1year"]=="years1921to1930") param1_start = 23; param1_end = 32;
-            if (params["param2year"]=="years1921to1930") param2_start = 23; param2_end = 32;
-            if (params["param3year"]=="years1921to1930") param3_start = 23; param3_end = 32;
-            if (params["param4year"]=="years1921to1930") param4_start = 23; param4_end = 32;
-            if (params["param5year"]=="years1921to1930") param5_start = 23; param5_end = 32;                        
+            if (params["param5year"]=="years1898to1910") {
+              param5_start = 0; param5_end = 12;
+            } else if (params["param5year"]=="years1911to1920") {
+              param5_start = 13; param5_end = 22;
+            } else if (params["param5year"]=="years1921to1930") {
+              param5_start = 23; param5_end = 32;
+            } else if (params["param5year"]=="years1931to1940") {
+              param5_start = 33; param5_end = 42;
+            } else if (params["param5year"]=="years1941to1950") {
+              param5_start = 43; param5_end = 52;
+            } else if (params["param5year"]=="years1951to1960") {
+              param5_start = 53; param5_end = 62;
+            } else if (params["param5year"]=="years1961to1970") {
+              param5_start = 63; param5_end = 72;
+            } else if (params["param5year"]=="years1971to1980") {
+              param5_start = 73; param5_end = 82;
+            } else if (params["param5year"]=="years1981to1990") {
+              param5_start = 83; param5_end = 92;
+            } else if (params["param5year"]=="years1991to2000") {
+              param5_start = 93; param5_end = 102;
+            } else if (params["param5year"]=="years2001to2005") {
+              param5_start = 103; param5_end = 107;
+            } else if (params["param5year"]=="years2006to2010") {
+              param5_start = 108; param5_end = 112;
+            } else if (params["param5year"]=="years2011to2015") {
+              param5_start = 113; param5_end = 116;
+            } else {
+              param5_start = 0; param5_end = datarisk["Africa-Algeria"].elements.length;
+            }                     
 
-            if (params["param1year"]=="years1931to1940") param1_start = 33; param1_end = 42;
-            if (params["param2year"]=="years1931to1940") param2_start = 33; param2_end = 42;
-            if (params["param3year"]=="years1931to1940") param3_start = 33; param3_end = 42;
-            if (params["param4year"]=="years1931to1940") param4_start = 33; param4_end = 42;
-            if (params["param5year"]=="years1931to1940") param5_start = 33; param5_end = 42;   
-
-            if (params["param1year"]=="years1941to1950") param1_start = 43; param1_end = 52;
-            if (params["param2year"]=="years1941to1950") param2_start = 43; param2_end = 52;
-            if (params["param3year"]=="years1941to1950") param3_start = 43; param3_end = 52;
-            if (params["param4year"]=="years1941to1950") param4_start = 43; param4_end = 52;
-            if (params["param5year"]=="years1941to1950") param5_start = 43; param5_end = 52;
-
-            if (params["param1year"]=="years1951to1960") param1_start = 53; param1_end = 62;
-            if (params["param2year"]=="years1951to1960") param2_start = 53; param2_end = 62;
-            if (params["param3year"]=="years1951to1960") param3_start = 53; param3_end = 62;
-            if (params["param4year"]=="years1951to1960") param4_start = 53; param4_end = 62;
-            if (params["param5year"]=="years1951to1960") param5_start = 53; param5_end = 62;  
-
-            if (params["param1year"]=="years1961to1970") param1_start = 63; param1_end = 72;
-            if (params["param2year"]=="years1961to1970") param2_start = 63; param2_end = 72;
-            if (params["param3year"]=="years1961to1970") param3_start = 63; param3_end = 72;
-            if (params["param4year"]=="years1961to1970") param4_start = 63; param4_end = 72;
-            if (params["param5year"]=="years1961to1970") param5_start = 63; param5_end = 72;                        
-
-            if (params["param1year"]=="years1971to1980") param1_start = 73; param1_end = 82;
-            if (params["param2year"]=="years1971to1980") param2_start = 73; param2_end = 82;
-            if (params["param3year"]=="years1971to1980") param3_start = 73; param3_end = 82;
-            if (params["param4year"]=="years1971to1980") param4_start = 73; param4_end = 82;
-            if (params["param5year"]=="years1971to1980") param5_start = 73; param5_end = 82;  
-
-            if (params["param1year"]=="years1981to1990") param1_start = 83; param1_end = 92;
-            if (params["param2year"]=="years1981to1990") param2_start = 83; param2_end = 92;
-            if (params["param3year"]=="years1981to1990") param3_start = 83; param3_end = 92;
-            if (params["param4year"]=="years1981to1990") param4_start = 83; param4_end = 92;
-            if (params["param5year"]=="years1981to1990") param5_start = 83; param5_end = 92;
-
-            if (params["param1year"]=="years1991to2000") param1_start = 93; param1_end = 102;
-            if (params["param2year"]=="years1991to2000") param2_start = 93; param2_end = 102;
-            if (params["param3year"]=="years1991to2000") param3_start = 93; param3_end = 102;
-            if (params["param4year"]=="years1991to2000") param4_start = 93; param4_end = 102;
-            if (params["param5year"]=="years1991to2000") param5_start = 93; param5_end = 102;  
-
-            if (params["param1year"]=="years2001to2005") param1_start = 103; param1_end = 107;
-            if (params["param2year"]=="years2001to2005") param2_start = 103; param2_end = 107;
-            if (params["param3year"]=="years2001to2005") param3_start = 103; param3_end = 107;
-            if (params["param4year"]=="years2001to2005") param4_start = 103; param4_end = 107;
-            if (params["param5year"]=="years2001to2005") param5_start = 103; param5_end = 107;                        
-            if (params["param1year"]=="years2006to2010") param1_start = 108; param1_end = 112;
-            if (params["param2year"]=="years2006to2010") param2_start = 108; param2_end = 112;
-            if (params["param3year"]=="years2006to2010") param3_start = 108; param3_end = 112;
-            if (params["param4year"]=="years2006to2010") param4_start = 108; param4_end = 112;
-            if (params["param5year"]=="years2006to2010") param5_start = 108; param5_end = 112; 
-
-            if (params["param1year"]=="years2011to2015") param1_start = 113; param1_end = 116;
-            if (params["param2year"]=="years2011to2015") param2_start = 113; param2_end = 116;
-            if (params["param3year"]=="years2011to2015") param3_start = 113; param3_end = 116;
-            if (params["param4year"]=="years2011to2015") param4_start = 113; param4_end = 116;
-            if (params["param5year"]=="years2011to2015") param5_start = 113; param5_end = 116; 
-
-            console.log(param3_start)             
+            console.log(params["param1year"]+" : "+param1_start+" : "+param1_end)
+            console.log(params["param2year"]+" : "+param2_start+" : "+param2_end)
+            console.log(params["param3year"]+" : "+param3_start+" : "+param3_end)
+            console.log(params["param4year"]+" : "+param4_start+" : "+param4_end)
+            console.log(params["param5year"]+" : "+param5_start+" : "+param5_end)
 
             for (i in datarisk) {
 
-                //console.log(params["param1year"] + " " + params["param2year"])
-
                 // gotta have separate loop for each drop-down range
                 // with respective start_params/end_params
-
+                
                 for (q = param1_start; q < param1_end; q++) {
-
                     if (datarisk[i].elements[q]["transmission_index_PARAM"] >= params["param1a"] && datarisk[i].elements[q]["transmission_index_PARAM"] <= params["param1b"]) {
                         param1check = true;
+                    } else {
+                        param1check = false;
+                        break;
                     }
-                
+                    //console.log(datarisk[i].name+" | param1:  "+datarisk[i].elements[q]["transmission_index_PARAM"]+" | "+param1check)                  
                 }
 
                 for (q = param2_start; q < param2_end; q++) {
 
                     if (datarisk[i].elements[q]["climate_index_PARAM"] >= params["param2a"] && datarisk[i].elements[q]["climate_index_PARAM"] <= params["param2b"]) {
                         param2check = true;
+                    } else {
+                        param2check = false;
+                        break;
                     }
 
                 }
@@ -669,6 +752,9 @@
 
                     if (datarisk[i].elements[q]["vector_behavior_index_PARAM"] >= params["param3a"] && datarisk[i].elements[q]["vector_behavior_index_PARAM"] <= params["param3b"]) {
                         param3check = true;
+                    } else {
+                        param3check = false;
+                        break;
                     }
                 
                 }
@@ -677,6 +763,9 @@
 
                     if (datarisk[i].elements[q]["development_index_PARAM"] >= params["param4a"] && datarisk[i].elements[q]["development_index_PARAM"] <= params["param4b"]) {
                         param4check = true;
+                    } else {
+                        param4check = false;
+                        break;
                     }
                 
                 }
@@ -685,6 +774,9 @@
 
                     if (datarisk[i].elements[q]["intervention_index_PARAM"] >= params["param5a"] && datarisk[i].elements[q]["intervention_index_PARAM"] <= params["param5b"]) {
                         param5check = true;
+                    } else {
+                        param5check = false;
+                        break;
                     }
                 
                 }
@@ -714,13 +806,9 @@
               console.log("no results!")
             }
         
-        console.log("filtered")
+          console.log("filtered")
        
         } else  {
-          //console.log("selected");
-          //console.log(country_list);
-          //console.log(country_list)
-          //console.log(datarisk)
           visualize(country_list);
         }
           
@@ -890,7 +978,7 @@
 
           colorCheck = false;
           get_id = $(this).attr("id");
-          console.log(get_id)
+          //console.log(get_id)
           //navArrayIdx = [];
 
           for (o in colorObj) {
@@ -1661,6 +1749,7 @@
 
       $("#index").on("click", function(e) {
         e.preventDefault();
+        country_list.length = 0;
         $("#results-viz").hide();  
         $("#landing-page").fadeIn();      
       })    
